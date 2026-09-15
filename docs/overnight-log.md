@@ -24,7 +24,12 @@ noted. Full table: `uv run python -m chess_nn.report`.
 4. **Mate ladder on human data: no gain.** Only 2.0% of human positions are
    mates, so targets barely change; L1 still moved 9 points between
    near-identical runs, so run-to-run noise is large.
-5. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
+5. **Seed noise is ~±3 points.** h256-s400 on shard 0 with seeds 0/1/2:
+   L1 60.8 / 54.8 / 55.5%, L2 37.8 / 41.0 / 42.5%. Most differences in
+   findings 2 and 4 are within this noise; only h128-s800 looks clearly worse.
+   Conclusion: at 726k human positions, architecture/scale/ladder choices
+   barely matter; the data and the repetition leak do.
+6. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
 ## In progress at time of writing
