@@ -9,6 +9,7 @@ Usage:
 """
 
 import argparse
+import json
 import subprocess
 import sys
 import time
@@ -98,20 +99,19 @@ class Stockfish:
         self.proc.wait(timeout=5)
 
 
-def label_position(
+def analyse_position(
     engine: Stockfish,
     fen: str,
     depth: int,
     deep_depth: int | None = None,
     deep_threshold_cp: int = 600,
-) -> Row | None:
-    """Label one position; None if it has no score or its best move is not quiet.
+) -> tuple[tuple[int, int], str] | None:
+    """((score_cp, mate), best move) for one position; None if it has no score.
 
     With deep_depth set, lopsided positions (|score| >= deep_threshold_cp without
     a mate score) are searched again deeper, which finds forced mates that the
     base depth reports only as large centipawn scores.
     """
-    board = chess.Board(fen)
     score, best = engine.analyse(fen, depth)
     if score is None or best == "(none)":
         return None
@@ -119,10 +119,29 @@ def label_position(
         deep_score, deep_best = engine.analyse(fen, deep_depth)
         if deep_score is not None and deep_best != "(none)":
             score, best = deep_score, deep_best
+    return score, best
+
+
+def row_for(fen: str, analysed: tuple[tuple[int, int], str] | None) -> Row | None:
+    """The training row for an analysed position; None if unscored or its best move is not quiet."""
+    if analysed is None:
+        return None
+    (score_cp, mate), best = analysed
+    board = chess.Board(fen)
     if not is_quiet_best_move(board, best):
         return None
-    score_cp, mate = score
     return fen, score_cp, mate, feature_indices(board)
+
+
+def label_position(
+    engine: Stockfish,
+    fen: str,
+    depth: int,
+    deep_depth: int | None = None,
+    deep_threshold_cp: int = 600,
+) -> Row | None:
+    """Label one position; None if it has no score or its best move is not quiet."""
+    return row_for(fen, analyse_position(engine, fen, depth, deep_depth, deep_threshold_cp))
 
 
 _engine: Stockfish | None = None
@@ -139,6 +158,16 @@ def _label_worker(fen: str) -> Row | None:
     return label_position(_engine, fen, *_label_args)
 
 
+def _analyse_worker(fen: str) -> tuple[str, tuple[tuple[int, int], str] | None, Row | None]:
+    analysed = analyse_position(_engine, fen, *_label_args)
+    return fen, analysed, row_for(fen, analysed)
+
+
+def record_line(fen: str, analysed: tuple[tuple[int, int], str] | None, row: Row | None) -> str:
+    (score_cp, mate), best = analysed if analysed is not None else ((None, None), None)
+    return json.dumps({"fen": fen, "score_cp": score_cp, "mate": mate, "best": best, "kept": row is not None}) + "\n"
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--candidates", type=Path, required=True)
@@ -152,6 +181,7 @@ def main() -> None:
     parser.add_argument("--prefix", default="shard", help="shard file prefix; keep it starting with 'shard'")
     parser.add_argument("--limit", type=int, help="only use the first N candidates")
     parser.add_argument("--bench", type=int, help="label N candidates, report throughput, write nothing")
+    parser.add_argument("--record", type=Path, help="also append every candidate's score, best move and whether it was kept (jsonl)")
     args = parser.parse_args()
 
     with open(args.candidates) as f:
@@ -184,9 +214,12 @@ def main() -> None:
                 continue
             rows = []
             start = time.time()
-            for i, row in enumerate(pool.imap(_label_worker, chunk, chunksize=64), start=1):
+            record = open(args.record, "a") if args.record else None
+            for i, (fen, analysed, row) in enumerate(pool.imap(_analyse_worker, chunk, chunksize=64), start=1):
                 if row is not None:
                     rows.append(row)
+                if record is not None:
+                    record.write(record_line(fen, analysed, row))
                 if i % 50_000 == 0:
                     rate = i / (time.time() - start)
                     eta_min = (len(chunk) - i) / rate / 60
