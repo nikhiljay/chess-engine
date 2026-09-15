@@ -50,6 +50,8 @@ def searched_reply(board: chess.Board, move: chess.Move) -> bool:
 def mating_replies(board: chess.Board) -> list[chess.Move]:
     replies = []
     for reply in board.legal_moves:
+        if not board.gives_check(reply):  # only a checking move can mate; skips most full checkmate tests
+            continue
         board.push(reply)
         mate = board.is_checkmate()
         board.pop()
