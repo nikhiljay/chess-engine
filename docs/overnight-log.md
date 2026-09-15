@@ -71,7 +71,14 @@ noted. Full table: `uv run python -m chess_nn.report`.
     ladder 62.0 / 39.2. L1 gains +5-7 over the seed mean, beyond noise, but
     repetition-while-winning stays at 57-62 and L2 does not move. The mate
     ladder shows no effect even with 14% mates in the self-play data.
-12. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
+12. **Shards 0-3 + self-play (3.06M, 5% self-play), h256-s400:** plain
+    L1 62.5% / L2 45.5%; + ladder 61.8 / 42.8; + ladder + cp_loss 0.02
+    58.8 / 48.5. At 5% share, self-play and the ladder are not measurable
+    against the j4 baselines (64.0-63.7 / 45.0-46.0). The weak pawn-space loss
+    hints at better conversion on L2 (repetition 104 → 76,
+    repetition-while-winning 65 → 43, wins 39 → 59) but L1 losses rose to 38,
+    so it is inconclusive at 0.02; `sweeps/june4_selfplay_cp.json` tests 0.1.
+13. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
 ## In progress at time of writing
