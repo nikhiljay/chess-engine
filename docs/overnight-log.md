@@ -136,6 +136,14 @@ noted. Full table: `uv run python -m chess_nn.report`.
     < 100 cp 8.5%; median 16 pieces, 20.9% with ≤10. In
     `sweeps/loops_a.json` (June 0-3 + July 0-1 + loops) they are 8.2% of
     positions — below the ~18% share at which fresh self-play helped (11).
+21. **Low-memory kills are not a training leak.** The loops_a sweep was
+    killed twice by the harness's low-memory guard, both ~2 min into
+    loopa-h512 (epoch 17-18). A direct run with 5 s memory sampling finished
+    all 20 epochs: process footprint 3.3 GB while loading, then flat at
+    2.7 GB; free memory 49-50%, with brief wired-memory swings to 8.6-9.9 GB
+    (35-38% free) from other processes after the OS update. That run is
+    reused as `runs/loopa-h512-s400` (same shards, order, seed and settings).
+    Sweeps now run with `PYTHONUNBUFFERED=1` so logs survive a kill.
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
