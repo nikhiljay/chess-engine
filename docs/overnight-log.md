@@ -552,7 +552,29 @@ noted. Full table: `uv run python -m chess_nn.report`.
     repetitions the net was winning also fell (65/52 vs 78/49) while wins
     fell. No weight or kind variation follows; the failure analysis
     (which safe decisions became losing moves, and whether before or during
-    quiescence) is finding 61.
+    quiescence) is finding 62.
+61. **The ~99k baseline is much weaker than h1024 (2026-09-15).** EvalNet
+    h128, no hidden head, WDL scale 800, no cp loss, same 4.36M positions
+    and 20 epochs (the leaderboard's st-h128-s800-9M architecture as
+    inferred from its name; unconfirmed). 98,947 params, 0.8/0.7 min to
+    train (h1024: 2.8/3.2), ORT 0.020/0.005 ms per position at batch 1/32
+    and 29 ms play-move (h1024 0.129/0.036, 37 ms; quiet CPU). Paired
+    against the h1024 control of the same seed:
+    - L1: 60.8 (81/81/38) vs 69.8 (92/95/13), −0.090 ± 0.033; 63.5
+      (73/108/19) vs 72.8 (112/67/21), −0.092 ± 0.038; pooled −0.091 ±
+      0.025, CI [−0.141, −0.042], openings better/worse 51/98
+    - L2: 38.8 (34/87/79) vs 54.2 (60/97/43), −0.155 ± 0.034; 38.5
+      (36/82/82) vs 56.5 (71/84/45), −0.180 ± 0.033; pooled −0.168 ± 0.024,
+      CI [−0.214, −0.121], 42/108
+    - L3: 25.2 (15/71/114) vs 29.0 (20/76/104), −0.037 ± 0.032; 22.2
+      (18/53/129) vs 32.2 (23/83/94), −0.100 ± 0.034; pooled −0.069 ±
+      0.023, CI [−0.114, −0.023], 54/94
+    It changes architecture and objective together (no head, s800, cp 0),
+    so it does not say which part costs strength; it does say the smaller
+    recipe on our data cannot reach L2 (it scores 38-39%). The leaderboard
+    model passing L2 must come from data, training or details its name does
+    not show, not from this architecture on our data. h1024 stays the
+    default; no follow-up on the small architecture without new evidence.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
