@@ -1,0 +1,10 @@
+{
+  "shards": ["data/shards/shard_000[0-3].npz"],
+  "levels": [1, 2],
+  "openings": "data/dev_openings_100.txt",
+  "defaults": {"epochs": 20, "batch_size": 16384, "head": [32, 32], "wdl_scale_cp": 400},
+  "runs": [
+    {"name": "j4-h256-32x32-s400", "hidden": 256},
+    {"name": "j4-h128-32x32-s400", "hidden": 128}
+  ]
+}
