@@ -267,6 +267,37 @@ noted. Full table: `uv run python -m chess_nn.report`.
     (16/83/101); kb-h256-s1000-cp20 33.2% (31/71/98); kb-h512-s1000-cp20
     26.8% (18/71/111). Every model loses about half its L3 games; king
     buckets h256 is the best L3 score so far but within ~±3 of the rest.
+38. **Stockfish diagnosis with history (h1024, depth 14, games the net did
+    not win).** Net move = Stockfish best in 38.6% (L2) / 36.4% (L3).
+    - L2 (297 games): 167 repetition draws, 150 (90%) genuinely won
+      (median best +9.2 pawns); 143 slipped. 130 losses: 106 contain one
+      blunder (median drop 6.7 pawns from +0.3, ply 32); 67 had been winning.
+    - L3 (365 games): 124 repetition draws, 92 (74%) won (median +8.1);
+      241 losses: 198 with one blunder (median drop 6.4 pawns from +1.4,
+      ply 42); 130 (54%) had been winning first.
+    - The flagged slip sits a median 2 (L2) / 10 (L3) plies before the end:
+      Stockfish counts a repetition as a draw only when it would complete
+      the threefold (or repeats after its root), so earlier shuffles back
+      into once-seen positions still score as winning, while the win was
+      first reached ~34 plies earlier. Hence `rank_pairs` adds a rule: a
+      winning-side move into an already-seen position, when Stockfish's
+      best is not one, is a pair regardless of the gap.
+    - h1024 L2 alone: 1,380 score pairs — too few; a larger diagnosis
+      (1,500 games per level from h1024 and kb-h256, depth 12) is running.
+39. **Why the earlier conversion fixes failed, given 38.** Every one of
+    them changed per-position targets from Stockfish searches that did not
+    know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
+    eval-db endgames (17-18) and loop-children data (22, 25) all labeled a
+    shuffle's child with the same winning score as a progress move's child,
+    so the gradient never separated them (finding 24's 15 cp median gap).
+    Progress shaping (8, 29) added bonuses to won human positions, where
+    loop positions share the same features, and distorted non-quiet
+    evaluations enough to raise losses. King buckets (32) added
+    king-relative capacity, but the losses are single tactical blunders
+    from level or better positions (6-7 pawns at move 16-21), which
+    king-relative weights do not address. What none of them supplied is a
+    signal that compares the moves available in the same position — the
+    ranking objective.
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
