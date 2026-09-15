@@ -372,6 +372,12 @@ noted. Full table: `uv run python -m chess_nn.report`.
     and h8192 (6,841,443). The harness limits only parameters (10M); ONNX
     files are ~4 bytes per parameter. Promising sizes get a seed-1 repeat
     before any default change.
+47. **The Python search in `chess_nn.search_check` matches the harness.** On
+    the 55 GUI reference positions with jj6-h1024-s1000-cp20, its move
+    choice equals play-move in 54; in the 55th
+    (8/6R1/8/8/3p4/2pK1Q2/6p1/6k1 b) every legal move (c2, Kh2, Kh1) scores
+    exactly −100,000 (mated), so only the tie-break order differs. Search
+    accuracy and selected-move results from it can be trusted.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
