@@ -41,6 +41,7 @@ fewest parameters, so the strategy is **climb levels first, shrink later**.
 training/
   pyproject.toml            # uv project, Python 3.12
   src/chess_nn/
+    harness.py              # paths into the harness, tool loading
     encoding.py             # vectorized feature-index encoder
     sample_positions.py     # Lichess PGN → candidate FENs
     label.py                # Stockfish worker pool → labeled shards
@@ -49,6 +50,7 @@ training/
     train.py                # training loop
     export.py               # ONNX export + validation + parity check
     dev_openings.py         # build dev opening set
+    evaluate.py             # run compete, summarize, repetition monitoring
   tests/
   docs/specs/
   data/                     # gitignored: PGNs, shards
@@ -79,7 +81,7 @@ to be 2–5 GB compressed, streamed through zstd without decompressing to disk.
 - Record the score from the side-to-move perspective and the best move.
 - Drop positions whose best move is a capture or promotion, so the data
   matches the quiet positions quiescence search hands the net.
-- Mate scores are clamped to ±2500 cp.
+- Scores are clamped to ±2500 cp; mate scores map to ±2500.
 
 **Volume.** ~5M labeled positions for v1.
 
@@ -109,7 +111,7 @@ board[N,1540]
   eval = Linear(32 → 1)                   # nn.Linear → Gemm
 ```
 
-H = 256 for v1 → 214,881 parameters. (H = 128 → 108,033.)
+H = 256 for v1 → 214,881 parameters. (H = 128 → 108,001.)
 
 **Output scale and loss.** The net's output is in pawns. Loss is MSE in
 win-probability space: `(sigmoid(100·out / 400) − sigmoid(score_cp / 400))²`.
@@ -123,8 +125,11 @@ magnitudes small relative to the harness mate score.
 - No augmentation in v1.
 
 **Export.**
-- `torch.onnx.export`, opset 17, `ir_version` set to 8, dynamic axes
-  `{"board": {0: "batch"}, "eval": {0: "batch"}}`.
+- The graph is built directly with `onnx.helper` from the trained weights
+  (Split → shared Gemm ×2 → Clip → Concat → Gemm/Relu ×2 → Gemm), opset 17,
+  `ir_version` 8, named `batch` dimension on `board` and `eval`. This avoids
+  torch exporter default drift (torch 2.14) and the MatMul+Add pitfall. The
+  Split sizes initializer adds 2 counted parameters.
 - Every export runs `../tools/validate_model.py` and a parity test (ONNX
   Runtime vs. PyTorch on 1,000 positions, max abs diff < 1e-4).
 

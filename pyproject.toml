@@ -1,0 +1,27 @@
+[project]
+name = "chess-nn"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Nikhil D'Souza", email = "nikhil@vitalize.care" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.5.3",
+    "onnx>=1.22.0",
+    "onnxruntime>=1.30.0",
+    "onnxscript>=0.7.2",
+    "python-chess>=1.999",
+    "torch>=2.14.0",
+    "zstandard>=0.25.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.10.7,<0.11.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
