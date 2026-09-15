@@ -1,0 +1,128 @@
+{
+  "L1": {
+    "pairs": [
+      {
+        "candidate": "tact-a-h1024",
+        "control": "jj6-h1024-s1000-cp20",
+        "candidate_outcomes": {
+          "score_pct": 69.8,
+          "wdl": "105/69/26",
+          "repetition_draws": 69,
+          "repetition_while_winning": 53
+        },
+        "control_outcomes": {
+          "score_pct": 69.8,
+          "wdl": "92/95/13",
+          "repetition_draws": 95,
+          "repetition_while_winning": 78
+        },
+        "paired": {
+          "openings": 100,
+          "mean_points_per_game": 0.0,
+          "se": 0.0328,
+          "ci95": [
+            -0.0642,
+            0.0642
+          ],
+          "openings_better": 36,
+          "openings_worse": 38
+        }
+      }
+    ],
+    "pooled": {
+      "openings": 100,
+      "mean_points_per_game": 0.0,
+      "se": 0.0328,
+      "ci95": [
+        -0.0642,
+        0.0642
+      ],
+      "openings_better": 36,
+      "openings_worse": 38
+    }
+  },
+  "L2": {
+    "pairs": [
+      {
+        "candidate": "tact-a-h1024",
+        "control": "jj6-h1024-s1000-cp20",
+        "candidate_outcomes": {
+          "score_pct": 53.5,
+          "wdl": "62/90/48",
+          "repetition_draws": 90,
+          "repetition_while_winning": 59
+        },
+        "control_outcomes": {
+          "score_pct": 54.2,
+          "wdl": "60/97/43",
+          "repetition_draws": 97,
+          "repetition_while_winning": 70
+        },
+        "paired": {
+          "openings": 100,
+          "mean_points_per_game": -0.0075,
+          "se": 0.0332,
+          "ci95": [
+            -0.0726,
+            0.0576
+          ],
+          "openings_better": 33,
+          "openings_worse": 37
+        }
+      }
+    ],
+    "pooled": {
+      "openings": 100,
+      "mean_points_per_game": -0.0075,
+      "se": 0.0332,
+      "ci95": [
+        -0.0726,
+        0.0576
+      ],
+      "openings_better": 33,
+      "openings_worse": 37
+    }
+  },
+  "L3": {
+    "pairs": [
+      {
+        "candidate": "tact-a-h1024",
+        "control": "jj6-h1024-s1000-cp20",
+        "candidate_outcomes": {
+          "score_pct": 32.5,
+          "wdl": "21/88/91",
+          "repetition_draws": 88,
+          "repetition_while_winning": 35
+        },
+        "control_outcomes": {
+          "score_pct": 29.0,
+          "wdl": "20/76/104",
+          "repetition_draws": 76,
+          "repetition_while_winning": 37
+        },
+        "paired": {
+          "openings": 100,
+          "mean_points_per_game": 0.035,
+          "se": 0.0297,
+          "ci95": [
+            -0.0233,
+            0.0933
+          ],
+          "openings_better": 37,
+          "openings_worse": 31
+        }
+      }
+    ],
+    "pooled": {
+      "openings": 100,
+      "mean_points_per_game": 0.035,
+      "se": 0.0297,
+      "ci95": [
+        -0.0233,
+        0.0933
+      ],
+      "openings_better": 37,
+      "openings_worse": 31
+    }
+  }
+}

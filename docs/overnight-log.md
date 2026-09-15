@@ -688,6 +688,35 @@ noted. Full table: `uv run python -m chess_nn.report`.
     converting: when it stops shuffling it walks into tactics it cannot
     see. Conversion is gated by tactical safety, not by the lack of a
     progress signal alone.
+66. **Leaves at winning decisions do not improve play (tact_a,
+    2026-09-15).** Tests whether finding 65's losses from won positions can
+    be trained out with ordinary labels. `decision_data --select winning
+    --min-cp 300 --sample 20000`: for 20,000 sampled training-source
+    decisions with best ≥ +300, every legal move's quiescence leaf (278,966
+    children, 366,148 leaves, 3,186 terminal → 624,299 unique; 23 min),
+    labeled Stockfish depth 9 like broad data → 547,128 positions (11.1% of
+    the mix, +12.5% optimizer steps). Same h1024 recipe, seed 0, against
+    jj6-h1024-s1000-cp20 (paired, per-opening SE):
+    - L1 69.8 (105/69/26) vs 69.8 (92/95/13): 0.000 ± 0.033
+    - L2 53.5 (62/90/48) vs 54.2 (60/97/43): −0.008 ± 0.033,
+      CI [−0.073, +0.058]; repetition draws 90 vs 97, repetitions while
+      winning 59 vs 70
+    - L3 32.5 (21/88/91) vs 29.0 (20/76/104): +0.035 ± 0.030,
+      CI [−0.023, +0.093]
+    - Stockfish depth 12 with history on L2 games not won: losses after a
+      winning position 26 vs 20 (conv_a 38); repetition draws with a win 76
+      vs 86; slip a median 2 plies before the end (control 2.5).
+    - start position (2 games per level, measurement only): L1 1.5, L2 0.5,
+      L3 1 (control 1 / 1 / 0.5)
+    No credible L2 gain and losses from won positions did not fall, so the
+    tactical-safety reading of finding 65 is not supported by this data. L1
+    shows the same trade as conv_a, shaping and king buckets in milder form:
+    13 more wins, 13 more losses, 26 fewer draws, unchanged score. The L3
+    difference is inside noise and is not pursued. No size-matched control
+    or seed-1 replicate (the rule requires a positive L2 result first). Not
+    promoted, not expanded. Across findings 29, 32, 65 and 66 the
+    interventions move games between draws and decisive results without
+    raising points.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
