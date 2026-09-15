@@ -462,6 +462,16 @@ noted. Full table: `uv run python -m chess_nn.report`.
     quality on a random sample of all decisions from held-out games
     (`chess_nn.move_quality`: play-move choice scored by Stockfish with the
     game history — mean loss, agreement, turning-move rate).
+55. **Held-out baseline for the default (jj6-h1024-s1000-cp20).** 1,400
+    fresh games (700 each vs L2 and L3, datagen seeds 902/903, 4 threads,
+    random training openings), diagnosed at depth 12: 1,132 not won, 41,356
+    decisions, agreement with Stockfish's best 36.7%. 507 repetition draws,
+    417 (82%) genuinely won. 625 losses: 363 (58%) with a turning move
+    (median ply 38, drop 557 cp; 27 allowed an unseen mate in one), 246 with
+    only non-turning large drops, 47 never defensible. A candidate must
+    lower the turning-move count on games recorded with the same datagen
+    flags. `chess_nn.move_quality` scores five runs' choices on 1,500
+    sampled decisions from these games.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
