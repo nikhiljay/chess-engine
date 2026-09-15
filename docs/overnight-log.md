@@ -178,6 +178,13 @@ noted. Full table: `uv run python -m chess_nn.report`.
     h512 mean L1 67.3 / L2 43.3 against the human-only 65.2 / 50.0; h256
     68.5 / 46.5 against 62.3 / 49.2. Loop children at 8.2% trade a small L1
     gain for a clear L2 loss, so they are not used going forward.
+26. **WDL scale at full data (June 0-3 + July 0-1, h512).** s800: L1 61.5% /
+    L2 46.5%. s800 + cp_loss 0.1: 64.5 / 50.7, seed 1 65.0 / 47.0. s1000 +
+    cp_loss 0.1: 63.7 / **57.2** — best L2 so far (+7.2 over s400's 50.0),
+    L2 losses 49 → 37, wins 49 → 66, repetition-while-winning 59 → 66.
+    Single seed; the s800 seeds already differ by 3.7 on L2.
+    `sweeps/jj6_scale2.json` runs a seed-1 replicate, s1500 + cp 0.1 and
+    s1000 + cp 0.2.
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
