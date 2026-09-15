@@ -5,7 +5,6 @@
   "defaults": {"epochs": 20, "batch_size": 4096, "hidden": 256, "head": [32, 32]},
   "runs": [
     {"name": "s0sp-h256-32x32-s400", "wdl_scale_cp": 400},
-    {"name": "s0sp-h256-32x32-s400-ladder", "wdl_scale_cp": 400, "mate_base_cp": 3000, "mate_step_cp": 20},
-    {"name": "s0sp-h256-32x32-s800-ladder", "wdl_scale_cp": 800, "mate_base_cp": 3000, "mate_step_cp": 20}
+    {"name": "s0sp-h256-32x32-s400-ladder", "wdl_scale_cp": 400, "mate_base_cp": 3000, "mate_step_cp": 20}
   ]
 }
