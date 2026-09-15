@@ -1,0 +1,24 @@
+{
+  "name": "s0-h128-32x32-s800-ladder",
+  "shards": [
+    "/Users/nikhildsouza/workspace/chess-challenge/training/data/shards/shard_0000.npz"
+  ],
+  "hidden": 128,
+  "head": [
+    32,
+    32
+  ],
+  "epochs": 20,
+  "batch_size": 4096,
+  "lr": 0.001,
+  "weight_decay": 0.0001,
+  "val_frac": 0.02,
+  "seed": 0,
+  "wdl_scale_cp": 800,
+  "score_clamp_cp": 2500,
+  "mate_base_cp": 3000,
+  "mate_step_cp": 20,
+  "device": "mps",
+  "limit": null,
+  "runs_dir": "/Users/nikhildsouza/workspace/chess-challenge/training/runs"
+}

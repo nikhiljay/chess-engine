@@ -1,0 +1,30 @@
+[
+  {
+    "level": 1,
+    "score": 111.5,
+    "score_pct": 55.8,
+    "wins": 59,
+    "draws": 105,
+    "losses": 36,
+    "passed": false,
+    "end_reasons": {
+      "checkmate": 95,
+      "repetition": 105
+    },
+    "repetition_while_winning": 56
+  },
+  {
+    "level": 2,
+    "score": 68.5,
+    "score_pct": 34.2,
+    "wins": 29,
+    "draws": 79,
+    "losses": 92,
+    "passed": false,
+    "end_reasons": {
+      "repetition": 79,
+      "checkmate": 121
+    },
+    "repetition_while_winning": 39
+  }
+]
