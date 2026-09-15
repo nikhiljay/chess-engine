@@ -129,6 +129,13 @@ noted. Full table: `uv run python -m chess_nn.report`.
     Candidates from L1 + L2 are deduplicated, shuffled (seed 0) and labeled
     in 100k shards so partial results are usable and a restart loses at most
     one shard.
+20. **Loop-children data (`data/shards_loops/shard_loops_a_*.npz`).** L2
+    generation: 8000 games, 2,456 loops (30.7%), 359,188 positions. L1 + L2:
+    706,614 unique candidates → 391,594 labeled positions (55% kept, ~140/s,
+    ~80 min). 6.3% mates; non-mate |score| ≥ 300 cp 81.5%, ≥ 600 cp 57.0%,
+    < 100 cp 8.5%; median 16 pieces, 20.9% with ≤10. In
+    `sweeps/loops_a.json` (June 0-3 + July 0-1 + loops) they are 8.2% of
+    positions — below the ~18% share at which fresh self-play helped (11).
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
