@@ -1,0 +1,10 @@
+[package]
+name = "datagen"
+version = "0.1.0"
+edition = "2021"
+
+# Standalone workspace: the harness workspace in ../.. must not claim this crate.
+[workspace]
+
+[dependencies]
+engine = { path = "../../engine" }
