@@ -1,0 +1,11 @@
+{
+  "shards": ["data/shards/shard_000[0-3].npz", "data/shards/shard_2017-07_000[0-1].npz", "data/shards_evaldb/shard_evaldb_*.npz"],
+  "levels": [1, 2],
+  "openings": "data/dev_openings_100.txt",
+  "defaults": {"epochs": 20, "batch_size": 16384, "hidden": 512, "head": [32, 32], "wdl_scale_cp": 400},
+  "runs": [
+    {"name": "evmix-h512-s400"},
+    {"name": "evmix-h512-s400-ladder", "mate_base_cp": 3000, "mate_step_cp": 20},
+    {"name": "evmix-h256-s400", "hidden": 256}
+  ]
+}

@@ -90,7 +90,20 @@ noted. Full table: `uv run python -m chess_nn.report`.
     ladder + cp_loss 0.1: L1 60.8% / L2 44.5% (1×: 64.8 / 49.0); h256-s400:
     64.0 / 48.0 (j4 baselines 64.0-63.7 / 45.0-46.0). Duplicated positions
     likely overfit; the shard-0 self-play gain came from fresh positions.
-15. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
+15. **(2026-09-15, after the reboot) July shards 0-1 add nothing.** h512 on
+    June 0-3 + July 0-1 (4.36M): L1 65.2% / L2 50.0%, repetition 89 / 102,
+    repetition-while-winning 59 / 59 — the same as June alone (63.7 / 49.8).
+    h256: 62.3 / 49.2 (June alone 64.0 / 45.0), within seed noise.
+    More human-game positions at depth 9 have plateaued; local labeling was
+    stopped after July shard 1 to free the CPU.
+16. **Lichess eval database as a data source.** `lichess_db_eval.jsonl.zst`
+    (22 GB) holds positions with deep Stockfish analyses and best-move lines,
+    so no local labeling is needed. `chess_nn.import_evals` filters them like
+    `label` (not in check, quiet legal best move, no official openings). On a
+    200k-line sample: 72.7% kept, median depth 30, 18.6% mate scores (human
+    data 2.0%), 24% of positions with ≤10 pieces — the won endgames the net
+    fails to convert.
+18. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
 ## State at the interruption
