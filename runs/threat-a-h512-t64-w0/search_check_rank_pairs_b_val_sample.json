@@ -1,0 +1,52 @@
+{
+  "score": {
+    "pairs": 880,
+    "static_accuracy": 0.469,
+    "search_accuracy": 0.43,
+    "static_right_search_wrong": 71,
+    "static_wrong_search_right": 36,
+    "chose_better": 0.235,
+    "chose_worse": 0.3,
+    "chose_other": 0.465
+  },
+  "all": {
+    "pairs": 1068,
+    "static_accuracy": 0.428,
+    "search_accuracy": 0.385,
+    "static_right_search_wrong": 84,
+    "static_wrong_search_right": 38,
+    "chose_better": 0.203,
+    "chose_worse": 0.311,
+    "chose_other": 0.486
+  },
+  "decisive": {
+    "pairs": 326,
+    "static_accuracy": 0.433,
+    "search_accuracy": 0.387,
+    "static_right_search_wrong": 30,
+    "static_wrong_search_right": 15,
+    "chose_better": 0.202,
+    "chose_worse": 0.298,
+    "chose_other": 0.5
+  },
+  "mate_in_one": {
+    "pairs": 146,
+    "static_accuracy": 0.199,
+    "search_accuracy": 0.13,
+    "static_right_search_wrong": 12,
+    "static_wrong_search_right": 2,
+    "chose_better": 0.062,
+    "chose_worse": 0.397,
+    "chose_other": 0.541
+  },
+  "repetition": {
+    "pairs": 42,
+    "static_accuracy": 0.357,
+    "search_accuracy": 0.333,
+    "static_right_search_wrong": 1,
+    "static_wrong_search_right": 0,
+    "chose_better": 0.024,
+    "chose_worse": 0.238,
+    "chose_other": 0.738
+  }
+}

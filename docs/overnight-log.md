@@ -446,6 +446,22 @@ noted. Full table: `uv run python -m chess_nn.report`.
     27.0; matched plain control rank-a-h512-w0: 69.2 / 53.2 / 29.0; default
     jj6-h1024-s1000-cp20: 69.8 / 54.2 / 29.0. No ranking or ThreatNet model
     beats the default or the plain control in games.
+54. **ThreatNet's static edge does change selected moves at error-prone
+    decisions, yet it plays worse — mismatch still open.** search_check on
+    the same 1,068-pair sample (static → search; chose better / worse /
+    other; decisive better / worse):
+    - rank-a-h512-w0: 0.365 → 0.301; 15% / 38% / 47%; decisive 14% / 37%
+    - rank-a-h512-w2: 0.424 → 0.364; 16% / 27% / 57%; decisive 16% / 25%
+    - threat-a-t64-w0: 0.428 → 0.385; 20% / 31% / 49%; decisive 20% / 30%
+    - threat-a-t64-w0.1: 0.474 → 0.414; 20% / 27% / 54%; decisive 19% / 26%
+    ThreatNet's rankings survive quiescence better (84-96 static-right /
+    search-wrong vs 109) and pick Stockfish's better move more often (20% vs
+    15%), but games favour the plain net (66.5/49.5/27.0 vs 69.2/53.2/29.0).
+    The sample holds only positions where h1024 or kb-h256 erred, so it
+    cannot show whether ThreatNet is worse at ordinary moves. Next: move
+    quality on a random sample of all decisions from held-out games
+    (`chess_nn.move_quality`: play-move choice scored by Stockfish with the
+    game history — mean loss, agreement, turning-move rate).
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
