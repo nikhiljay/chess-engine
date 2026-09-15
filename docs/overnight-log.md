@@ -76,6 +76,27 @@ noted. Full table: `uv run python -m chess_nn.report`.
 - Shard0 + self-play sweep (`sweeps/shard0_selfplay.json`).
 - July 2017 download (`data/lichess_2017-07.pgn.zst.part`, ~130 KiB/s).
 
+## Next steps after the interruption
+
+Best so far: `j4-h256-32x32-s400` / `-seed1` (L1 ~64%, L2 ~45-46%) and
+`j4-h512-32x32-s400` (L1 63.7%, L2 49.8%). No model has passed L1 (70%) on dev,
+so no official run has been made.
+
+1. Check `sweeps/june4_selfplay.json` and `sweeps/shard0_selfplay.json`
+   results (`chess_nn.report`). The question is whether self-play positions,
+   the mate ladder and the pawn-space loss cut `repetition_while_winning`.
+2. If they do: generate self-play positions at scale with the best model
+   (`datagen`, all threads, no competing jobs), label with
+   `--deep-depth 14`, and retrain h256/h512 on June + self-play with the
+   winning settings.
+3. If they don't: the eval still can't rank won positions. Options to try
+   next: higher `cp_loss_weight`, deeper labels for all lopsided positions,
+   or more self-play data specifically from positions reached in repetition
+   loops (sample only after the net is ahead).
+4. Resume June labeling (shards 4-6) and train on the full ~5M either way;
+   more data measurably helped h256 (+7 L1 from 726k to 2.9M).
+5. Only once dev L1 ≥ ~72%: run `--official` for Level 1 (then Level 2).
+
 ## Resuming after an interruption
 
 Every step is resumable: labeling skips finished shards (a partial shard is
@@ -98,6 +119,7 @@ uv run python -m chess_nn.sweep sweeps/shard0_selfplay.json
 uv run python -m chess_nn.sweep sweeps/june4.json
 uv run python -m chess_nn.sweep sweeps/june4b.json
 uv run python -m chess_nn.sweep sweeps/june4_shaped.json
+uv run python -m chess_nn.sweep sweeps/june4_selfplay.json
 
 # Table of every run
 uv run python -m chess_nn.report
