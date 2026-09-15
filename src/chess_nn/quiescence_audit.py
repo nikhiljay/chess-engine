@@ -1,29 +1,25 @@
 """Which static evaluations decide a move, and which of them candidate extraction keeps.
 
-For each decision this builds two views of the search engine/src/nn.rs runs:
+For each decision this replays try_choose_move from engine/src/nn.rs: its root
+alpha window, fail-hard cutoffs and batched stand-pats (every ongoing child not
+in check is evaluated before the loop over it, even when a cutoff then skips
+its subtree). Python-chess generates root and in-check moves in a different
+order than cozy-chess, so cutoffs, and with them the evaluated set, can differ
+slightly; the chosen move is the same up to exact ties.
 
-1. Harness-evaluated positions: a replica of try_choose_move with its root
-   alpha window, fail-hard cutoffs and batched stand-pats (every ongoing child
-   not in check is evaluated before the loop over it, even when a cutoff then
-   skips its subtree). Python-chess generates root and in-check moves in a
-   different order than cozy-chess, so cutoffs, and with them the evaluated set,
-   can differ slightly; the chosen move is the same up to exact ties.
-2. Sensitivity: the same capture trees searched with a full window and no
-   pruning. For every static evaluation in them, the smallest error at that
-   one position (net units, pawns) that changes the chosen move with every
-   other evaluation held fixed. Raising a value propagates through a node once
-   it passes that node's value (cost: the gap), and lowering one propagates
-   only while its line is the node's unique best, by at most the margin to the
-   second best; negamax alternates the two at each ply. At the root the chosen
-   move's value has to fall below the runner-up's, or another move's rise
-   above the chosen one's.
+Only positions the search evaluates can change its choice through a single
+evaluation error, so for each evaluated position this shifts that one
+evaluation by ±0.5, 1, 2 and 4 pawns, reruns the search, and records the
+smallest shift that changes the chosen move (none within 4 pawns: infinite).
 
 decision_data keeps, per legal move, the quiet leaf of that move's principal
-line: the child itself when quiescence stands pat there, else the end of the
-capture line. The report splits every position in the unpruned trees into
-kept, dropped move children (quiescence searched past them), and dropped
-deeper positions, with how many the harness evaluates and how many could
-change the decision with an error of at most 0.5, 1, 2 or 4 pawns.
+line under a full window: the child itself when quiescence stands pat there,
+else the end of the capture line. The report splits evaluated positions into
+kept, dropped move children (quiescence searched past their stand-pat) and
+dropped deeper positions (stand-pats on other capture lines, batch-evaluated
+siblings), with how many of each can change the decision at each error size,
+and how many kept positions the search never evaluates at all (principal
+leaves of moves the root window refutes early).
 
 With --meta-out it also writes, for every legal move of every decision, the
 kept position and whether the move is the one the net played, for joining
@@ -45,17 +41,12 @@ from pathlib import Path
 
 import chess
 
-from chess_nn.decision_data import load_decisions, quiescence_leaf
+from chess_nn.decision_data import decision_positions, load_decisions, quiescence_leaf
 from chess_nn.rank_pairs import is_decisive
 from chess_nn.search_check import MATE, NetEval, harness_captures
 
 INF = float("inf")
-ERROR_BINS = (0.5, 1.0, 2.0, 4.0)
-NODE_BUDGET = 50_000
-
-
-class TreeTooLarge(Exception):
-    pass
+ERROR_SIZES = (0.5, 1.0, 2.0, 4.0)
 
 
 def status(board: chess.Board) -> str:
@@ -121,107 +112,68 @@ def harness_evaluated(net, board: chess.Board) -> tuple[chess.Move, set[str]]:
     return best or moves[0], evaluated
 
 
-def full_tree(net, board: chess.Board, ply: int, budget: list[int]) -> dict:
-    """Unpruned full-window quiescence tree: each node's stand-pat (None in check or terminal) and value."""
-    budget[0] -= 1
-    if budget[0] < 0:
-        raise TreeTooLarge
-    state = status(board)
-    if state != "ongoing":
-        return {"fen": None, "ply": ply, "stand_pat": None, "children": [], "value": -MATE if state == "mated" else 0.0}
-    in_check = board.is_check()
-    stand_pat = None if in_check else net(board)
-    kids = [full_tree(net, kid, ply + 1, budget) for kid in children(board, list(board.legal_moves) if in_check else harness_captures(board))]
-    options = ([stand_pat] if stand_pat is not None else []) + [-kid["value"] for kid in kids]
-    return {"fen": board.fen(), "ply": ply, "stand_pat": stand_pat, "children": kids, "value": max(options)}
+class Shifted:
+    """The net with one position's evaluation moved by `shift` pawns."""
+
+    def __init__(self, net, fen: str, shift: float) -> None:
+        self.net, self.fen, self.shift = net, fen, shift
+
+    def __call__(self, board: chess.Board) -> float:
+        value = self.net(board)
+        return value + self.shift if board.fen() == self.fen else value
 
 
-def thresholds(node: dict, plus_cost: float, minus_cost: float, out: list[tuple[str, int, float]]) -> None:
-    """Append (fen, ply, smallest eval error that changes the chosen move) for every stand-pat in the tree.
-
-    plus_cost / minus_cost: how far this node's value (for its side to move) must rise / fall to change the
-    chosen move; INF when no change in that direction can.
-    """
-    options = ([node["stand_pat"]] if node["stand_pat"] is not None else []) + [-kid["value"] for kid in node["children"]]
-    value = node["value"]
-
-    def lowering_propagates(option: float) -> bool:
-        if option != value or options.count(value) > 1:
-            return False
-        rest = [o for o in options if o != value]
-        return not rest or value - max(rest) > minus_cost
-
-    if node["stand_pat"] is not None:
-        up = value - node["stand_pat"] + plus_cost
-        down = minus_cost if lowering_propagates(node["stand_pat"]) else INF
-        out.append((node["fen"], node["ply"], min(up, down)))
-    for kid in node["children"]:
-        option = -kid["value"]
-        # Raising the child's value lowers this option; lowering it raises the option past the gap.
-        kid_plus = minus_cost if lowering_propagates(option) else INF
-        kid_minus = value - option + plus_cost
-        thresholds(kid, kid_plus, kid_minus, out)
+def decision_errors(net, board: chess.Board, chosen: chess.Move, positions: set[str]) -> dict[str, float]:
+    """For each position, the smallest single-evaluation shift that changes the chosen move (INF if none)."""
+    errors = {}
+    for fen in positions:
+        errors[fen] = next(
+            (size for size in ERROR_SIZES
+             if any(harness_evaluated(Shifted(net, fen, sign * size), board)[0] != chosen for sign in (1, -1))),
+            INF,
+        )
+    return errors
 
 
-def audit_decision(net, fen: str) -> dict | None:
+def audit_decision(net, fen: str) -> dict:
     board = chess.Board(fen)
     chosen, evaluated = harness_evaluated(net, board)
-    kept: set[str] = set()
-    trees = []
-    budget = [NODE_BUDGET]
-    try:
-        for move, kid in zip(list(board.legal_moves), children(board, list(board.legal_moves))):
-            _, leaf = quiescence_leaf(net, kid.copy(stack=False), -INF, INF)
-            if leaf is not None:
-                kept.add(leaf)
-            trees.append((move, full_tree(net, kid, 1, budget)))
-    except TreeTooLarge:
-        return None
-    values = {move: -tree["value"] for move, tree in trees}
-    best_value = max(values.values())
-    runner_up = max((v for m, v in values.items() if m != chosen), default=-INF)
-    positions: list[tuple[str, int, float]] = []
-    for move, tree in trees:
-        if move == chosen:
-            thresholds(tree, best_value - runner_up if runner_up > -INF else INF, INF, positions)
-        else:
-            thresholds(tree, INF, best_value - values[move], positions)
-    rows = defaultdict(list)
-    for position, ply, error in positions:
-        role = "kept" if position in kept else "dropped move child" if ply == 1 else "dropped deeper"
-        rows[role].append({"error": error, "harness": position in evaluated})
+    kept = set(decision_positions(net, fen)[0])
+    root_children = {kid.fen() for kid in children(board, list(board.legal_moves))}
+    roles = defaultdict(list)
+    for position, error in decision_errors(net, board, chosen, evaluated).items():
+        role = "kept" if position in kept else "dropped move child" if position in root_children else "dropped deeper"
+        roles[role].append(error)
     return {
         "fen": fen,
-        "chosen_matches_full_window": values[chosen] == best_value,
         "evaluated_by_harness": len(evaluated),
         "kept_positions": len(kept),
-        "roles": rows,
+        "kept_not_evaluated": len(kept - evaluated),
+        "roles": roles,
     }
 
 
-def summarize(audits: list[dict], skipped: int) -> dict:
-    roles: dict[str, list[dict]] = defaultdict(list)
+def summarize(audits: list[dict]) -> dict:
+    roles: dict[str, list[float]] = defaultdict(list)
     for a in audits:
-        for role, rows in a["roles"].items():
-            roles[role] += rows
-    report = {
+        for role, errors in a["roles"].items():
+            roles[role] += errors
+    decisive = {size: sum(e <= size for errors in roles.values() for e in errors) for size in ERROR_SIZES}
+    return {
         "decisions": len(audits),
-        "skipped_tree_too_large": skipped,
-        "chosen_matches_full_window": sum(a["chosen_matches_full_window"] for a in audits),
         "median_evaluated_by_harness": statistics.median(a["evaluated_by_harness"] for a in audits),
         "median_kept_positions": statistics.median(a["kept_positions"] for a in audits),
-        "roles": {},
+        "kept_positions": sum(a["kept_positions"] for a in audits),
+        "kept_not_evaluated_by_harness": sum(a["kept_not_evaluated"] for a in audits),
+        "roles": {
+            role: {
+                "evaluated_positions": len(errors),
+                **{f"changes_decision_at_{size}": sum(e <= size for e in errors) for size in ERROR_SIZES},
+                **{f"share_of_decisive_at_{size}": round(sum(e <= size for e in errors) / max(decisive[size], 1), 3) for size in ERROR_SIZES},
+            }
+            for role, errors in sorted(roles.items())
+        },
     }
-    for role, rows in sorted(roles.items()):
-        finite = [r["error"] for r in rows if r["error"] < INF]
-        report["roles"][role] = {
-            "positions": len(rows),
-            "evaluated_by_harness": sum(r["harness"] for r in rows),
-            "can_change_decision": len(finite),
-            **{f"error_le_{b}": sum(e <= b for e in finite) for b in ERROR_BINS},
-            **{f"harness_evaluated_error_le_{b}": sum(r["harness"] and r["error"] <= b for r in rows) for b in ERROR_BINS},
-        }
-    return report
 
 
 def move_meta(net, decision: dict) -> list[dict]:
@@ -253,7 +205,7 @@ def _init(model: str) -> None:
     _net = NetEval(Path(model))
 
 
-def _audit(fen: str) -> dict | None:
+def _audit(fen: str) -> dict:
     _net.cache.clear()
     return audit_decision(_net, fen)
 
@@ -287,8 +239,7 @@ def main() -> None:
             with open(args.meta_out, "w") as out:
                 for rows in pool.imap(_meta, [decisions[f] for f in fens], chunksize=4):
                     out.writelines(json.dumps(r) + "\n" for r in rows)
-    done = [a for a in audits if a is not None]
-    report = summarize(done, skipped=len(audits) - len(done))
+    report = summarize(audits)
     args.out.write_text(json.dumps(report, indent=2))
     print(json.dumps(report, indent=2), file=sys.stderr)
 

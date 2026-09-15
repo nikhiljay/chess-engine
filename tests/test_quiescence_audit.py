@@ -1,7 +1,7 @@
 import chess
 
 from chess_nn.decision_data import decision_positions
-from chess_nn.quiescence_audit import INF, audit_decision, harness_evaluated, move_meta, summarize, thresholds
+from chess_nn.quiescence_audit import INF, Shifted, audit_decision, decision_errors, harness_evaluated, move_meta, summarize
 from chess_nn.search_check import search_choice
 
 VALUES = {chess.PAWN: 1, chess.KNIGHT: 3, chess.BISHOP: 3, chess.ROOK: 5, chess.QUEEN: 9, chess.KING: 0}
@@ -18,31 +18,43 @@ def material(board: chess.Board) -> float:
 
 def test_harness_replica_picks_the_search_check_move():
     for fen in FENS:
-        board = chess.Board(fen)
-        chosen, evaluated = harness_evaluated(material, board)
+        chosen, evaluated = harness_evaluated(material, chess.Board(fen))
         assert chosen == search_choice(material, chess.Board(fen))
-        assert evaluated  # every root child not in check is evaluated
+        assert evaluated
 
 
-def test_thresholds_follow_gaps_and_unique_best_lines():
-    # A root child (opponent to move) stands pat at 1 but captures into a line worth 3; the chosen move leads
-    # the runner-up by 2, so the child's value has to rise by more than 2 to change the decision.
-    leaf = {"fen": "leaf", "ply": 2, "stand_pat": -3.0, "children": [], "value": -3.0}
-    child = {"fen": "child", "ply": 1, "stand_pat": 1.0, "children": [leaf], "value": 3.0}
-    out = []
-    thresholds(child, 2.0, INF, out)
-    assert out == [("child", 1, 4.0), ("leaf", 2, 2.0)]
+def test_shifting_the_decisive_leaf_changes_the_choice_and_a_forced_move_never_changes():
+    # White's only legal move is Kh2, so no evaluation error can change it.
+    forced = chess.Board("6r1/8/8/8/8/8/8/k6K w - - 0 1")
+    chosen, evaluated = harness_evaluated(material, forced)
+    assert chosen.uci() == "h1h2"
+    assert set(decision_errors(material, forced, chosen, evaluated).values()) == {INF}
+    # Rook e1 takes the undefended pawn on e5 without giving check (+5 against +4 for quiet moves),
+    # so the quiet child it leads to is kept, evaluated at the root, and decisive at a small error.
+    board = chess.Board("7k/8/8/4p3/8/8/8/K3R3 w - - 0 1")
+    chosen, evaluated = harness_evaluated(material, board)
+    assert chosen.uci() == "e1e5"
+    after = board.copy()
+    after.push(chosen)
+    errors = decision_errors(material, board, chosen, evaluated)
+    assert errors[after.fen()] <= 4.0  # the kept leaf of the chosen move is decisive at a 4-pawn error
 
 
-def test_audit_splits_positions_into_kept_and_dropped():
+def test_shifted_net_moves_only_the_named_position():
+    board = chess.Board(FENS[0])
+    other = chess.Board(FENS[1])
+    shifted = Shifted(material, board.fen(), 2.5)
+    assert shifted(board) == material(board) + 2.5 and shifted(other) == material(other)
+
+
+def test_audit_splits_evaluated_positions_into_kept_and_dropped():
     fen = FENS[0]
     audit = audit_decision(material, fen)
-    kept = set(decision_positions(material, fen)[0])
-    assert audit["kept_positions"] == len(kept)
+    assert audit["kept_positions"] == len(set(decision_positions(material, fen)[0]))
     assert set(audit["roles"]) <= {"kept", "dropped move child", "dropped deeper"}
-    assert len(audit["roles"]["kept"]) >= len(kept)  # a kept position can recur in several trees
-    report = summarize([audit], skipped=0)
-    assert report["roles"]["dropped move child"]["positions"] >= 1  # Qd4's child, searched past to exd4
+    assert sum(len(v) for v in audit["roles"].values()) == audit["evaluated_by_harness"]
+    report = summarize([audit])
+    assert report["decisions"] == 1 and report["kept_positions"] == audit["kept_positions"]
 
 
 def test_move_meta_marks_the_played_move_and_how_its_value_was_reached():
