@@ -23,6 +23,28 @@ from chess_nn.model import EvalNet, count_params, wdl_loss
 from chess_nn.shards import load_shards
 
 PARITY_TOLERANCE = 1e-4
+# Mates further than this many moves share the lowest rung of the mate ladder.
+MATE_LADDER_MOVES = 50
+
+
+def training_targets(
+    scores: np.ndarray,
+    mates: np.ndarray,
+    score_clamp_cp: int,
+    mate_base_cp: int | None = None,
+    mate_step_cp: int = 20,
+) -> np.ndarray:
+    """Centipawn targets: clamp scores; optionally rank mates above the clamp.
+
+    With mate_base_cp set, mate in N becomes ±(mate_base_cp + (50 - N) * mate_step_cp),
+    so a shorter mate always scores higher than a longer one.
+    """
+    targets = np.clip(scores, -score_clamp_cp, score_clamp_cp).astype(np.float32)
+    if mate_base_cp is not None:
+        is_mate = mates != 0
+        distance = np.minimum(np.abs(mates[is_mate].astype(np.int32)), MATE_LADDER_MOVES)
+        targets[is_mate] = np.sign(mates[is_mate]) * (mate_base_cp + (MATE_LADDER_MOVES - distance) * mate_step_cp)
+    return targets
 
 
 def default_device() -> str:
@@ -50,6 +72,8 @@ class TrainConfig:
     seed: int = 0
     wdl_scale_cp: float = 400.0
     score_clamp_cp: int = 2500
+    mate_base_cp: int | None = None
+    mate_step_cp: int = 20
     device: str = field(default_factory=default_device)
     limit: int | None = None
     runs_dir: str = str(RUNS_DIR)
@@ -71,9 +95,9 @@ def run_training(cfg: TrainConfig) -> Path:
     run_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "config.json").write_text(json.dumps(asdict(cfg), indent=2))
 
-    features_np, scores_np, _ = load_shards([Path(p) for p in cfg.shards])
+    features_np, scores_np, mates_np = load_shards([Path(p) for p in cfg.shards])
     if cfg.limit:
-        features_np, scores_np = features_np[: cfg.limit], scores_np[: cfg.limit]
+        features_np, scores_np, mates_np = features_np[: cfg.limit], scores_np[: cfg.limit], mates_np[: cfg.limit]
     n = len(scores_np)
 
     torch.manual_seed(cfg.seed)
@@ -83,8 +107,8 @@ def run_training(cfg: TrainConfig) -> Path:
 
     device = torch.device(cfg.device)
     features = torch.from_numpy(features_np).to(device)
-    clamped = np.clip(scores_np, -cfg.score_clamp_cp, cfg.score_clamp_cp).astype(np.float32)
-    targets = torch.from_numpy(clamped).to(device)
+    targets_np = training_targets(scores_np, mates_np, cfg.score_clamp_cp, cfg.mate_base_cp, cfg.mate_step_cp)
+    targets = torch.from_numpy(targets_np).to(device)
     val_idx, train_idx = val_idx_cpu.to(device), train_idx_cpu.to(device)
 
     model = EvalNet(cfg.hidden, tuple(cfg.head)).to(device)
@@ -159,6 +183,8 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--wdl-scale-cp", type=float, default=400.0)
     parser.add_argument("--score-clamp-cp", type=int, default=2500)
+    parser.add_argument("--mate-base-cp", type=int, help="rank mates above the clamp starting here (default: off)")
+    parser.add_argument("--mate-step-cp", type=int, default=20)
     parser.add_argument("--device", default=default_device())
     parser.add_argument("--limit", type=int)
     args = parser.parse_args()
@@ -181,6 +207,8 @@ def main() -> None:
         seed=args.seed,
         wdl_scale_cp=args.wdl_scale_cp,
         score_clamp_cp=args.score_clamp_cp,
+        mate_base_cp=args.mate_base_cp,
+        mate_step_cp=args.mate_step_cp,
         device=args.device,
         limit=args.limit,
     )
