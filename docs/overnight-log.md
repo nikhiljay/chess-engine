@@ -509,6 +509,31 @@ noted. Full table: `uv run python -m chess_nn.report`.
     Validation loss falls steadily with width but match scores do not
     follow: h8192's +2.2 L1 comes with −2.7 L2 and −2.2 L3, all inside seed
     noise, so no size earns a seed-1 repeat and h1024 stays the default.
+59. **Comparison table and default decision (2026-09-15 13:19).** Matched
+    dev openings; inference timed on a quiet CPU (ONNX Runtime, one thread;
+    play-move includes model load). Move quality from finding 57; mate
+    counts against h1024 and rank-a-h512-w0 are biased by benchmark
+    selection (finding 51). ThreatNet w0.1's 28.7 training minutes include
+    CPU contention.
+
+| run | params | train min | L1 | L2 | L3 | move quality: agree · loss · turning | unseen mate allowed: defensible · lost | held-out pairs (static by kind; after search) | ms/pos ORT b1 / b32 · play-move ms |
+|---|---|---|---|---|---|---|---|---|---|
+| jj6-h1024-s1000-cp20 | 856,161 | 2.8 | 69.8% (92/95/13) | 54.2% (60/97/43) | 29.0% (20/76/104) | 0.358 · 86 cp · 29/981 | 90/109 · 468/621 | mate 0.22 (n=382); tact 0.30 (n=737); mod 0.28 (n=1958); rep 0.12 (n=42); after search 0.18; picks better 9% / worse 68% | 0.128 / 0.037 · 33.3 |
+| rank-a-h512-w0 | 428,643 | 2.8 | 69.2% (91/95/14) | 53.2% (54/105/41) | 29.0% (15/86/99) | 0.364 · 81 cp · 31/981 | 86/109 · 489/621 | mate 0.23 (n=382); tact 0.38 (n=737); mod 0.37 (n=1958); rep 0.48 (n=42); after search 0.30; picks better 15% / worse 38% | 0.068 / 0.018 · 30.4 |
+| rank-a-h512-w05 | 428,643 | 4.8 | 57.0% (68/92/40) | 44.2% (50/77/73) | 18.8% (7/61/132) | — | 70/109 · 398/621 | mate 0.30 (n=382); tact 0.43 (n=737); mod 0.43 (n=1958); rep 0.55 (n=42) | 0.068 / 0.018 · 29.6 |
+| rank-a-h512-w2 | 428,643 | 4.9 | 60.0% (77/86/37) | 42.8% (48/75/77) | 21.8% (17/53/130) | 0.343 · 90 cp · 29/981 | 76/109 · 408/621 | mate 0.30 (n=382); tact 0.44 (n=737); mod 0.45 (n=1958); rep 0.38 (n=42); after search 0.36; picks better 16% / worse 27% | 0.067 / 0.018 · 29.8 |
+| threat-a-h512-t64-w0 | 629,422 | 7.3 | 66.5% (85/96/19) | 49.5% (55/88/57) | 27.0% (15/78/107) | 0.377 · 75 cp · 27/981 | 62/109 · 426/621 | mate 0.22 (n=382); tact 0.49 (n=737); mod 0.43 (n=1958); rep 0.36 (n=42); after search 0.39; picks better 20% / worse 31% | 0.338 / 0.059 · 106.9 |
+| threat-a-h512-t64-w01 | 629,422 | 28.7 | 62.7% (76/99/25) | 51.5% (50/106/44) | 27.0% (17/74/109) | 0.362 · 83 cp · 31/981 | 63/109 · 384/621 | mate 0.25 (n=382); tact 0.52 (n=737); mod 0.48 (n=1958); rep 0.57 (n=42); after search 0.41; picks better 20% / worse 27% | 0.318 / 0.058 · 106.5 |
+| kb-h256-s1000-cp20 | 1,596,583 | 4.5 | 69.5% (101/76/23) | 52.2% (65/79/56) | 33.2% (31/71/98) | — | — | — | 0.063 / 0.083 · 34.0 |
+| cap-h3072-s1000-cp20 | 2,566,243 | 10.8 | 67.0% (90/88/22) | 54.8% (61/97/42) | 25.0% (16/68/116) | — | — | — | 0.399 / 0.106 · 44.2 |
+| cap-h8192-s1000-cp20 | 6,841,443 | 24.9 | 72.0% (105/78/17) | 51.5% (58/90/52) | 26.8% (14/79/107) | — | — | — | 1.025 / 0.284 · 67.6 |
+
+    **No candidate beats the default in matched games; jj6-h1024-s1000-cp20
+    (856,161 params, 0.037 ms/position batched) stays the default.** Every
+    difference is inside seed noise; ranking at w0.5-2 is clearly worse.
+    Capacity lowers validation loss but not match scores at 4.36M positions,
+    at ~9× training time and ~8× batched inference for 6.8M params. Running:
+    bounded rank_b (h1024, score pairs at w0.05, seeds 0-1, matched control).
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
