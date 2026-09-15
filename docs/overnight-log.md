@@ -284,6 +284,12 @@ noted. Full table: `uv run python -m chess_nn.report`.
       best is not one, is a pair regardless of the gap.
     - h1024 L2 alone: 1,380 score pairs — too few; a larger diagnosis
       (1,500 games per level from h1024 and kb-h256, depth 12) is running.
+    - rank_pairs_a (h1024 L2 + L3): 3,104 pairs — 3,057 by score gap, 47 by
+      the repetition rule; 2,786 train / 318 val. Of 746 net moves that
+      repeated a position: 323 were not in a winning position, 232 were
+      already score pairs, 80 matched Stockfish's best, 64 had a child in
+      check or game over, 47 became rule pairs. So ~279 pairs cover winning
+      shuffles and the rest are blunders — consistent with L3's losses.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
