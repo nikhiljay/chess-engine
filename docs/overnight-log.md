@@ -738,6 +738,15 @@ noted. Full table: `uv run python -m chess_nn.report`.
       plies (student, static) vs 54-56 (d9, raw)
     - decision agreement with d9 on the student's own 40 games: 581/1,393
       (41.7%); 40% where the teacher is winning
+    - priced by the teacher (its best move's full-window value minus the
+      student's move's): median cost 0.13 pawns, mean 0.73; 57% of decisions
+      cost ≤0.25, 4% cost >3. Big errors concentrate where the teacher is
+      winning (44 of 57; 6% of those decisions vs 2% when level), and 23 of
+      40 games contain at least one, a median of 2 each. So most
+      disagreement is harmless preference, and outright blunders are too few
+      to explain a 56% → 94% gap on their own: the rest is small, persistent
+      misvaluation in won positions, which a per-position cost cannot price
+      because the teacher scores leaves without game history either.
     Depth-1 + quiescence wins these games outright when the leaf values are
     accurate, so search depth is not the binding constraint, and neither is
     the target clamp at L2. Conversion follows leaf accuracy with no
