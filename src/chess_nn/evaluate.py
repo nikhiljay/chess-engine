@@ -35,6 +35,10 @@ def tag_for(openings: Path, official: bool) -> str:
 def run_compete(model: Path, level: int, openings: Path, json_path: Path) -> dict:
     if not COMPETE_BIN.exists():
         raise FileNotFoundError(f"{COMPETE_BIN} missing; run `cargo build --release -p cli` in {HARNESS_ROOT}")
+    # compete silently falls back to the start position for every game when the
+    # openings file is missing, so fail loudly instead.
+    if not openings.exists():
+        raise FileNotFoundError(f"openings file {openings} does not exist")
     json_path.parent.mkdir(parents=True, exist_ok=True)
     json_path.unlink(missing_ok=True)
     cmd = [
