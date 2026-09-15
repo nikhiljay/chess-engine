@@ -7,7 +7,10 @@
                "rank_batch_size": 4096},
   "runs": [
     {"name": "rank-b-h512-w0", "rank_weight": 0.0},
-    {"name": "rank-b-h512-w05", "rank_weight": 0.5},
-    {"name": "rank-b-h512-w2", "rank_weight": 2.0}
+    {"name": "rank-b-h512-w005", "rank_weight": 0.05},
+    {"name": "rank-b-h512-w02", "rank_weight": 0.2},
+    {"name": "rank-b-threat64-w0", "threat_hidden": 64, "rank_weight": 0.0},
+    {"name": "rank-b-threat64-w005", "threat_hidden": 64, "rank_weight": 0.05},
+    {"name": "rank-b-threat64-w02", "threat_hidden": 64, "rank_weight": 0.2}
   ]
 }

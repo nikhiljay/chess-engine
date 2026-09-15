@@ -290,6 +290,19 @@ noted. Full table: `uv run python -m chess_nn.report`.
       already score pairs, 80 matched Stockfish's best, 64 had a child in
       check or game over, 47 became rule pairs. So ~279 pairs cover winning
       shuffles and the rest are blunders — consistent with L3's losses.
+40. **Ranking objective, first try (rank_a, h512 s1000 cp 0.2, 2,786 train
+    pairs): play gets clearly worse.** Control w0 (identical to
+    jj6-h512-s1000-cp20): L1 69.2 / L2 53.2 / L3 29.0, held-out pair
+    accuracy 0.52 → 0.36 over training. w0.5: 57.0 / 44.2 / 18.8, accuracy
+    0.46. w2: 60.0 / 42.8 / 21.8, accuracy 0.48. The loss drops 9-13 points
+    at every level and held-out accuracy stays below 0.5, so it memorizes
+    the pairs without generalizing, and at w >= 0.5 it outweighs the score
+    losses (train loss ~0.36 vs rank ~0.7·w). The control shows the base net
+    prefers the worse child in 64% of these pairs — they are real blind
+    spots. Most pairs are blunders whose refutation is a tactic the static
+    features do not expose, so next: many more pairs (diagnosis_b), much
+    smaller weights (0.05, 0.2), and ThreatNet's attack/threat inputs, with
+    and without ranking (`sweeps/threat_a.json`, `sweeps/rank_b.json`).
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
