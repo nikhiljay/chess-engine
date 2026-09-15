@@ -20,6 +20,7 @@ from chess_nn.encoding import dense_from_sparse, dense_numpy
 from chess_nn.export import export_onnx, parity_check, sanity_checks, validate_with_harness
 from chess_nn.harness import RUNS_DIR, SHARDS_DIR
 from chess_nn.model import EvalNet, count_params, wdl_loss
+from chess_nn.shaping import progress_bonus
 from chess_nn.shards import load_shards
 
 PARITY_TOLERANCE = 1e-4
@@ -33,17 +34,29 @@ def training_targets(
     score_clamp_cp: int,
     mate_base_cp: int | None = None,
     mate_step_cp: int = 20,
+    features: np.ndarray | None = None,
+    shaping_threshold_cp: int | None = None,
+    shaping_pawn_cp: int = 10,
+    shaping_trade_cp: int = 4,
+    shaping_mopup_cp: int = 15,
 ) -> np.ndarray:
-    """Centipawn targets: clamp scores; optionally rank mates above the clamp.
+    """Centipawn targets: clamp scores; optionally rank mates and shape won positions.
 
     With mate_base_cp set, mate in N becomes ±(mate_base_cp + (50 - N) * mate_step_cp),
-    so a shorter mate always scores higher than a longer one.
+    so a shorter mate always scores higher than a longer one. With
+    shaping_threshold_cp set, non-mate positions at least that lopsided get a
+    progress bonus for the winning side (see chess_nn.shaping).
     """
     targets = np.clip(scores, -score_clamp_cp, score_clamp_cp).astype(np.float32)
     if mate_base_cp is not None:
         is_mate = mates != 0
         distance = np.minimum(np.abs(mates[is_mate].astype(np.int32)), MATE_LADDER_MOVES)
         targets[is_mate] = np.sign(mates[is_mate]) * (mate_base_cp + (MATE_LADDER_MOVES - distance) * mate_step_cp)
+    if shaping_threshold_cp is not None:
+        won = (np.abs(scores.astype(np.int32)) >= shaping_threshold_cp) & (mates == 0)
+        stm_winning = scores[won] > 0
+        bonus = progress_bonus(features[won], stm_winning, shaping_pawn_cp, shaping_trade_cp, shaping_mopup_cp)
+        targets[won] += np.where(stm_winning, bonus, -bonus)
     return targets
 
 
@@ -74,6 +87,10 @@ class TrainConfig:
     score_clamp_cp: int = 2500
     mate_base_cp: int | None = None
     mate_step_cp: int = 20
+    shaping_threshold_cp: int | None = None
+    shaping_pawn_cp: int = 10
+    shaping_trade_cp: int = 4
+    shaping_mopup_cp: int = 15
     device: str = field(default_factory=default_device)
     limit: int | None = None
     runs_dir: str = str(RUNS_DIR)
@@ -107,7 +124,18 @@ def run_training(cfg: TrainConfig) -> Path:
 
     device = torch.device(cfg.device)
     features = torch.from_numpy(features_np).to(device)
-    targets_np = training_targets(scores_np, mates_np, cfg.score_clamp_cp, cfg.mate_base_cp, cfg.mate_step_cp)
+    targets_np = training_targets(
+        scores_np,
+        mates_np,
+        cfg.score_clamp_cp,
+        cfg.mate_base_cp,
+        cfg.mate_step_cp,
+        features=features_np,
+        shaping_threshold_cp=cfg.shaping_threshold_cp,
+        shaping_pawn_cp=cfg.shaping_pawn_cp,
+        shaping_trade_cp=cfg.shaping_trade_cp,
+        shaping_mopup_cp=cfg.shaping_mopup_cp,
+    )
     targets = torch.from_numpy(targets_np).to(device)
     val_idx, train_idx = val_idx_cpu.to(device), train_idx_cpu.to(device)
 
