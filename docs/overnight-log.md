@@ -34,7 +34,19 @@ noted. Full table: `uv run python -m chess_nn.report`.
    h128-s400 56.5% / 41.8%, no gain, so width matters once data grows.
    Train/val gap nearly closed (0.0087 / 0.0092). Repetition still ~38% of
    games, with 56 (L1) and 37 (L2) of them the net ahead by its own eval.
-7. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
+7. **Capacity gains get absorbed by repetition.** On June shards 0-3:
+   h256 seed1 L1 63.7% / L2 46.0%; h512 (429k params) 63.7 / 49.8;
+   h256 40 epochs 63.2 / 47.2. Bigger or longer-trained nets cut losses
+   (L1 34 → 21-25, L2 71 → 49-55) but those games become repetition draws
+   (L1 76 → 95-103) with the net ahead in 64-71 of them. L1 is capped near
+   64% until conversion is fixed; h512 converting its "winning" repetitions
+   would score ~81%.
+8. **Progress shaping (in progress):** `chess_nn/shaping.py` adds a
+   winning-side bonus to non-mate targets with |score| ≥ 300 cp: 10 cp per
+   pawn rank advanced, 4 cp per point of material traded off, and 15 cp per
+   step of mop-up (losing king to the edge, kings close) once the loser has
+   no pawns and ≤ a rook. Sweep: `sweeps/june4_shaped.json` (s400, s1000).
+9. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
 ## In progress at time of writing
