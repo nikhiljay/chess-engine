@@ -156,6 +156,12 @@ noted. Full table: `uv run python -m chess_nn.report`.
     losses 30 → 19 — the same L1 pattern as h512 (losses 25 → 19), so the L1
     gain holds across two widths. L2 again does not improve: 122 draws,
     repetition-while-winning 56 → 80.
+23. **Loop parents for a ranking diagnostic.** `datagen --emit parents`
+    writes the positions the net moved from in loops instead of their
+    children. loopa-h512 vs L1, 100 games: 30 loops → 180 unique parents
+    (6 per loop), 6 in check, 32.5 legal moves on average. Next: on one
+    parent set, compare each model's harness move with Stockfish's top moves
+    to test whether the net picks draw-ish moves when a winning one exists.
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
