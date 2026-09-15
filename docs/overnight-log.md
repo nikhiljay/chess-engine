@@ -659,6 +659,27 @@ noted. Full table: `uv run python -m chess_nn.report`.
     models — seeds of one recipe differ from 0 to 1.5 at L2 — but it shows
     what a server pass takes: two wins in a row, where a repetition draw is
     as fatal as a loss. st-h128 won all four of its L1-L2 games by mate.
+65. **Distance-to-mate playout labels cut repetition but lose more games
+    (conv_a, 2026-09-15).** Premise: h1024's recorded L2 games reach a
+    Stockfish-winning position in 54% of all games and fail to win them
+    (finding 38), and no label source so far rises as mate approaches.
+    `chess_nn.playouts`: 13,376 clearly winning positions (best ≥ +500)
+    from training-source games the net did not win, played out by
+    Stockfish depth 8 with game history (12,809 end in mate, median 69
+    plies); each quiet position labeled with Stockfish's score plus 15 cp
+    per ply inside the last 100 plies before mate, clamp 2500. 747,088
+    positions (14.6% of the mix; median |label| 1,613 cp; 4 min CPU;
+    +17% optimizer steps). Same h1024 recipe, seed 0, against
+    jj6-h1024-s1000-cp20:
+    - L1 67.5 (96/78/26) vs 69.8 (92/95/13): −0.023 ± 0.032
+    - L2 49.5 (63/72/65) vs 54.2 (60/97/43): −0.048 ± 0.037; repetition
+      draws 71 vs 97, repetitions while winning 45 vs 70
+    - L3 24.5 (16/66/118) vs 29.0 (20/76/104): −0.045 ± 0.031
+    - start position (2 games per level): L1 1/2, L2 0.5/2, L3 0/2
+    The first intervention to cut winning repetitions clearly (−25 at L2),
+    but only 3 became wins and losses rose by 22. Progress shaping
+    (finding 29) and king buckets (finding 32) showed the same trade. Not
+    replicated or expanded.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
