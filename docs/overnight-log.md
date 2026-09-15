@@ -224,6 +224,36 @@ noted. Full table: `uv run python -m chess_nn.report`.
     harness-counted params, h256 ≈ 1.6M. Tests: zero deltas equal EvalNet,
     ONNX parity, harness validation and param count
     (`tests/test_king_buckets.py`). First sweep: `sweeps/kb1.json`.
+32. **King buckets: no overall gain.** s1000 on June 0-3 + July 0-1:
+    kb-h512 + cp 0.2 L1 67.8% / L2 51.2% (L2 W/D/L 66/73/61);
+    kb-h256 + cp 0.2 69.5 / 52.2 (65/79/56); kb-h512 + cp 0.1 66.5 / 50.0.
+    Mean 67.9 / 51.1 against ~70 / 51-54 without buckets. Buckets convert
+    more L2 wins (repetition-while-winning 41-51 in two runs) but lose more
+    games (56-61 L2 losses) — the losses are tactical, which king-relative
+    piece weights do not address.
+33. **Goal is now Level 3 (2026-09-15).** Every candidate is graded on L1-L3
+    (`sweeps/grade_l3.json` grades the best existing runs). The L3 bot
+    searches depth 3 with TT/PVS/null-move over a full handcrafted eval
+    (tapered PSTs, mobility, king-attack count, pawn shield, passed pawns,
+    structure, bishop pair, rook files). compete logs keep only per-game
+    results, so losing positions need our own game records.
+    Data: self-play from jj6-h1024-s1000-cp20 against L2 and L3 (12k games
+    each, 10% random moves, `data/selfplay_{L2,L3}_b.txt`), labeled first,
+    then the remaining human shards.
+34. **Level 3 baseline: ~29%.** jj6-h1024-s1000-cp20 58/200 (29%, 235 s);
+    jj6-h512-s1000-cp10-seed1 56/200 (28%). Passing needs 140/200.
+35. **Diagnosis with game history (user's plan, 2026-09-15).** Finding 24
+    gave Stockfish loop positions without the game, so a shuffle back into
+    a repeated position looked as good as progress. `datagen --record` now
+    writes whole games; `chess_nn.diagnose` replays each with
+    `position fen <start> moves ...` so Stockfish scores repetitions as
+    draws, and reports repetition draws the net really had won, the move
+    where the win slipped (and whether it repeated a position), and each
+    loss's biggest drop. Games use random training openings; the dev
+    openings stay for measurement. Next: a ranking objective on those
+    decisions (good continuation vs the tempting move), then capacity.
+    ThreatNet (in-graph attack/threat features, `threat_hidden`) is written
+    and tested but parked until the ranking signal is measured.
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 

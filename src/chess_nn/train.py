@@ -18,8 +18,8 @@ import torch
 
 from chess_nn.encoding import dense_from_sparse, dense_numpy
 from chess_nn.export import export_onnx, parity_check, sanity_checks, validate_with_harness
-from chess_nn.harness import RUNS_DIR, SHARDS_DIR
-from chess_nn.model import EvalNet, KingBucketNet, count_params, cp_loss, wdl_loss
+from chess_nn.harness import RUNS_DIR, SHARDS_DIR, VALIDATE_MODEL, load_harness_tool
+from chess_nn.model import EvalNet, KingBucketNet, ThreatNet, count_params, cp_loss, wdl_loss
 from chess_nn.shaping import progress_bonus
 from chess_nn.shards import load_shards
 
@@ -97,6 +97,8 @@ class TrainConfig:
     cp_loss_clip_pawns: float = 50.0
     # Feature transformer chosen by each side's own king square (model.KingBucketNet).
     king_buckets: bool = False
+    # Width of the attack/threat feature transformer (model.ThreatNet); 0 = off.
+    threat_hidden: int = 0
     device: str = field(default_factory=default_device)
     limit: int | None = None
     runs_dir: str = str(RUNS_DIR)
@@ -145,8 +147,12 @@ def run_training(cfg: TrainConfig) -> Path:
     targets = torch.from_numpy(targets_np).to(device)
     val_idx, train_idx = val_idx_cpu.to(device), train_idx_cpu.to(device)
 
-    model_class = KingBucketNet if cfg.king_buckets else EvalNet
-    model = model_class(cfg.hidden, tuple(cfg.head)).to(device)
+    if cfg.threat_hidden:
+        model = ThreatNet(cfg.hidden, tuple(cfg.head), cfg.threat_hidden).to(device)
+    elif cfg.king_buckets:
+        model = KingBucketNet(cfg.hidden, tuple(cfg.head)).to(device)
+    else:
+        model = EvalNet(cfg.hidden, tuple(cfg.head)).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=cfg.lr, weight_decay=cfg.weight_decay)
     steps_per_epoch = math.ceil(len(train_idx) / cfg.batch_size)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=cfg.epochs * steps_per_epoch)
@@ -192,7 +198,7 @@ def run_training(cfg: TrainConfig) -> Path:
     sanity = sanity_checks(onnx_path)
 
     summary = {
-        "params": model.exported_params() if isinstance(model, KingBucketNet) else count_params(model),
+        "params": load_harness_tool(VALIDATE_MODEL, "validate_model").count_onnx_params(str(onnx_path)),
         "positions": n,
         "final_train_loss": metrics[-1]["train_loss"],
         "final_val_loss": metrics[-1]["val_loss"],

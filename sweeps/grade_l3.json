@@ -1,0 +1,13 @@
+{
+  "shards": ["data/shards/shard_0000.npz"],
+  "levels": [1, 2, 3],
+  "openings": "data/dev_openings_100.txt",
+  "defaults": {},
+  "runs": [
+    {"name": "jj6-h1024-s1000-cp20"},
+    {"name": "jj6-h512-s1000-cp10-seed1"},
+    {"name": "jj6-h512-s1000-cp10"},
+    {"name": "kb-h256-s1000-cp20"},
+    {"name": "kb-h512-s1000-cp20"}
+  ]
+}

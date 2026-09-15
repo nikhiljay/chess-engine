@@ -26,5 +26,19 @@
       "repetition": 101
     },
     "repetition_while_winning": 66
+  },
+  {
+    "level": 3,
+    "score": 56.0,
+    "score_pct": 28.0,
+    "wins": 23,
+    "draws": 66,
+    "losses": 111,
+    "passed": false,
+    "end_reasons": {
+      "repetition": 66,
+      "checkmate": 134
+    },
+    "repetition_while_winning": 32
   }
 ]

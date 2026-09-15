@@ -4,6 +4,7 @@ import torch
 from torch import nn
 
 from chess_nn.encoding import HALF_SIZE
+from chess_nn.threats import GEOMETRY_NAMES, THREAT_FEATURES, geometry, threat_features
 
 
 class EvalNet(nn.Module):
@@ -95,6 +96,38 @@ class KingBucketNet(EvalNet):
         head = sum(p.numel() for module in (*self.head, self.out) for p in module.parameters())
         # bucket weights and biases, the 64-entry bucket map, 4 index constants, 2 split sizes
         return self.num_buckets * (HALF_SIZE + 1) * self.hidden + head + 64 + 4 + 2
+
+
+class ThreatNet(EvalNet):
+    """EvalNet plus a second feature transformer over attack and threat features.
+
+    Each perspective's accumulator is [clamp(ft(half)), clamp(threat_ft(threat_features(half)))];
+    the fixed attack geometry lives in non-persistent buffers (chess_nn.threats).
+    """
+
+    def __init__(self, hidden: int = 256, head: tuple[int, ...] = (32, 32), threat_hidden: int = 64) -> None:
+        super().__init__(hidden, head)
+        self.threat_hidden = threat_hidden
+        self.threat_ft = nn.Linear(THREAT_FEATURES, threat_hidden)
+        sizes = [2 * (hidden + threat_hidden), *head]
+        self.head = nn.ModuleList(nn.Linear(a, b) for a, b in zip(sizes, sizes[1:]))
+        self.out = nn.Linear(sizes[-1], 1)
+        for name, matrix in geometry().items():
+            self.register_buffer(name, torch.from_numpy(matrix), persistent=False)
+
+    def geometry_tensors(self) -> dict[str, torch.Tensor]:
+        return {name: getattr(self, name) for name in GEOMETRY_NAMES}
+
+    def transform(self, half: torch.Tensor) -> torch.Tensor:
+        base = torch.clamp(self.ft(half), 0.0, 1.0)
+        threats = torch.clamp(self.threat_ft(threat_features(half, self.geometry_tensors())), 0.0, 1.0)
+        return torch.cat([base, threats], dim=1)
+
+    def forward(self, board: torch.Tensor) -> torch.Tensor:
+        x = torch.cat([self.transform(board[:, :HALF_SIZE]), self.transform(board[:, HALF_SIZE:])], dim=1)
+        for layer in self.head:
+            x = torch.relu(layer(x))
+        return self.out(x)
 
 
 def count_params(model: nn.Module) -> int:
