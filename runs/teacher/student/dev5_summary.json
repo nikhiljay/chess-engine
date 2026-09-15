@@ -1,0 +1,15 @@
+[
+  {
+    "level": 2,
+    "score": 22.5,
+    "score_pct": 56.2,
+    "wins": 11,
+    "draws": 23,
+    "losses": 6,
+    "passed": false,
+    "end_reasons": {
+      "checkmate": 17,
+      "repetition": 23
+    }
+  }
+]

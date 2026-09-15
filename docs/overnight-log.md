@@ -717,6 +717,38 @@ noted. Full table: `uv run python -m chess_nn.report`.
     promoted, not expanded. Across findings 29, 32, 65 and 66 the
     interventions move games between draws and decisive results without
     raising points.
+67. **Teacher versus student: the search is not the limit, leaf accuracy is
+    (2026-09-15).** `datagen/src/bin/teacher.rs` ports NnEvalBot's reference
+    search line for line (depth 1 + quiescence, same constants, ordering and
+    tie-breaks) and swaps only the evaluator, every arm in pawns from the
+    side to move. Verified before use: 7,037/7,037 net moves reproduced
+    across h1024's 200 recorded dev L2 games, and 8/8 freshly played games
+    identical to compete's recordings. 20 dev openings x both colours at L2
+    (40 games), paired against h1024's recorded games on the same openings
+    (student 56.2%, 11/23/6):
+    - d9 (Stockfish depth 9 under our training transform: clamp ±2500 cp,
+      mate → ±25 pawns): 93.8% (35/5/0), +0.375 ± 0.067,
+      CI [+0.244, +0.506], 14 openings better, 0 worse
+    - raw (same search, unclamped, mate distance kept): 96.2% (37/3/0),
+      +0.400 ± 0.061, CI [+0.28, +0.52], 16/0. Against d9: +0.025 ± 0.017,
+      CI [−0.009, +0.059] — no evidence the clamp costs anything here.
+    - static (Stockfish's static eval, negated for Black): 68.8% (17/21/2),
+      +0.125 ± 0.064, CI [−0.001, +0.251], 11 better / 4 worse
+    - repetition draws: student 23, static 21, d9 5, raw 3; median game 66
+      plies (student, static) vs 54-56 (d9, raw)
+    - decision agreement with d9 on the student's own 40 games: 581/1,393
+      (41.7%); 40% where the teacher is winning
+    Depth-1 + quiescence wins these games outright when the leaf values are
+    accurate, so search depth is not the binding constraint, and neither is
+    the target clamp at L2. Conversion follows leaf accuracy with no
+    progress term, no history and no king buckets, which is why shaping
+    (29), king buckets (32), conv_a (65) and tact_a (66) moved behaviour
+    without adding points. The teacher is a diagnostic, not a candidate
+    (~15 ms/position, not a net). Stockfish's own static evaluation gains
+    far less than its searched scores, so what plays well here is the
+    searched score — that says our student is far from reproducing the
+    target it is already trained on, not that a static net cannot learn it.
+    Scope: L2, 40 games, one opening subset, one deterministic baseline.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
