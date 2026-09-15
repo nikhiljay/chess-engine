@@ -2,13 +2,15 @@
 
 Usage:
   uv run python -m chess_nn.train --name v1-h256 --epochs 30
+  uv run python -m chess_nn.train --name h128-s800 --hidden 128 --head none \
+      --wdl-scale-cp 800 --shards data/shards/shard_0000.npz
 """
 
 import argparse
 import json
 import math
 import time
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 import numpy as np
@@ -27,31 +29,40 @@ def default_device() -> str:
     return "mps" if torch.backends.mps.is_available() else "cpu"
 
 
+def parse_head(text: str) -> list[int]:
+    """'32,32' → [32, 32]; '' or 'none' → []."""
+    if text.strip().lower() in ("", "none"):
+        return []
+    return [int(part) for part in text.split(",")]
+
+
 @dataclass
 class TrainConfig:
     name: str
     shards: list[str]
     hidden: int = 256
+    head: list[int] = field(default_factory=lambda: [32, 32])
     epochs: int = 30
     batch_size: int = 16384
     lr: float = 1e-3
     weight_decay: float = 1e-4
     val_frac: float = 0.02
     seed: int = 0
-    device: str = default_device()
+    wdl_scale_cp: float = 400.0
     score_clamp_cp: int = 2500
+    device: str = field(default_factory=default_device)
     limit: int | None = None
     runs_dir: str = str(RUNS_DIR)
 
 
 @torch.no_grad()
-def _loss_over(model, features, targets, indices, batch_size) -> float:
+def _loss_over(model, features, targets, indices, batch_size, scale_cp) -> float:
     model.eval()
     total = torch.zeros((), device=features.device)
     for start in range(0, len(indices), batch_size):
         batch = indices[start : start + batch_size]
         out = model(dense_from_sparse(features[batch])).squeeze(1)
-        total += wdl_loss(out, targets[batch]) * len(batch)
+        total += wdl_loss(out, targets[batch], scale_cp) * len(batch)
     return total.item() / len(indices)
 
 
@@ -76,7 +87,7 @@ def run_training(cfg: TrainConfig) -> Path:
     targets = torch.from_numpy(clamped).to(device)
     val_idx, train_idx = val_idx_cpu.to(device), train_idx_cpu.to(device)
 
-    model = EvalNet(cfg.hidden).to(device)
+    model = EvalNet(cfg.hidden, tuple(cfg.head)).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=cfg.lr, weight_decay=cfg.weight_decay)
     steps_per_epoch = math.ceil(len(train_idx) / cfg.batch_size)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=cfg.epochs * steps_per_epoch)
@@ -91,14 +102,15 @@ def run_training(cfg: TrainConfig) -> Path:
         total = torch.zeros((), device=device)
         for s in range(0, len(order), cfg.batch_size):
             batch = order[s : s + cfg.batch_size]
-            loss = wdl_loss(model(dense_from_sparse(features[batch])).squeeze(1), targets[batch])
+            out = model(dense_from_sparse(features[batch])).squeeze(1)
+            loss = wdl_loss(out, targets[batch], cfg.wdl_scale_cp)
             optimizer.zero_grad(set_to_none=True)
             loss.backward()
             optimizer.step()
             scheduler.step()
             total += loss.detach() * len(batch)
         train_loss = total.item() / len(order)
-        val_loss = _loss_over(model, features, targets, val_idx, cfg.batch_size)
+        val_loss = _loss_over(model, features, targets, val_idx, cfg.batch_size, cfg.wdl_scale_cp)
         metrics.append({
             "epoch": epoch,
             "train_loss": train_loss,
@@ -120,6 +132,7 @@ def run_training(cfg: TrainConfig) -> Path:
 
     summary = {
         "params": count_params(model),
+        "positions": n,
         "final_train_loss": metrics[-1]["train_loss"],
         "final_val_loss": metrics[-1]["val_loss"],
         "harness_validation": valid,
@@ -136,29 +149,37 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--name", required=True)
     parser.add_argument("--shard-dir", type=Path, default=SHARDS_DIR)
+    parser.add_argument("--shards", type=Path, nargs="+", help="explicit shard files (overrides --shard-dir)")
     parser.add_argument("--hidden", type=int, default=256)
+    parser.add_argument("--head", default="32,32", help="hidden widths after the accumulator, or 'none'")
     parser.add_argument("--epochs", type=int, default=30)
     parser.add_argument("--batch-size", type=int, default=16384)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--wdl-scale-cp", type=float, default=400.0)
     parser.add_argument("--score-clamp-cp", type=int, default=2500)
     parser.add_argument("--device", default=default_device())
     parser.add_argument("--limit", type=int)
     args = parser.parse_args()
 
-    shards = sorted(str(p) for p in args.shard_dir.glob("shard_*.npz") if ".tmp" not in p.name)
+    if args.shards:
+        shards = [str(p) for p in args.shards]
+    else:
+        shards = sorted(str(p) for p in args.shard_dir.glob("shard_*.npz") if ".tmp" not in p.name)
     if not shards:
         raise SystemExit(f"no shards found in {args.shard_dir}")
     cfg = TrainConfig(
         name=args.name,
         shards=shards,
         hidden=args.hidden,
+        head=parse_head(args.head),
         epochs=args.epochs,
         batch_size=args.batch_size,
         lr=args.lr,
         weight_decay=args.weight_decay,
         seed=args.seed,
+        wdl_scale_cp=args.wdl_scale_cp,
         score_clamp_cp=args.score_clamp_cp,
         device=args.device,
         limit=args.limit,

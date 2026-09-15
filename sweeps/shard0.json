@@ -1,0 +1,13 @@
+{
+  "shards": ["data/shards/shard_0000.npz"],
+  "levels": [1, 2],
+  "openings": "data/dev_openings_100.txt",
+  "defaults": {"epochs": 20, "batch_size": 4096},
+  "runs": [
+    {"name": "s0-h256-32x32-s400", "hidden": 256, "head": [32, 32], "wdl_scale_cp": 400},
+    {"name": "s0-h256-32x32-s800", "hidden": 256, "head": [32, 32], "wdl_scale_cp": 800},
+    {"name": "s0-h128-32x32-s400", "hidden": 128, "head": [32, 32], "wdl_scale_cp": 400},
+    {"name": "s0-h128-32x32-s800", "hidden": 128, "head": [32, 32], "wdl_scale_cp": 800},
+    {"name": "s0-h128-none-s800", "hidden": 128, "head": [], "wdl_scale_cp": 800}
+  ]
+}

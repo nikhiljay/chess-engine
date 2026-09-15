@@ -32,12 +32,6 @@ def export_onnx(model: EvalNet, path) -> None:
     initializers = [
         _weight("ft.weight", model.ft.weight),
         _weight("ft.bias", model.ft.bias),
-        _weight("l1.weight", model.l1.weight),
-        _weight("l1.bias", model.l1.bias),
-        _weight("l2.weight", model.l2.weight),
-        _weight("l2.bias", model.l2.bias),
-        _weight("out.weight", model.out.weight),
-        _weight("out.bias", model.out.bias),
         numpy_helper.from_array(np.array([HALF_SIZE, HALF_SIZE], dtype=np.int64), "split_sizes"),
         numpy_helper.from_array(np.array(0.0, dtype=np.float32), "clip_min"),
         numpy_helper.from_array(np.array(1.0, dtype=np.float32), "clip_max"),
@@ -49,12 +43,18 @@ def export_onnx(model: EvalNet, path) -> None:
         helper.make_node("Clip", ["ft_stm", "clip_min", "clip_max"], ["act_stm"]),
         helper.make_node("Clip", ["ft_nstm", "clip_min", "clip_max"], ["act_nstm"]),
         helper.make_node("Concat", ["act_stm", "act_nstm"], ["accumulator"], axis=1),
-        helper.make_node("Gemm", ["accumulator", "l1.weight", "l1.bias"], ["l1_out"], transB=1),
-        helper.make_node("Relu", ["l1_out"], ["l1_act"]),
-        helper.make_node("Gemm", ["l1_act", "l2.weight", "l2.bias"], ["l2_out"], transB=1),
-        helper.make_node("Relu", ["l2_out"], ["l2_act"]),
-        helper.make_node("Gemm", ["l2_act", "out.weight", "out.bias"], ["eval"], transB=1),
     ]
+    x = "accumulator"
+    for i, layer in enumerate(model.head):
+        initializers += [_weight(f"head{i}.weight", layer.weight), _weight(f"head{i}.bias", layer.bias)]
+        nodes += [
+            helper.make_node("Gemm", [x, f"head{i}.weight", f"head{i}.bias"], [f"head{i}_out"], transB=1),
+            helper.make_node("Relu", [f"head{i}_out"], [f"head{i}_act"]),
+        ]
+        x = f"head{i}_act"
+    initializers += [_weight("out.weight", model.out.weight), _weight("out.bias", model.out.bias)]
+    nodes.append(helper.make_node("Gemm", [x, "out.weight", "out.bias"], ["eval"], transB=1))
+
     graph = helper.make_graph(
         nodes,
         "chess_nn_eval",

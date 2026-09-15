@@ -1,5 +1,6 @@
 import numpy as np
 import onnx
+import pytest
 import torch
 
 from chess_nn.encoding import dense_numpy, encode_sparse
@@ -9,14 +10,16 @@ from chess_nn.model import EvalNet, count_params
 from conftest import random_positions
 
 
-def test_param_counts_match_spec():
+def test_param_counts():
     assert count_params(EvalNet(256)) == 214_881
     assert count_params(EvalNet(128)) == 108_001
+    assert count_params(EvalNet(128, head=())) == 98_945
 
 
-def test_export_passes_harness_validation(tmp_path):
+@pytest.mark.parametrize("head", [(), (32, 32)])
+def test_export_passes_harness_validation(tmp_path, head):
     torch.manual_seed(0)
-    model = EvalNet(hidden=16)
+    model = EvalNet(hidden=16, head=head)
     path = tmp_path / "model.onnx"
     export_onnx(model, path)
 
@@ -29,9 +32,10 @@ def test_export_passes_harness_validation(tmp_path):
     assert tool.count_onnx_params(str(path)) == count_params(model) + 2
 
 
-def test_onnx_matches_pytorch(tmp_path, rng):
+@pytest.mark.parametrize("head", [(), (32,), (32, 32)])
+def test_onnx_matches_pytorch(tmp_path, rng, head):
     torch.manual_seed(0)
-    model = EvalNet(hidden=64)
+    model = EvalNet(hidden=64, head=head)
     # Push the feature transformer into its active range so clipping is exercised.
     with torch.no_grad():
         model.ft.weight.mul_(20)

@@ -130,6 +130,7 @@ def main() -> None:
     parser.add_argument("--workers", type=int, default=10)
     parser.add_argument("--stockfish", default="stockfish")
     parser.add_argument("--shard-size", type=int, default=SHARD_SIZE)
+    parser.add_argument("--prefix", default="shard", help="shard file prefix; keep it starting with 'shard'")
     parser.add_argument("--limit", type=int, help="only use the first N candidates")
     parser.add_argument("--bench", type=int, help="label N candidates, report throughput, write nothing")
     args = parser.parse_args()
@@ -156,7 +157,7 @@ def main() -> None:
             return
 
         for shard_idx, begin in enumerate(range(0, len(fens), args.shard_size)):
-            path = args.out_dir / f"shard_{shard_idx:04d}.npz"
+            path = args.out_dir / f"{args.prefix}_{shard_idx:04d}.npz"
             chunk = fens[begin : begin + args.shard_size]
             if path.exists():
                 print(f"{path.name}: exists, skipping", file=sys.stderr)

@@ -9,7 +9,8 @@ HARNESS_ROOT = TRAINING_ROOT.parent
 
 DATA_DIR = TRAINING_ROOT / "data"
 SHARDS_DIR = DATA_DIR / "shards"
-DEV_OPENINGS = DATA_DIR / "dev_openings.txt"
+# 100 dev openings (200 games per level). data/dev_openings.txt is the earlier 50-opening set.
+DEV_OPENINGS = DATA_DIR / "dev_openings_100.txt"
 RUNS_DIR = TRAINING_ROOT / "runs"
 
 OFFICIAL_OPENINGS = HARNESS_ROOT / "data" / "openings.txt"
