@@ -424,6 +424,22 @@ noted. Full table: `uv run python -m chess_nn.report`.
     reliably; ThreatNet w0's lower defensible rate is ~2 SE at n=70, and
     lost-position rates are indistinguishable. Treated as a small, secondary
     signal (5-10% of decisive errors).
+52. **Static rankings partly fail to survive the search (search_check on a
+    stratified b_val sample: 1,068 pairs incl. all 326 decisive and 42
+    repetition).** static accuracy → accuracy after quiescence; play-move
+    chose better / worse / other:
+    - jj6-h1024-s1000-cp20: 0.291 → 0.185; 9% / 68% / 23% (its own games'
+      mistakes dominate the sample)
+    - rank-a-h512-w0: 0.365 → 0.301; 15% / 38% / 47% (decisive 14% / 37% / 49%)
+    - rank-a-h512-w2: 0.424 → 0.364; 16% / 27% / 57% (decisive 16% / 25% / 59%)
+    Rankings right statically but wrong after quiescence outnumber the
+    reverse ~2.5:1 (109 vs 40-45), because captures in the search replace the
+    child position with a quiescence leaf. Ranking cut "chose the worse
+    move" from 38% to 27% (decisive 37% → 25%) but "chose Stockfish's
+    better move" stayed ~15% — it moved choices to other moves, whose
+    quality is not yet measured. Mate-in-one pairs survive least (search
+    accuracy 0.03-0.14): the bad move is usually a capture that quiescence
+    scores as winning material. ThreatNet results pending.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
