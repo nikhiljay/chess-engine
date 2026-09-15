@@ -575,6 +575,42 @@ noted. Full table: `uv run python -m chess_nn.report`.
     model passing L2 must come from data, training or details its name does
     not show, not from this architecture on our data. h1024 stays the
     default; no follow-up on the small architecture without new evidence.
+62. **Why rank_b lost games: compact failure analysis (2026-09-15).** Same
+    1,500 held-out decisions (h1024 games, never in pair training), each
+    model choosing through play-move, Stockfish d12 with history
+    (`chess_nn.rank_failure`, `chess_nn.paired decisions`):
+    - Turning moves did not rise overall: seed 0 introduced 25 and
+      prevented 16 (sign test p 0.21), seed 1 introduced 14 and prevented 19
+      (p 0.49), pooled 39 vs 35. Two plain h1024 seeds give 15 vs 13, change
+      666/1,500 choices (44%) and differ by −7.6 ± 3.6 cp mean loss. rank_b
+      changed 830 and 842 choices (55-56%) with +5.1 ± 4.1 and +12.9 ± 4.1
+      cp mean loss. So the ranking loss perturbed ordinary choices a little
+      more than a reseed does, but this fixed sample, drawn from the
+      control's own games, shows nothing like the −0.12 points per game
+      the games show: the losses come from positions the ranking model
+      reaches in its own games. Matched decisions are a weak instrument;
+      games decide.
+    - Where the 39 new turning moves arose: 26 before quiescence (the
+      losing move's value was the candidate's static eval of its quiet
+      child), 11 on a capture line's leaf, 2 in check. 24 of the 26 are
+      refuted by a quiet move or quiet check that no capture search sees
+      (e.g. Rf5?? c6b4 in r1bk3r/1ppp2pp/2n5/pN1N4/P2P2pq/BQ2P1b1/B2K4/5R2
+      w; h3?? Qh2+ in r6r/1pp2kpp/4p3/p3qp2/P1B3n1/1P2P3/R2P1PPP/1Q3RK1 w).
+      The play-move replica matched 38/39 choices.
+    - What changed: the controls preferred the safe move by a median
+      1.4/1.1 pawns, the candidates the losing move by 0.85/0.87. Seed 0
+      mostly underrated the safe move (16 of 25; median safe-move shift
+      −1.9 pawns, up to −9), seed 1 split 7/7. Shifts of several pawns on
+      positions the pairs never contained show the pairwise loss moving
+      absolute evaluations it had no target for, while the WDL/cp targets
+      alone anchor them.
+    To avoid repeating it: the errors that decide games are static evals of
+    quiet children refuted by quiet moves, so the signal has to reach those
+    positions as absolute targets on the leaves search actually evaluates,
+    not as orderings of children whose absolute values then drift; and
+    any such change is judged by games from its own play. The targeted-data
+    experiment (decision_data keeps exactly those leaves, labeled like
+    broad data) follows from this; no ranking variant does.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
