@@ -203,6 +203,13 @@ noted. Full table: `uv run python -m chess_nn.report`.
     Next: `sweeps/jj6_shape2.json` — progress shaping (finding 8) retried at
     3-7× the bonuses on top of s1000 + cp 0.2, where the pawn loss keeps
     gradient in won positions.
+29. **Strong progress shaping hurts, even with the pawn loss.** On s1000 +
+    cp 0.2 (unshaped seeds mean L1 70.0 / L2 51.2): mid bonuses (pawn 40,
+    trade 15, mop-up 50 cp, threshold 300) 67.2 / 48.5 and 66.5 / 46.2
+    (mean 66.9 / 47.4); strong (80 / 30 / 100) 60.2 / 42.5. Repetition-
+    while-winning drops only slightly (L2 67-70 → 56-59) while losses rise
+    (L2 41-51 → 57-74): the bonus makes the net overvalue pawn pushes and
+    trades. Shaping is ruled out.
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
@@ -223,10 +230,17 @@ noted. Full table: `uv run python -m chess_nn.report`.
 
 ## Next steps after the interruption
 
-**Updated 2026-09-15 midday. Leaderboard #1 is not beaten yet.** Best dev
-results (200 games per level): `jj6-h512-s400` (June 0-3 + July 0-1, 4.36M)
-L1 65.2% / L2 50.0%; `j4-h512-32x32-s400` 63.7 / 49.8. No model has reached
-70% on dev L1, so no official run has been made.
+**Updated 2026-09-15 afternoon (findings 26-29). Leaderboard #1 is not
+beaten yet.** Best recipe: h512 on June 0-3 + July 0-1 (4.36M) with WDL scale
+1000 and `cp_loss_weight` 0.1-0.2 — seed means L1 70.0 / L2 51.2 (cp 0.2) and
+67.9 / 54.0 (cp 0.1), against 65.2 / 50.0 at scale 400. Candidate 2 below
+worked modestly; candidate 3 (strong shaping) failed; width (h1024) adds
+little. L2 is the gap: ~70 of 200 L2 games are still repetition draws the
+net thinks it is winning. Work is paused pending candidate 1.
+
+Earlier state (midday): `jj6-h512-s400` (June 0-3 + July 0-1, 4.36M) L1
+65.2% / L2 50.0%; `j4-h512-32x32-s400` 63.7 / 49.8. No official run has been
+made.
 
 Ruled out since the interruption (findings 15-25): more human data (July),
 the Lichess eval database whole or endgames-only, and loop-children
