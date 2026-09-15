@@ -35,7 +35,9 @@ noted. Full table: `uv run python -m chess_nn.report`.
 ## In progress at time of writing
 
 - June labeling (`data/candidates.txt`, 6.84M candidates → ~5M positions):
-  shards land in `data/shards/shard_000N.npz`.
+  shards land in `data/shards/shard_000N.npz`. **Stopped deliberately after
+  shard_0003 (~2.9M positions)** at 23:24 to give self-play labeling the CPU
+  before the interruption; resume picks up at shard_0004.
 - Self-play positions (`data/selfplay_L2_a.txt`, 212,568 FENs from
   m2a-h256-shard0 vs Level 2 with 10% random moves), labeled with depth 9 +
   depth-14 re-search when |score| ≥ 600 → `data/shards_selfplay/`.
