@@ -393,6 +393,24 @@ noted. Full table: `uv run python -m chess_nn.report`.
     loss. After re-filtering against the completed diagnoses:
     `data/mate_bench_heldout.jsonl`. Allowance rates are reported for
     defensible and lost positions separately.
+50. **rank_pairs_b (all four diagnoses).** 30,297 pairs — 3,385 mate_in_one,
+    26,591 score, 321 repetition; 3,292 decisive (defensible → losing).
+    Train 27,178 (2,966 decisive); val 3,119 (382 mate, 737 tactical score
+    ≥300 cp, 1,958 moderate, 42 repetition; 326 decisive). Games that fed
+    rank_pairs_a land in the same split (the split hashes the game key), so
+    b_val is held out for every run so far. Static pair accuracy on b_val
+    (mate / tactical / moderate / repetition / all):
+    - jj6-h1024-s1000-cp20 (default): 0.223 / 0.303 / 0.279 / 0.119 / 0.275
+      — lowest partly because most pairs come from its own games' mistakes
+    - rank-a-h512-w0: 0.230 / 0.376 / 0.371 / 0.476 / 0.357
+    - rank-a-h512-w0.5: 0.296 / 0.429 / 0.431 / 0.548 / 0.416
+    - rank-a-h512-w2: 0.304 / 0.441 / 0.448 / 0.381 / 0.428
+    - threat-a-t64-w0: 0.220 / 0.487 / 0.435 / 0.357 / 0.420
+    - threat-a-t64-w0.1: 0.251 / 0.517 / 0.481 / 0.571 / 0.462
+    ThreatNet's static tactical edge over the matched plain net (0.487 vs
+    0.376, n=737, ~4 SE) is now robust, yet it plays worse (finding 43): an
+    unresolved mismatch. `chess_nn.search_check` on a stratified val sample
+    tests whether static order survives quiescence and changes the chosen move.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
