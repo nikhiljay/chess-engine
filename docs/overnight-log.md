@@ -384,6 +384,15 @@ noted. Full table: `uv run python -m chess_nn.report`.
     defensible; 55 of 840 first turning moves (6.5%) allowed an unseen mate
     in one; 3,576 of 4,586 large drops (78%) were not turning moves. The
     failure pattern is not specific to one architecture.
+49. **Held-out mate-in-one benchmark (`data/mate_bench.jsonl`).** 4,200
+    fresh games (h1024, kb-h256, h512 vs L2 and L3, 700 each, seeds 902/903)
+    → 767 positions where the net's move allowed an unseen mate in one while
+    a safe move existed; 25 excluded as ranking-pair sources, 731 unique.
+    Stockfish depth 16 rates the best safe move as saving the game (> −300
+    cp) in only 109 (15%); in the other 622 avoiding the mate only delays a
+    loss. After re-filtering against the completed diagnoses:
+    `data/mate_bench_heldout.jsonl`. Allowance rates are reported for
+    defensible and lost positions separately.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
