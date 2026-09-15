@@ -336,6 +336,17 @@ noted. Full table: `uv run python -m chess_nn.report`.
     repetition pairs says nothing. Firmer evidence has to come from the
     larger diagnosis and from move selection on the held-out mate
     benchmark.
+43. **ThreatNet without ranking does not play better.** threat-a-h512-t64-w0
+    (580k params, same data and recipe): L1 66.5% (133/200) / L2 49.5% (99)
+    / L3 27.0% (54), against the plain control rank-a-h512-w0's 69.2 / 53.2
+    / 29.0. Its better static tactical pair accuracy (finding 42) has not
+    turned into match results; the mate-in-one benchmark will show whether
+    it changes move selection at the search's blind spot.
+44. **Larger diagnosis, h1024 half (2,437 games not won, depth 12)
+    confirms 38 at four times the size.** 1,125 repetition draws, 926 (82%)
+    genuinely won (median best +8.2 pawns), 839 slipped; 1,312 losses, 1,059
+    (81%) with one blunder (median ply 38), 628 (48%) after having been
+    winning. The net's move matched Stockfish's best in 37.7% of decisions.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
