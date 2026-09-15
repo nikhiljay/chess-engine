@@ -1,0 +1,5125 @@
+{
+  "bench": "mate_bench_heldout.jsonl",
+  "positions": 730,
+  "allowed_unseen_mate": 558,
+  "allowed_any_mate": 558,
+  "savable_positions": 109,
+  "allowed_unseen_mate_when_savable": 90,
+  "lost_positions": 621,
+  "allowed_unseen_mate_when_lost": 468,
+  "allowed_unseen_mate_rate": 0.764,
+  "allowed_unseen_mate_rate_when_savable": 0.826,
+  "allowed_unseen_mate_rate_when_lost": 0.754,
+  "rows": [
+    {
+      "fen": "Q7/6R1/2p5/2P1p3/1P2P3/2NK1k2/8/8 b - - 2 43",
+      "chosen": "f3f4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4k3/ppp2pb1/6p1/2n4r/8/K4PqP/PPP5/R1BQR3 b - - 1 23",
+      "chosen": "e8f8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "3r4/R1kp4/1pp4p/5Q2/5P2/4P2P/2P1K3/1R6 b - - 2 30",
+      "chosen": "c7d6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2QQ1b2/5pkp/8/8/4P3/2N2B2/1P3PPP/4R1K1 b - - 0 30",
+      "chosen": "f8b4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5R1R/3kp3/p3r3/b1Pp4/3B4/3K1P2/6r1/8 w - - 4 41",
+      "chosen": "f8a8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "r4k2/ppp3p1/2n1p3/6P1/3Pp3/1PP1P3/1q5r/2RQKBR1 w - - 1 22",
+      "chosen": "f1c4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3r1k2/pp3pb1/8/1B3Q2/4R1p1/6Pq/PPPP1P2/R1B3K1 b - - 2 23",
+      "chosen": "d8d6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5b1r/p3k1pp/8/3K2P1/8/PPr1q3/8/8 w - - 0 34",
+      "chosen": "a3a4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/p4rp1/p1pP2B1/8/4QbK1/5p2/5Pq1/8 w - - 2 34",
+      "chosen": "g4h5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/p4p2/2p1bP2/4q3/8/1P1r4/1KP5/7r w - - 0 40",
+      "chosen": "b2a2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2Q1b3/3R2pk/8/1PQ5/8/P5P1/7P/2K5 b - - 0 38",
+      "chosen": "e8d7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4Q2R/pBp2pp1/4bk2/p6R/4p3/2P1b3/KP6/3q4 w - - 3 31",
+      "chosen": "a2a3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "6k1/5N2/1p6/7B/P7/4B3/1Q3PPP/6KR b - - 0 36",
+      "chosen": "g8h7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/3R1pp1/4p2p/4P3/4Q3/8/1q3PPP/2r1NK2 b - - 8 38",
+      "chosen": "h6h5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2k5/1p6/p2q2b1/6K1/p7/4r3/8 w - - 0 56",
+      "chosen": "g4h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1q1k2r1/p4p1p/p1Q1p2p/3pPb2/1bP2P2/3P4/P1PB2P1/R3K2R w KQ - 3 21",
+      "chosen": "e1c1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "3k4/RQ1p4/4pp2/8/7P/8/1P3K2/1N2R3 b - - 0 23",
+      "chosen": "d7d6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1r3r2/p2p3k/pqnp1p2/4pN2/1Pb1P1P1/B4P2/2PP4/R2QK3 w - - 0 21",
+      "chosen": "b4b5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "rnb1k2r/pppp1ppp/2n1p3/2P5/5qPP/2N5/P1PPP3/R1BQKBNR w KQkq - 0 7",
+      "chosen": "g1f3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "8/4R3/5ppk/3P1p2/1r1PnQ2/8/5PPP/1q3BK1 b - - 2 43",
+      "chosen": "e4g5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/4Kp2/2k5/2nb3r/8/8/1r3p2/q7 w - - 0 56",
+      "chosen": "e7f6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3k2r/pppb1ppp/8/4p3/P3n3/4q1P1/1PP1N2P/RN1QKB1R w KQkq - 0 11",
+      "chosen": "f1g2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1nbk2nr/1ppp3p/4ppp1/8/8/Q2P1N2/P2KPPPP/5B1R b - - 0 14",
+      "chosen": "e6e5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5rk1/1p1rbppp/pRb5/2p1p3/P1B3P1/3PB1RP/2P1QP2/q5K1 w - - 11 23",
+      "chosen": "g1h2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/Q4kp1/3P1p2/4pP2/4q3/7p/1P1P1K1P/2B3R1 b - - 4 31",
+      "chosen": "f7e8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r5k1/P1q1bp2/2P1p1r1/1B4pQ/3B4/5N1P/1P3P2/R5Kb b - - 0 27",
+      "chosen": "h1f3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2Q5/8/4NK2/8/2k5/8/8/3Q4 b - - 4 62",
+      "chosen": "c4b4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5k2/1pp1n3/8/pP1p1p2/P2P4/1KPN4/4q2r/3R4 w - - 4 36",
+      "chosen": "d1g1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "rnbqkbnr/1p1pp2p/p5p1/5P2/Pp6/3B3N/2PP1PPP/RNBQK2R b KQkq - 1 6",
+      "chosen": "g6f5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "8/7B/2pk4/p1p4p/P1Kp3P/8/1r4r1/8 w - - 2 45",
+      "chosen": "h7d3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2k5/2P5/8/p1q5/8/1K6/8 w - - 0 59",
+      "chosen": "b2a3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3kb2/p4ppr/p7/4p3/8/5K2/5P1p/2q5 w q - 0 36",
+      "chosen": "f3g4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5r2/p2R2k1/1p2n1P1/2p1P2p/4BPb1/P3K3/1PP5/8 b - - 4 29",
+      "chosen": "g7h6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "6Q1/8/3kp3/8/1p1P1P2/4K1P1/P6P/2R4R b - - 0 40",
+      "chosen": "d6d5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7r/8/4k3/4p3/6P1/4bP2/2r3K1/6B1 w - - 7 46",
+      "chosen": "g2g3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5QQ1/2p1P3/8/2Nk4/8/n4K2/8/8 b - - 0 56",
+      "chosen": "d5e5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2P5/4P3/3Q1k2/8/1Q6/8/5K2 b - - 0 52",
+      "chosen": "f5f4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5rk1/p2pnnp1/1q6/3pp3/7Q/2BB3P/PP3P2/R4K2 b - - 1 27",
+      "chosen": "b6e6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "Q7/2Q5/6rk/1P2P1p1/8/7q/2P2r2/1K2R3 b - - 0 47",
+      "chosen": "h3f5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "rk5r/pp5p/3p2bp/1NpBbp2/Q3p2q/P7/2P2PP1/1R3RK1 w - - 0 25",
+      "chosen": "d5b7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "r3r1k1/pp1bqppp/5n2/P1pp1P2/5Q2/2PP1N1B/2P4P/R1BK2R1 w - - 3 19",
+      "chosen": "f4h4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "8/8/5k2/8/8/5q2/1K1p1P2/7q w - - 0 58",
+      "chosen": "b2c2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7r/6k1/4RP2/3R2NP/6B1/8/4PK1P/8 b - - 0 43",
+      "chosen": "g7g8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/8/p3kp2/1P1n1p1p/1K6/3b4/2r5/8 w - - 1 46",
+      "chosen": "b4a5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r4rk1/pp3ppp/8/2pbNPP1/q2B3Q/b3P3/2PP3P/KR4R1 w - - 2 24",
+      "chosen": "g5g6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/7R/4p3/3p1k2/PP1P4/6Q1/1K2P1P1/R4B2 b - - 0 30",
+      "chosen": "f5e4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "N1b2k1r/pp1p1p2/4p1pp/2bP4/5P2/6P1/Pq4BP/4RKNR w - - 1 23",
+      "chosen": "d5e6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b3B1/pp1kp2p/4n2q/8/8/P2p4/5P2/4K3 w - - 0 34",
+      "chosen": "g8f7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b1kb1r/ppp2ppp/2n1q3/1B1Q2B1/P3P1n1/2N2N2/RPP2PPP/4K2R b Kkq - 2 10",
+      "chosen": "f8b4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "5k2/p1p2p2/2P1r3/7K/3Q4/2N4P/PPP4P/R4BR1 b - - 6 25",
+      "chosen": "e6c6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2R2R2/7p/8/1n4pk/6p1/6K1/2p1r2P/q7 w - - 0 47",
+      "chosen": "h2h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/7P/3Q4/1kp5/p7/P7/1P1K4/8 b - - 0 62",
+      "chosen": "b5c4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r4kr1/pp1Qbp2/7p/3P4/8/8/Pq5p/3R3K w - - 0 28",
+      "chosen": "d1f1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3R4/8/2k5/2P1B3/1P4p1/Q5Pp/3p1P1P/3R2K1 b - - 0 48",
+      "chosen": "c6b7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2Q5/6bk/8/P2P4/6N1/3KB3/P7/5R2 b - - 0 43",
+      "chosen": "h7g6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2bqr1k1/R1p2p1p/1r1b1np1/8/1p1Q4/4PB1P/1BPP1PP1/4K2R b K - 3 21",
+      "chosen": "f6d7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "1r3rk1/R6R/6pb/4P3/1P6/2P4P/5P1P/6K1 b - - 0 31",
+      "chosen": "h6c1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6r1/2pk1p2/2n5/1R2p2p/p1P1B3/P2Pr3/2P4K/1R6 w - - 0 33",
+      "chosen": "h2h1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "rnb1kbnr/p1pp1p1p/1p2p3/6q1/2P5/5P2/PP1PP1P1/RNBQKBNR w KQkq - 0 5",
+      "chosen": "b1c3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "8/1K6/8/8/3q1k2/8/4p3/1q6 w - - 0 61",
+      "chosen": "b7a8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r6k/1R4pp/5p2/2Qp1P2/4q3/4P2P/2PK4/8 b - - 3 46",
+      "chosen": "a8a1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "r6k/p6p/8/P1N2p2/2B1PB2/6K1/1Pn3PP/7R b - - 4 34",
+      "chosen": "f5e4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4k3/p3np2/6p1/1PP3P1/P7/2b1p3/4B2r/3R1KR1 w - - 0 33",
+      "chosen": "c5c6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "7k/R5b1/2p2q2/8/4Q1K1/2N5/PP4PP/7R b - - 0 40",
+      "chosen": "g7h6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1r2B2k/6pp/8/Q7/1P6/4q2P/2P4P/1K1R1R2 b - - 2 31",
+      "chosen": "e3c3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r5n1/Pk3Q1N/3pp2b/R2b3P/1p1P4/2q1P3/2P2PP1/3K1BR1 b - - 1 24",
+      "chosen": "b7b6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2r2kr1/3R1p1p/p1B3pq/1p2Q3/1b2Pn1n/N1R4P/PPP2P2/5K2 b - - 6 26",
+      "chosen": "c8c6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "4k3/3Rn1P1/2n1PP2/8/P3K2p/8/8/8 b - - 0 49",
+      "chosen": "h4h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2Q5/5p1k/7p/3Rp3/3p1q2/8/5PPK/1r6 w - - 6 38",
+      "chosen": "h2h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1k6/pp5r/8/2p5/2P1R3/P1K5/1P6/8 b - - 0 36",
+      "chosen": "b8a8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "8/2p5/1kp3pK/5q2/4p2P/8/5P2/q7 w - - 0 41",
+      "chosen": "f2f3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r2kn2Q/2p5/ppn5/3q4/5r2/2P1p3/PP2B2R/4K3 w - - 0 38",
+      "chosen": "h8h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4k1r1/4pp1p/2N4B/2rn3p/Q2N4/3K1P2/1P6/1q6 w - - 1 31",
+      "chosen": "d3e2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/5p2/6p1/8/3b3p/8/1r4rK/8 w - - 0 41",
+      "chosen": "h2h1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1k5Q/5p2/p4Q2/b5P1/3PBN2/8/PP2K3/1RBR4 b - - 0 41",
+      "chosen": "b8a7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2R2br1/1k1pq2p/pp2p1p1/1N2Q3/3P1P2/3P4/PP2N1PP/6K1 b - - 0 25",
+      "chosen": "b7c8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2k5/ppp3p1/8/2p1Q3/2P1P2P/3B2K1/PB1P4/R4R2 b - - 0 25",
+      "chosen": "a7a6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6R1/4kp1p/3rp3/p2p4/P1p2P2/4q3/8/R6K w - - 2 32",
+      "chosen": "g8g1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/3R3p/6p1/2b2p2/7P/2PK4/1r3PP1/4R3 b - - 5 33",
+      "chosen": "c5f2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2p2k2/1pN1p1N1/P4n2/5K2/5P2/8/2q5 w - - 3 42",
+      "chosen": "f4e5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1k6/p3p3/3pQ1N1/4P2p/8/P3KPPP/1R5R b - - 1 29",
+      "chosen": "b7a7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r2q3r/ppp1kp2/2n1bPnP/8/3p4/5NB1/PPPQPPP1/R3KB1R b KQ - 0 13",
+      "chosen": "e7f6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "Q7/2p5/2pk4/1p2Pp2/1P3P2/4K1pp/7P/8 b - - 0 42",
+      "chosen": "d6d5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/4k3/p2n4/5q1p/8/1P6/KQr1p3/8 w - - 0 40",
+      "chosen": "a2a3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4r1k1/5ppp/8/8/2Q5/p1Np2PP/3r4/6K1 w - - 1 38",
+      "chosen": "h3h4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1k1r1r2/2p3pp/Bp1bp2q/4Pn2/4QN2/6P1/PPP4P/2KR3R b - - 2 21",
+      "chosen": "d6c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b4r/pp5p/2n1pp2/8/8/k5PB/2q2PKP/4q3 w - - 0 28",
+      "chosen": "g2f3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2r2k2/pp4bp/8/5nN1/2Br4/1P6/P2P1PPP/n1BKR3 b - - 2 19",
+      "chosen": "h7h6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "8/8/3b4/3k1b2/1p6/8/6Kp/8 w - - 0 64",
+      "chosen": "g2h1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/p7/p4n2/3pkbp1/1P6/P7/8/K5q1 w - - 0 46",
+      "chosen": "a1a2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4kb1Q/p4p2/3q3p/pP1p3R/P1rB3P/2P5/4r3/6RK w - - 11 46",
+      "chosen": "h8h7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1r5r/p5p1/2n5/5kp1/7P/2P5/6q1/2b1K3 w - - 0 29",
+      "chosen": "e1d1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5k2/2p1qp2/p6r/1p4R1/8/P3PBRP/1PP2P2/1K6 b - - 0 29",
+      "chosen": "h6h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "r1b1k2r/p2p2Qp/8/2pN1p2/q4P2/4P3/p2P4/n2K3R w kq - 1 24",
+      "chosen": "d1c1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "2b4q/1pp1nk2/1pn1ppp1/8/4NP2/6P1/rPPQ4/2KR1BN1 w - - 0 18",
+      "chosen": "g1f3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "4r1k1/ppp3p1/7p/6PP/5p2/2N2n2/PP3PR1/5K2 w - - 1 27",
+      "chosen": "g5h6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "rn1qkb1r/p1p1n1pp/bp1pP3/8/8/NP3Q1P/P1PP1PP1/R1B1KBNR b KQkq - 2 7",
+      "chosen": "d6d5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5R2/6p1/4p1B1/4k2P/1p3p2/4nP1K/6P1/r7 w - - 16 47",
+      "chosen": "g2g4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1bqkb2/1p1pp2Q/p7/2p5/3nP3/P2n4/1PPP1P1P/RNB2KNR b q - 1 11",
+      "chosen": "d4c2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5b1r/1kp2ppp/pp6/6PP/3p1Pq1/8/PB1Pr2K/5R2 w - - 4 28",
+      "chosen": "h2h1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r5rk/p1R3p1/1p5p/n4Q2/4BPP1/P7/3qP2P/5R1K b - - 0 28",
+      "chosen": "a8f8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "QQ6/5p1k/6p1/8/8/2Pp3P/3Pq2P/RKB5 b - - 0 42",
+      "chosen": "e2e7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/8/4Q3/2kp1p2/8/5q1p/5P1K/8 w - - 8 53",
+      "chosen": "e6e5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "k5Br/2R5/p1P2R2/8/3N2Q1/8/PPP5/6K1 b - - 2 33",
+      "chosen": "a8b8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7r/R6P/6k1/P4p2/2K2P2/4B3/1P6/7R b - - 0 50",
+      "chosen": "g6f6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5k2/5pp1/1p5r/p2Q2N1/6q1/P1PK4/2P2P1n/1R6 b - - 4 28",
+      "chosen": "h6f6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1R5Q/6p1/4pk2/2bn4/8/P2K4/2P3P1/5R2 b - - 3 32",
+      "chosen": "f6e7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2r4k/6pp/p7/5p2/2B2P2/PP2BK2/6PP/3R4 b - - 2 26",
+      "chosen": "c8c4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1k5r/2p2p2/2p1p3/3pP3/2Pq4/PK6/1P6/7q w - - 0 38",
+      "chosen": "c4c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7Q/pp2kp2/3p4/2pP4/8/P7/KPb2P2/6q1 w - - 0 40",
+      "chosen": "h8c3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/4n3/5k2/p1p2p2/4pP2/4K3/7r/6R1 w - - 0 45",
+      "chosen": "g1g8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "4r3/1pp4k/p5q1/3p4/8/PKP5/1P1n1p2/8 w - - 2 45",
+      "chosen": "b3a2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6Rk/4R3/2p3r1/2P1P3/3Pp2p/4Q3/1r2P2P/7K b - - 0 37",
+      "chosen": "g6g8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2Q4r/pR1b2N1/5k2/3Q4/1B6/8/2P1PKR1/8 b - - 0 32",
+      "chosen": "d7c8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5kN1/5p2/p3p3/P6P/P1P5/2P1KP2/3r4/1R4R1 b - - 2 33",
+      "chosen": "d2h2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/8/3pb1n1/3p1p2/N2P3p/4P1pK/3r2B1/1R6 w - - 3 44",
+      "chosen": "a4b6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r4k2/4R3/1p1P1n1N/p1p2b2/P1P2N2/7P/5PP1/1R4K1 b - - 0 37",
+      "chosen": "f5b1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2Q3k1/R4pp1/8/8/3Q3P/1P1P4/2B3K1 b - - 2 45",
+      "chosen": "g7g8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "N3k2r/1R2npp1/8/2P3Pp/2P1p1b1/1P6/4PPP1/2BQKBNR b K - 0 16",
+      "chosen": "h8f8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2r1kb2/p1qbn3/3p1Qp1/1p1Pp1B1/3nP2P/3B1P2/PP1N2P1/3K3R w - - 6 22",
+      "chosen": "h4h5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "b4r2/4R1p1/1pkp4/7n/2PP2p1/1P2B3/P6P/6K1 b - - 6 32",
+      "chosen": "g4g3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "r4kn1/1pp1qp2/3p4/1B6/p4BQ1/PP6/2PP1P1P/RN1K2R1 b - - 1 19",
+      "chosen": "g8f6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1k5/1pp4p/p3P1p1/6q1/P7/1PPQ3P/8/RN3R1K b - - 2 25",
+      "chosen": "g5e5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2B2kp1/2b1p3/5n2/8/5r1p/4Kp2/8 w - - 2 56",
+      "chosen": "e2f1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3r1k1/ppp2pqp/3b4/8/1P3n2/P4N1P/3Q1P2/7K w - - 4 36",
+      "chosen": "b4b5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5rk1/5p2/5Q2/p3p2R/4P1p1/P1P2b2/3q1P2/R5K1 b - - 0 29",
+      "chosen": "g4g3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1p5k/8/3pp3/8/4K3/1r6/q7 w - - 0 47",
+      "chosen": "e3d3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7r/1b3pk1/5q2/pB1p3p/3p2p1/3Q2P1/3r1b1P/7K w - - 0 37",
+      "chosen": "d3d2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5rk1/4Np1p/6p1/4P3/1pp4Q/P1N1q3/1BP1B2P/6RK b - - 1 31",
+      "chosen": "g8h8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6Q1/4R3/kp2p3/7p/P2pP1n1/3P4/1Pr5/R3K3 b - - 0 34",
+      "chosen": "g4h2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1r6/6kp/2p3p1/p3N3/P4p2/7P/5bPK/3r4 w - - 0 33",
+      "chosen": "e5c6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/pp4k1/8/8/7p/7K/4B3/4q3 w - - 2 41",
+      "chosen": "e2g4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3k2r/PQ1b2pp/2P5/8/5pPq/1BN5/1PP3P1/R2R2K1 b k - 2 23",
+      "chosen": "d7c8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2k2p2/8/2bbr3/8/3K4/pr5p/R7 w - - 2 35",
+      "chosen": "a1c1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7N/3k4/1qn1p3/3p4/Q7/8/1p2p2p/1B5K w - - 0 47",
+      "chosen": "a4h4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r7/p5Rp/1r2k1p1/R3Bp2/6n1/8/6PK/8 w - - 2 39",
+      "chosen": "h2g1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "R5k1/5p2/4pBp1/3pPb1p/2pP3P/2P2KP1/5P2/1r6 b - - 6 47",
+      "chosen": "g8h7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1bk3r/1pbp1R1p/2n5/p1BN2p1/P1QP4/1K2P3/B5qq/8 w - - 2 29",
+      "chosen": "a2b1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3kb1r/pR3ppp/4p3/q1P1Nb2/4pB2/8/P1nQPPPP/3K1B1R b kq - 1 12",
+      "chosen": "a5a2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "8/8/p1nBp3/k1P5/2K5/1P6/8/8 b - - 1 44",
+      "chosen": "c6d8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "2Q5/7P/5Q2/8/2k1P3/1N4K1/8/7R b - - 0 51",
+      "chosen": "c4d3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1kb5/5p1p/1p3p1P/8/8/8/6PK/q1q5 w - - 0 46",
+      "chosen": "g2g3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/1p1b1p1p/1P5P/3pp1P1/3b1N2/8/r1r3B1/1R3R1K w - - 0 30",
+      "chosen": "g2d5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "rQ5r/P2pkqp1/2p2p2/4p3/R3Pnn1/B1P2N1p/2P2PPP/3R2K1 b - - 3 27",
+      "chosen": "e7e6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1rb3k1/p5bp/2p3p1/2Ppq3/1P4n1/R2BP3/3Q2PP/1N3RK1 w - - 2 28",
+      "chosen": "h2h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "6R1/4Nk2/5p2/3p3p/2n2K2/p7/1r6/8 w - - 2 46",
+      "chosen": "f4f5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3r1k1/ppp2ppp/2n5/8/1qnP2PP/2NbP2Q/PP1B2B1/2KR3R w - - 3 24",
+      "chosen": "b2b3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1R4pk/p7/5P2/2q5/P5QP/2PR1P1K/8 b - - 2 33",
+      "chosen": "c4g8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "b1n4R/4kpBp/1p2p3/6P1/4P3/P1N5/2P2P1P/2KR4 b - - 0 27",
+      "chosen": "a8b7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b2b1r/pp3k1p/5P2/2pP3p/n7/P2P2PP/6K1/1q2q3 w - - 0 29",
+      "chosen": "d3d4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3r1k1/2p2ppp/1p6/pP1R4/3B4/P5q1/2Q3B1/5K2 w - - 2 22",
+      "chosen": "c2c6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "5n2/1Q6/5pk1/1Q6/5PPp/8/6P1/6K1 b - - 2 41",
+      "chosen": "h4h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/5ppp/p1b5/2p5/2P1p2R/2Q1N1P1/5nPK/1r6 w - - 3 33",
+      "chosen": "c3e5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "8/p1N1R3/3k1B2/3P2p1/1P2P2r/8/P1P4P/6K1 b - - 2 29",
+      "chosen": "a7a5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1Q6/8/2k2p2/5N2/p1p5/4PK2/1P6/8 b - - 0 51",
+      "chosen": "c6d5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2r3k1/5p1p/7r/5p2/8/5pP1/5P2/R5K1 w - - 2 42",
+      "chosen": "a1a2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1rk3nr/1pp5/p3P3/3Pn1B1/4B1bP/2P1K3/PP1N3P/5R2 b - - 4 26",
+      "chosen": "a6a5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2kr2r1/1p3qnp/p1p1bn2/P2pQp2/N2Pp3/4P3/1PPBB1PP/R4RK1 b - - 2 20",
+      "chosen": "g7h5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3R4/8/4b1pk/4Q2n/4P3/7P/1PP2KP1/R7 b - - 0 39",
+      "chosen": "h5g7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1qQ5/p2P1pk1/6p1/8/2P5/3B4/PPK5/7R b - - 1 39",
+      "chosen": "b8b4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/8/7p/5pr1/3k4/5K2/8/q7 w - - 0 50",
+      "chosen": "f3f4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/p3qp2/7R/6p1/3QB3/2P5/P2K3P/R1B5 b - - 0 28",
+      "chosen": "e7c7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r5k1/2p2pp1/4p1r1/1pNpP2p/1P1P1P2/p1P2Q1P/R6K/4q3 w - - 11 40",
+      "chosen": "f3h5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7k/6b1/6Q1/3B4/3p2p1/3Pp3/1P2P2P/2BK1R2 b - - 0 35",
+      "chosen": "g7f6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3r1bnr/ppp2k1p/2n2pp1/q2bp3/8/2N1BP1P/1PPQN1P1/2KR1B1R w - - 0 15",
+      "chosen": "c3d5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7R/3k1p2/2p1p3/r2pP3/3q2pp/P1N5/2P2PPP/1R4K1 b - - 1 21",
+      "chosen": "d4c3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "1k6/2p3pp/1r6/1P6/5r2/1BP1b3/3p2PP/3R3K w - - 3 36",
+      "chosen": "d1d2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "rn1qkb1r/1bppp3/p4np1/1p6/1P3N2/P2B4/2PP1PPP/RNBQK2R b KQkq - 1 8",
+      "chosen": "g6g5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "4kbn1/p3ppp1/3P4/2r5/P7/3K1b2/8/r5q1 w - - 0 26",
+      "chosen": "a4a5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/4p3/1k2Pq2/2b4p/4K3/8/8/8 w - - 2 54",
+      "chosen": "e4d5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4k3/p2n1p1p/4q3/1Q6/5r2/P7/1P5p/K7 w - - 0 42",
+      "chosen": "b5b7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b2rk1/ppp2ppp/3bp3/4q3/8/2P4P/P2PBPP1/R1BQ1RK1 w - - 2 12",
+      "chosen": "d2d4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "rn2kbnr/pB2pppp/3p4/2p5/q5b1/2P1PQ2/PP1P1PPP/RNB1K1NR w KQkq - 1 6",
+      "chosen": "f3g3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "3r4/pp1P1Q2/3k3P/4bB2/1P6/P7/4qPP1/2R3KR b - - 0 32",
+      "chosen": "a7a6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3k3/ppp1qp2/1b3n1p/1N1pN3/2P2Bb1/1Q6/PP4rP/3RKR2 w - - 3 21",
+      "chosen": "b3c3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "rn2kb1r/p1p1pp1p/6p1/1Pq5/4nP2/5N2/1P1P2PP/RNBQK2R w KQkq - 1 10",
+      "chosen": "a1a4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "r7/1pp3kp/6p1/1b3r2/4p2P/N3P3/2PP4/R3K1R1 w Q - 1 23",
+      "chosen": "g1g5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2bkr1q1/R1p2p2/3B1n2/3Pp2p/2B1P1pP/2P1Q1P1/P1P2P2/6K1 b - - 0 35",
+      "chosen": "c7d6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r6r/1pp2kpp/4p3/p3qp2/P1B3n1/1P2P3/R2P1PPP/1Q3RK1 w - - 3 16",
+      "chosen": "h2h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "7r/1k3Q1B/p1p5/2R5/4P3/2N4P/PP3P2/2KR4 b - - 2 30",
+      "chosen": "b7b6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3kb1r/1p4p1/p1np4/7p/2P5/PKBPn2B/5q2/8 w kq - 2 29",
+      "chosen": "c4c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1r3rk1/3nbpp1/p1qpp2p/2p3Nn/2P4P/1P4P1/P2BPPB1/1Q1R1K1R b - - 2 20",
+      "chosen": "d6d5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1bk4/1p1pb3/5N2/2P4r/pBB5/4Qp2/2q4P/6KR w - - 2 35",
+      "chosen": "f6h5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b2Q2/1pk2R2/p1p5/3p4/1P1P2B1/P1N3P1/2P4K/R7 b - - 2 34",
+      "chosen": "c7b6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6r1/5RP1/4R3/k7/1p1P4/1P4K1/P1P5/8 b - - 0 46",
+      "chosen": "a5b5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/p1p4p/1p6/3q4/1P6/7P/P4p1K/5b2 w - - 0 41",
+      "chosen": "a2a3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1k4q1/1p2b3/p2p4/4p3/NP6/P3P3/1K6/3q4 w - - 2 49",
+      "chosen": "b4b5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3q1rk1/p4pp1/2p4n/4QbN1/1PBB1P1n/P6P/R1P4P/6K1 b - - 1 22",
+      "chosen": "g7g6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/6p1/p1p3k1/P5p1/3b4/7P/1r4r1/5R1K w - - 0 37",
+      "chosen": "h3h4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2k2b2/ppp5/4Qp2/7P/1q6/3nK3/3P1PP1/R1B4R b - - 2 29",
+      "chosen": "c8b8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3rkb2/p3pp1p/b1p3rp/2p5/4QB2/3N4/2q2P2/3RK2R w - - 2 19",
+      "chosen": "h1h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/3b2r1/8/1p1k3p/6p1/8/5K2/q1q5 w - - 0 44",
+      "chosen": "f2g2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "R7/2p2kpp/5p2/8/3B4/4Q3/3P1P1q/1N2KR2 b - - 1 25",
+      "chosen": "h2h5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5b1r/2p1pkp1/p3p3/4q2P/8/P2K1r2/8/8 w - - 0 33",
+      "chosen": "d3c4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/p1R2rk1/5P2/1r2p1P1/4B2p/P2PN2P/KP2n3/8 b - - 0 38",
+      "chosen": "g7f8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1r3k1r/pppQ1p1p/7p/4P3/4p3/6bP/PPq5/R6K w - - 0 24",
+      "chosen": "a1f1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2kr3r/ppp4p/4p2p/8/P7/2P2n2/1P1Nq3/R1K5 w - - 0 28",
+      "chosen": "d2f3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/R2knR2/8/1P6/2N1q3/3n4/1P2N2P/2BK4 b - - 2 32",
+      "chosen": "d7c8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1pp2p1k/8/8/3pPb2/3b3P/r7/6RK w - - 0 39",
+      "chosen": "e4e5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2R3k1/5p2/1P4p1/8/B6Q/3Pr2P/P1P2PK1/4q3 b - - 2 36",
+      "chosen": "g8g7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r2r2k1/p1p2p1p/4p3/1P6/2q5/P7/1P6/K7 w - - 0 37",
+      "chosen": "a1b1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r4r1k/pbpn4/1pn1p1p1/3pP3/3P4/2P5/PP4q1/RB2K3 w Q - 0 25",
+      "chosen": "b1g6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2N4Q/8/8/k7/p5K1/1n1B4/1P6/8 b - - 2 43",
+      "chosen": "b3c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r5kr/5N1p/p2bNRp1/3p4/2pP4/2P1n2P/6P1/5BKR b - - 2 27",
+      "chosen": "d6e7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2p3k1/4n1p1/N2p4/P1bb4/B1K2P2/8/8 w - - 0 39",
+      "chosen": "c3b4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b5/pp2k2R/2pbp3/3pNpp1/3Bn3/2P5/PP2PPP1/3RKB2 b - - 3 19",
+      "chosen": "e7f6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r6r/ppp3p1/2n3k1/3q1pP1/P2p1P2/7p/1PP4K/5R2 w - - 2 22",
+      "chosen": "b2b4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4R3/3R4/kp5p/p1r3p1/P5P1/2P4P/1P3PK1/8 b - - 0 36",
+      "chosen": "h6h5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2r1r1k1/1b3p2/1pq1p1pP/p2pQ3/P2P4/2B5/1PP2P1P/R3R1K1 b - - 1 26",
+      "chosen": "g8h7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b2r2/ppp2ppk/2nq4/P7/4P3/2p5/2P2PPn/R3K3 w Q - 0 22",
+      "chosen": "a5a6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1R6/1P1p2kp/4p3/2p3P1/2P3PK/8/1P1P3P/2B2R2 b - - 0 31",
+      "chosen": "g7g6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5rk1/pp4rp/1b2p3/1p6/8/P1p2P1P/7P/3R3K w - - 0 26",
+      "chosen": "d1d3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1p2RBpk/pP6/2p1N1p1/5bK1/5P2/2b4r/8 w - - 0 39",
+      "chosen": "f7e8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6r1/ppp4p/1k6/1bb4p/4r3/2P5/PR4PP/7K w - - 1 31",
+      "chosen": "b2d2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r7/2k2R1p/1bpN2p1/p3P3/2B2n2/P6P/1PP2P1P/4K1R1 b - - 2 21",
+      "chosen": "c7b8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1k6/p1p2pN1/Pp6/1Pb2K2/2P5/5q2/8/2r5 w - - 2 43",
+      "chosen": "f5e5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2bqr1k1/1p3p1p/r6P/3N2p1/3Q4/5P2/PPP2KP1/R6R b - - 0 21",
+      "chosen": "c8e6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1k3r2/pBp4p/3rp1p1/2p1p3/2P1Q3/8/PP2K1P1/6q1 w - - 4 29",
+      "chosen": "b7a6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r2qkb1r/1ppb4/p3ppp1/n2Q1n1p/3PNP2/2PB1N1P/PP1B2P1/R3R1K1 b kq - 9 17",
+      "chosen": "e6d5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "r1b1k2r/1p1q2pp/pb6/4p3/1P3p2/Q1B2p2/P4nPP/4KB1R w Kkq - 0 18",
+      "chosen": "g2f3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3r1k1r/1pp1b2p/5p1N/4p3/P1P5/4B2p/4KP2/q7 w - - 0 33",
+      "chosen": "a4a5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5R2/4R3/4N1P1/2B5/8/5k2/PPPK4/8 b - - 2 43",
+      "chosen": "f3e4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b3nk/p1p5/p3p1p1/2P3P1/8/P7/6PK/2q1q3 w - - 0 25",
+      "chosen": "a3a4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1nbq1knr/r3b2P/2p3B1/3p4/p2PpB2/2N5/PP3PP1/R3K2R b KQ - 0 19",
+      "chosen": "g8f6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "6k1/1ppqp2p/p1n1b1p1/2B1P1b1/3P4/1PPQp3/P6P/RN1BK1r1 w Q - 2 26",
+      "chosen": "e1e2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1k6/1pp2pp1/6p1/2b4r/p7/3n1K2/3r4/2q5 w - - 0 38",
+      "chosen": "f3e4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7k/1p5p/p2P4/2Q3p1/1PB5/4Kb2/P5q1/8 b - - 1 44",
+      "chosen": "f3c6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5Q2/PR2p3/6k1/8/P4B2/6Pp/5P1P/6K1 b - - 0 48",
+      "chosen": "e7e5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4r1k1/1bpn1p2/p1nb2pB/3p2Q1/Pp1P2N1/1P3PN1/2P2KPP/4r3 w - - 0 27",
+      "chosen": "g3f5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/p1p4p/1nnb4/4p3/4P3/P1pbNq2/5P2/2R1K3 w - - 2 32",
+      "chosen": "c1c3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5r2/B1p3pk/3bB3/8/5q2/7K/p7/q7 w - - 0 46",
+      "chosen": "h3g2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1rbq1k1r/3p2p1/p3pbQ1/1p2p2B/2p1P3/2N4P/PPP2PP1/1K1R3R b - - 0 20",
+      "chosen": "b5b4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "8/Q5Rp/1p2p3/1k1bP3/3P3P/8/PP1N1P2/R5K1 b - - 0 28",
+      "chosen": "b5c6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/8/8/4N3/Q7/3K4/1k6/8 b - - 2 63",
+      "chosen": "b2c1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5Q2/1k5B/1p5P/p1p5/P1Pp4/3Pn1B1/1P1N2P1/4R1K1 b - - 0 50",
+      "chosen": "b7a6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2r3k1/pp2pp1p/2r4n/Pq1p1P2/R5p1/1P4P1/QB1N2P1/3K1R2 w - - 1 28",
+      "chosen": "b2e5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "3r4/p1p5/2p1k3/1p6/8/P5Pr/1PP2P2/2K5 w - - 0 33",
+      "chosen": "a3a4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b4r/p1Q5/2p1pp1k/2b1P2P/8/1p6/5qPK/4R3 w - - 0 27",
+      "chosen": "c7c8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r4r1k/1bpp2p1/1pn1p2p/1B2q1N1/7P/P1PQ2P1/2P2P2/R3R1K1 b - - 7 21",
+      "chosen": "a8a3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "2k5/7Q/3p4/p3p3/8/8/P1P2P2/1R4K1 b - - 0 32",
+      "chosen": "c8d8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "rnb1kbnr/pp1ppppp/8/2p5/5q1P/N7/PPPPP1P1/R1BQKBNR w KQkq - 0 4",
+      "chosen": "a3b5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "8/p1pk4/1p2p3/1Pb5/8/3q3r/1K6/8 w - - 0 36",
+      "chosen": "b2a1",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "4k1r1/1pp2p1p/2nb1p2/3Q4/4p2P/1P2P3/2qP1P2/5K2 w - - 2 24",
+      "chosen": "h4h5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/5k2/3pp1p1/2p5/5PK1/8/p7/2q1r2q w - - 0 49",
+      "chosen": "g4g3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "N7/4kppp/K7/5P2/1P6/4BP2/PP2P2P/R2Q1BNR b - - 0 24",
+      "chosen": "h7h6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/4Bk2/7p/4R3/4P1K1/8/2r3r1/8 w - - 0 53",
+      "chosen": "g4f3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "r7/2pkR1p1/p7/3p1r2/1P1P4/8/2P4P/4R1K1 b - - 1 34",
+      "chosen": "d7c6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "2Q5/6k1/3b1p2/Q3p1r1/4P3/3K1P1R/1B1P4/R7 b - - 0 57",
+      "chosen": "d6e7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "7k/2p1p1b1/1p4P1/p3p3/b3q3/2P5/1P2K3/8 w - - 2 35",
+      "chosen": "e2f2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1Q6/2R5/3p1kp1/3Pp3/1p5p/4KP2/8/6R1 b - - 0 53",
+      "chosen": "h4h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4kb1r/4n1p1/8/1p1bNp2/3B1P2/q3P3/5K2/7q w k - 0 34",
+      "chosen": "e5g6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/3k4/8/1K1b4/8/4q3/2p5/4q3 w - - 0 57",
+      "chosen": "b5a6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/6p1/4k2p/2r4P/3np1P1/4p3/8/3K4 w - - 3 53",
+      "chosen": "d1e1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/8/7R/k4PPP/1pK5/3N4/3P4/8 b - - 2 42",
+      "chosen": "b4b3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r3kb1r/p4pp1/2p2n1p/2pq4/PpN5/3P2Pb/1P2PP1P/RNBQ1RK1 w kq - 2 14",
+      "chosen": "f1e1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "4k3/3bpp2/1N5p/P4P2/7P/6r1/1r1P1RP1/2R3K1 b - - 0 29",
+      "chosen": "g3g4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "8/3k4/5K2/Q3B3/2B3P1/8/8/8 b - - 0 51",
+      "chosen": "d7c6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2kr4/1p3R2/2p5/p2pQ3/7p/2P2N1P/PP2PP1P/3RKB2 b - - 0 19",
+      "chosen": "d8d7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r3k2r/1pp2ppp/4p2P/pP1p1q2/PbnPn1P1/4P3/R1P1B1P1/2BQK1NR w Kkq - 1 15",
+      "chosen": "c1d2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/3R4/8/2K1B3/8/5Q2/2k5/8 b - - 4 67",
+      "chosen": "c2c1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3kn3/R7/2P5/4B1pp/2P5/8/3K1PPP/8 b - - 0 40",
+      "chosen": "g5g4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2p2p1k/7N/8/8/5PK1/r5r1/qqn5 w - - 0 43",
+      "chosen": "g3f4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6R1/2P5/8/5Kpk/7p/4r2P/6P1/8 b - - 0 53",
+      "chosen": "e3c3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2b2kn1/1rp2p2/p2b1rq1/2B1pN2/Q3P1pR/2P5/PP3PB1/1K1R4 b - - 0 22",
+      "chosen": "d6c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4r1k1/1p3pp1/2n5/7p/3p3P/1p1b2P1/1rN2PR1/2RK4 w - - 0 27",
+      "chosen": "d1d2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/8/1p6/2q5/8/1KPb4/3n3p/8 w - - 6 53",
+      "chosen": "b3b2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/B1pk1pp1/2r5/4p1Pp/7P/3P1P2/r1p1K3/1q6 w - - 0 38",
+      "chosen": "e2f2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "4r2k/2R3R1/1r2pp1B/p2b4/7P/1P4P1/P3P2q/4KB2 b - - 2 30",
+      "chosen": "e8g8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "8/7p/p7/P7/3n1kP1/2p4K/2p1r3/8 w - - 3 54",
+      "chosen": "g4g5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "rn2k1r1/pbpp1p2/8/1p2p3/4P1q1/3P2P1/PPPN1n1K/R6R w q - 0 19",
+      "chosen": "a1g1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r7/pp3pkp/4bn2/2p5/4np2/1P5P/2qP2P1/3RK1R1 w - - 4 21",
+      "chosen": "g1f1",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1p6/p3k3/b4pKp/8/4pq2/7p/8 w - - 0 49",
+      "chosen": "g5g6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r3kb1r/4p1pp/8/3p1p2/8/4q1P1/1p4K1/q7 w kq - 0 31",
+      "chosen": "g2h2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "Q7/4R2p/2R3p1/8/3p1k2/1P1P3P/4KPP1/8 b - - 0 40",
+      "chosen": "f4g5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "rnb2knr/ppp2ppp/3b4/4q1N1/2B5/1Q6/P2B1PPP/1N3RK1 w - - 2 15",
+      "chosen": "g2g3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/5p2/8/3k2pp/3n4/5PKP/r7/3R4 w - - 6 52",
+      "chosen": "f3f4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r2qk1nr/ppp3p1/2n1Pp1p/3p3Q/1bPP4/8/P2B1PPP/RN2KBNR b KQkq - 3 8",
+      "chosen": "e8e7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/R7/1kp5/1p2N3/4PB2/1b1B1P2/5K1P/R7 b - - 2 33",
+      "chosen": "b3e6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b1kbnr/pp1ppppp/n1p5/8/5q2/2P2N1P/PP1PP1P1/RNBQKB1R w KQkq - 0 5",
+      "chosen": "d2d4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "2R5/5rp1/3p2k1/3P4/1P1b2Q1/5pP1/P3qP1P/6K1 b - - 8 31",
+      "chosen": "g6h7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2k1r3/ppp2p1p/2n5/2b3p1/3p4/PP3P1P/1BPP1P2/2K2B1R w - - 0 17",
+      "chosen": "h3h4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "8/pq5p/4Nn1k/5Q2/3P4/P3P3/1PP2P1P/R5K1 b - - 2 27",
+      "chosen": "b7f7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/p1B4p/6p1/1p6/1b6/1P1K4/P4rPP/4q3 w - - 0 36",
+      "chosen": "c7e5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1k6/1p5R/p6p/8/5N2/1P4P1/1PP2B2/2K5 b - - 2 40",
+      "chosen": "b8c8",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/p1p3pp/Q7/3p4/PPP5/4R2P/2k1KPp1/6q1 w - - 1 33",
+      "chosen": "c4d5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6R1/p2p4/1p1k4/3N1p2/2Bnr3/P7/1Pr5/1K6 w - - 4 26",
+      "chosen": "c4d3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "4k1r1/5p1p/7p/8/3q2P1/8/4p1K1/4q3 w - - 0 44",
+      "chosen": "g2f3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/p1p4p/P1p2p2/3p1b2/6p1/2p3P1/1r1NP1B1/3K4 w - - 0 25",
+      "chosen": "d2b3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1r3knr/1b1Rpp2/p4b2/Pp1PPN1p/8/P4N2/5PPP/3K1B1R b - - 0 21",
+      "chosen": "b7c8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5k2/ppp5/8/7B/3Pq3/P1b5/6PP/7K w - - 0 33",
+      "chosen": "d4d5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/5p1p/6b1/P5p1/4P1K1/5P1P/1r4P1/2q5 w - - 0 41",
+      "chosen": "g4g3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5n2/2Q5/1p3p2/5k2/PR5P/8/1PP2PP1/1K2R3 b - - 2 36",
+      "chosen": "f5g6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "2k2r2/1pp4p/8/8/8/4PNKP/6P1/1q5q w - - 0 39",
+      "chosen": "f3d2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "q2k3r/p1p1n2p/Qp3N2/2b1N3/2P2p2/7b/PP1PP2P/R1B1KR2 b Q - 0 15",
+      "chosen": "a8g2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r7/pp2Nkb1/3Pbp2/8/3B4/1PN4p/P2PQP1P/R3K1R1 b Q - 2 23",
+      "chosen": "a8g8",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/6pp/8/2B2QP1/8/P1P3KP/2P1q3/4r3 b - - 2 36",
+      "chosen": "e2d1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "7k/3R2b1/6Qp/p7/5P2/7P/2P5/2K4B b - - 0 32",
+      "chosen": "g7b2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1rbk4/2pp1p1p/1p6/p3N1p1/6P1/P1q2BK1/P1P1R2P/8 b - - 5 30",
+      "chosen": "c8a6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "8/3k4/4p3/p2p1p2/P2q4/8/5RKP/8 w - - 0 35",
+      "chosen": "f2f3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1K6/5k2/8/5q1p/8/3rq3/2p5/8 w - - 0 72",
+      "chosen": "b8c7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r6k/7p/6p1/7r/2NqPQ2/3p1PP1/5RK1/q7 w - - 0 40",
+      "chosen": "c4d2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4kb2/pp2p3/3q4/1n1p1p2/1P6/4P2Q/1r6/4R2K w - - 0 30",
+      "chosen": "h3h5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1k6/p1p5/8/1P2B3/1K4r1/2pr4/2b5/8 w - - 6 45",
+      "chosen": "b4a3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1R4PR/3B4/k2P4/2KP4/P7/8/8 b - - 2 43",
+      "chosen": "a5a4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r4k2/1pp2pp1/5n1N/5Q2/p7/1P5p/P1PP1PPP/R3R1K1 b - - 0 20",
+      "chosen": "h3g2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3kb2/ppp2pp1/2n5/3p1b1r/3pq3/2P5/PP1KP2P/RNB1QB1R w q - 2 14",
+      "chosen": "d2d1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/4k3/6p1/5p1p/3bqP1P/6P1/p3n2K/8 w - - 0 55",
+      "chosen": "h2h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r6k/1pp2p1p/3p4/1P1N1N1Q/p2P4/4P3/1q3PrP/1n2K2R w K - 0 24",
+      "chosen": "h5f3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/6p1/5pk1/2RQ3p/1P2P3/3P1NP1/PP3PP1/4KB2 b - - 1 25",
+      "chosen": "g6h7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/ppp5/7N/4n3/P3k3/K7/1r4r1/8 w - - 2 40",
+      "chosen": "h6g4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3r2k1/pp3pp1/4p1p1/4P3/8/PP2p3/8/K5q1 w - - 0 37",
+      "chosen": "a1a2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7r/p4pkp/2Q5/4b1p1/2B5/4P2P/2p1KPP1/7q w - - 0 38",
+      "chosen": "f2f4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/4R2P/7Q/2k5/2p3K1/P1B5/P1P5/8 b - - 2 48",
+      "chosen": "c5b5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r6r/ppk3p1/2p5/P2n3p/7b/1R6/KN1Pb3/5q2 w - - 0 29",
+      "chosen": "b3b7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/5pp1/7p/6PP/5P1K/5q2/4r3/8 w - - 2 48",
+      "chosen": "f4f5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1p6/1kp5/8/8/PQ5p/P4PPP/3R2K1 b - - 2 45",
+      "chosen": "b6a7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "4Q3/1P1R4/6p1/4B1k1/Q7/5R1P/7P/6K1 b - - 4 58",
+      "chosen": "g5h6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4kr2/2p2p2/2N4p/pR4p1/3RP3/8/1PP2PPP/6K1 b - - 1 27",
+      "chosen": "a5a4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/rpBn3k/2p3p1/p1Pp3p/2n5/P1Pp3P/4rPB1/R3K1R1 w Q - 0 29",
+      "chosen": "e1f1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2k4p/7P/3p4/3q4/7K/3pr1P1/1q6 w - - 0 56",
+      "chosen": "h3h2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1bqkb1r/pp2pp1p/2p1n1p1/6B1/3PN3/5N2/PPP1QPPP/2KR3R b kq - 2 12",
+      "chosen": "e6g5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "1K6/4q3/8/p2k4/P2bb3/7p/2p5/8 w - - 0 59",
+      "chosen": "b8c8",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/P5p1/P2B4/5p1p/2P4k/3N3P/2K3P1/R6R b - - 0 31",
+      "chosen": "h4g5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/3R2p1/3P1pk1/Q7/P5PB/8/5P1P/3rN1K1 b - - 0 42",
+      "chosen": "d1b1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "Q7/5p2/3p2k1/3BnN2/2p1P1nQ/1P6/2P3P1/R2R2K1 b - - 0 37",
+      "chosen": "e5f3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "5r2/Qpp1p1b1/3k3p/3qp1p1/8/1P2P1P1/P2P1r1P/2RR2K1 w - - 0 23",
+      "chosen": "a7a3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "2kr1b1r/1pp3p1/7p/1N2p3/2bnp3/P1N1B1R1/5PP1/R3K3 w - - 3 24",
+      "chosen": "a3a4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/Bp1b1k1Q/4p3/1P1B4/PP1P1p2/2N3b1/4Pr2/R5K1 b - - 1 29",
+      "chosen": "f7f6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r7/1p2k1pp/p1b1p3/5p2/1PP2P2/RP5P/2r2KP1/3q4 w - - 2 31",
+      "chosen": "f2g3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "2k5/pp1r3p/2p1Qp2/8/4PB2/p2P1N1P/P4P1P/R3KBR1 b Q - 3 20",
+      "chosen": "a7a6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6r1/p7/5k2/Bp5p/1P6/P7/4qP2/1K6 w - - 2 37",
+      "chosen": "b1a1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3k2r/pbpp1ppp/p7/3Np2P/4q3/1P6/P1PPBb1P/R1BK2NR w kq - 0 11",
+      "chosen": "e2f3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4Q3/6Rk/p2R2r1/4P2q/7p/2K1B3/PP3P1P/8 b - - 0 45",
+      "chosen": "h7g7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1Q6/2p2ppk/5nnp/3P4/1B1pP3/5NPB/5P1K/r1q5 w - - 4 33",
+      "chosen": "e4e5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2Q5/6B1/3b4/1B1kp3/p2p4/3P4/1PK3P1/3R1R2 b - - 2 43",
+      "chosen": "d6b4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7Q/2pk4/3ppB2/1P2n3/R3P3/8/1bP1B2K/5R2 b - - 0 42",
+      "chosen": "e5g4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r3kb1r/p3pppp/3p1n2/8/5N1P/4Pb2/PPqP1P2/R1B1K3 w Qkq - 1 12",
+      "chosen": "f4g6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1r6/5k2/3p4/5P2/4pK2/4P3/1r6/3q4 w - - 2 58",
+      "chosen": "f4g5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b1k3/1pp1b3/4p1n1/p3P2N/6P1/5R2/PPP2P1P/3R2K1 b - - 6 21",
+      "chosen": "g6e5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "R5k1/1p2pp2/2p1n1r1/4B3/1PP5/3P4/5PP1/6K1 b - - 2 36",
+      "chosen": "g8h7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/6pp/3NR3/1p6/5P2/P1n5/4PPBP/2R3K1 b - - 0 29",
+      "chosen": "c3a2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5Q2/R4p1k/6pP/P3p3/2Pq4/4pK2/7P/8 b - - 3 33",
+      "chosen": "e5e4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "7r/kpQ4p/6pR/4p3/Pb2Np2/7P/5PPK/q2r4 w - - 2 27",
+      "chosen": "c7c4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4r1k1/2p2ppp/2P2nb1/8/3PPQ2/2Rp1PNP/3R2PK/rq6 w - - 1 34",
+      "chosen": "d2d3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2k3pp/4p3/3n4/6P1/4KP2/8/1q3r2 w - - 2 45",
+      "chosen": "e3d4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1Q5R/3Q2p1/4ppk1/6p1/8/R6P/5P2/1K6 b - - 1 43",
+      "chosen": "e6e5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5B2/2pk4/2n5/p5r1/5b2/PK6/4b3/3q4 w - - 0 45",
+      "chosen": "b3a2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r3k2r/1pp3p1/p3B2n/7p/3Q3P/5N2/PP3PP1/5K1R b kq - 0 19",
+      "chosen": "e8f8",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1Q6/1p3qk1/6p1/8/3p2P1/Pp5P/4r3/1K6 w - - 0 44",
+      "chosen": "b8d6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4Q3/1p4R1/pkB5/8/1P4p1/P2P4/4K3/8 b - - 0 40",
+      "chosen": "b7c6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/1p3p2/4p2Q/p2qP1B1/8/P5PP/5P1K/4r3 w - - 1 38",
+      "chosen": "g5f6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7R/k7/pp6/3p1bP1/1P1P4/2R5/P5P1/r4BK1 b - - 2 33",
+      "chosen": "f5b1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7r/pp2p3/5kp1/bb1p1pN1/3K1P2/8/2r5/2B5 w - - 4 34",
+      "chosen": "c1e3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1Q2Q3/8/p7/3k4/6p1/4K3/1P6/8 b - - 0 47",
+      "chosen": "g4g3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "5k2/5p2/1p3p2/4pN1p/2p1P2P/1bn1KPP1/7r/8 w - - 2 35",
+      "chosen": "g3g4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/5RkP/8/1p4B1/p4P2/P7/1PP3P1/6K1 b - - 0 39",
+      "chosen": "g7h8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4k3/1p2pp2/4bn1b/2R3P1/8/2N1PP2/2P1N3/r1BK4 b - - 0 21",
+      "chosen": "f6d7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1r6/p1p2pp1/2n5/2PkpPP1/P7/3PP3/5K2/1q4r1 w - - 0 33",
+      "chosen": "e3e4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r3k2r/1bpp1ppp/pp6/8/2PP2nq/2NpP3/PP1N1PP1/RQB2RK1 w kq - 3 15",
+      "chosen": "e3e4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4Q3/6b1/5ppk/P1Bp4/4P1P1/8/2P1N2P/5RK1 b - - 0 35",
+      "chosen": "h6h7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/8/8/5p1p/8/6P1/3k2PK/4q3 w - - 0 65",
+      "chosen": "h2h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r2r2k1/1pp1nppq/1p6/n5Pp/7N/P1NbQ2B/1P3P1P/2KRR3 w - - 14 22",
+      "chosen": "e3e7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "5rk1/3p4/r2bp2Q/1q3pp1/p7/P1B1PN2/1n3PPP/RR4K1 b - - 0 24",
+      "chosen": "d6e7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1rb2b1r/p4ppp/1pk5/8/5B2/8/P3qPPP/3R2K1 w - - 0 20",
+      "chosen": "d1c1",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r3r1k1/1pp2p1N/p1n2B1R/b3pP2/8/P2PpB2/3q1PP1/5K2 w - - 0 35",
+      "chosen": "f3e2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4r1k1/1p3pp1/1b5p/Np6/8/6P1/5pBP/5K1R w - - 2 29",
+      "chosen": "a5b3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4B3/2p5/3bk3/5p2/8/4PK2/r5r1/8 w - - 0 46",
+      "chosen": "e8c6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "rnbq1knr/pppp2bp/8/4N2Q/4P1p1/3P4/PPPK2PP/RNB2B1R b - - 0 8",
+      "chosen": "g8f6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3r4/pp3k1p/4nn2/4p2p/1b6/7r/1P3P2/2R3K1 w - - 0 23",
+      "chosen": "c1a1",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/3R4/8/8/Q1b1B1Q1/2k2P2/8/7K b - - 2 60",
+      "chosen": "c4b5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2r1k2r/1pp5/4p1p1/pPQpN2p/1n1PnP2/4q2P/1PP3P1/3K1BR1 w - - 0 23",
+      "chosen": "c5b4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2rkr3/p1p1q2p/3p4/1Q3B2/8/P1N5/5PPP/1R3K1R b - - 2 24",
+      "chosen": "c7c6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1nkr4/q1p2p1r/7p/1B1p1N2/3PnpQ1/P3P3/P1PB2PP/6KR b - - 0 20",
+      "chosen": "e4d2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "6B1/6p1/Kp2R3/5k2/2P5/5q2/1r1r4/8 w - - 4 52",
+      "chosen": "e6e5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "rnb2rk1/pp1p1p1p/2p4b/7P/2NPP3/1QP2n2/PPK5/q7 w - - 1 19",
+      "chosen": "c4d6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2r3k1/3Q1ppp/b3p3/8/6P1/4B2P/PPP2P2/R3K2R b KQ - 10 23",
+      "chosen": "h7h6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1k1b2r1/3P1q2/R2Pn1p1/4Pp1p/8/P1N1QR2/2B3PP/6K1 b - - 0 34",
+      "chosen": "f7d7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r2qkb1r/ppp1p2p/5p1p/8/2P5/6P1/PPb1PPBP/RN2K1NR w KQkq - 0 11",
+      "chosen": "g2b7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2rk1b1r/pp3ppp/n3p2n/3PN3/Q2P1P2/P7/1P1NK1PP/R1q4R b - - 1 14",
+      "chosen": "c1b2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "r6k/3R3p/4N1p1/8/2P5/P1N5/5PPP/2n3K1 b - - 0 28",
+      "chosen": "h8g8",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r4rk1/pp2bp1p/3p3Q/Pb1Pp3/1pq3P1/4B3/1P3P2/4KR2 w - - 1 26",
+      "chosen": "f1g1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "Q2Q4/5prk/6pp/1B6/4p3/2K1P3/PP4PP/R4R2 b - - 1 32",
+      "chosen": "f7f5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1Q2k3/P4pp1/1n2p3/2p5/4q2r/7P/1P3P1P/3R2KR b - - 2 30",
+      "chosen": "e8e7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/pbq2pk1/1pp5/2br2p1/6Qr/3BP3/PpP2PP1/5RK1 w - - 0 24",
+      "chosen": "g4d1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/5pp1/5qp1/4N3/5P1P/3PbQP1/r6r/3B1RK1 w - - 3 37",
+      "chosen": "f3e3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/kp4p1/2n4p/P6P/8/4n1PK/4p3/5r2 w - - 4 39",
+      "chosen": "a5a6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1r2k1q1/pbbp4/8/4PQ2/p1pB1P1P/2Pp3R/1P6/7K w - - 4 37",
+      "chosen": "h1h2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r5k1/1pp1pp2/4bnp1/4Q3/3B4/Pp6/2q5/K7 w - - 0 28",
+      "chosen": "d4b2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r3kr2/2p4Q/p1p1p3/1q2P1b1/6p1/2P3P1/PP2PP1P/3RK2R b Kq - 0 24",
+      "chosen": "b5b2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7k/2p2n1P/pr1bN1Q1/8/2qP1pp1/2P5/1P3PP1/4R1KR b - - 1 35",
+      "chosen": "b6b8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "b4r2/4b2k/p1q1p3/1p1pBpp1/3Pn3/1B2P3/1PP1Q1PP/R3R1K1 b - - 1 30",
+      "chosen": "h7g6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "r6r/p4p2/8/P5kp/4n3/4P2P/5nK1/2q5 w - - 0 34",
+      "chosen": "h3h4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "2QQ4/5pk1/p5p1/2P5/4rP2/6P1/P4K1P/4R3 b - - 0 42",
+      "chosen": "e4f4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1k6/p2R4/2p1B3/1p2P3/1P1K2P1/P7/2P4P/5R2 b - - 1 40",
+      "chosen": "c6c5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r4rk1/pp3p2/2p1bB2/7p/8/2PB1q2/1PK5/6q1 w - - 0 38",
+      "chosen": "f6d4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3k3/pp1nBpb1/2p1RP2/3p3r/8/2NB4/PPP3PP/5RK1 b - - 0 24",
+      "chosen": "f7e6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r6r/1b6/p3qk1p/5ppQ/8/b5P1/2PP2NP/7K w - - 0 26",
+      "chosen": "h1g1",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1R5R/q3ppk1/2p3p1/2npP3/P4PP1/2N5/K1P5/8 b - - 7 36",
+      "chosen": "c5a4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "4kb1r/2p1ppp1/1pnq4/5PN1/1p4Q1/7P/1r3N2/4RR1K w k - 0 28",
+      "chosen": "g5f7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "3k2B1/R1pp2p1/1p6/3N1p2/4p3/4P3/1PPP1K2/2B3N1 b - - 2 21",
+      "chosen": "g7g5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2kr2nr/pppb2b1/3p3p/Q2Nq1p1/4P3/3BB1P1/PPP1N2P/R4RK1 b - - 0 16",
+      "chosen": "e5d5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "5rk1/2p3p1/4b1p1/8/8/6P1/4P1K1/4q3 w - - 0 45",
+      "chosen": "e2e3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/p2p1k2/P7/8/2p2r2/2P5/3K3p/6q1 w - - 0 45",
+      "chosen": "d2c2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3kb1r/ppp2ppp/4b3/3q4/1P2p3/6n1/PB1P2P1/K2RQn2 w kq - 2 18",
+      "chosen": "a2a3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4r3/8/2k3n1/2b4p/1p5P/3K4/8/4q3 w - - 0 44",
+      "chosen": "d3c4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2b5/1R5P/7R/2k3B1/2P5/1P3P2/1P2N3/4K3 b - - 2 39",
+      "chosen": "c8b7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2p3k1/4R3/p1pn2p1/6r1/8/5K2/r5q1 w - - 0 37",
+      "chosen": "f2e2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "7Q/2R5/p2pk3/4p3/3nP3/1P1P4/P4P2/7K b - - 2 38",
+      "chosen": "d4f3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1Q2Rp2/1P4pk/4P3/1r6/5N1K/5P1P/R4R2 b - - 0 40",
+      "chosen": "b4f4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/pkB3p1/2q5/3N4/4P3/1Q6/PPP2P1P/R3K2R b KQ - 2 23",
+      "chosen": "b7a8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1bqrn1k/1p2bQ1p/2p3p1/p1p4n/2BPP3/P1N1BN1P/1P3PP1/R4RK1 b - - 2 17",
+      "chosen": "b7b5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3Q4/1pp5/2kp4/4p3/p1N1P3/3PBp2/1rPK3q/8 w - - 4 39",
+      "chosen": "d2e1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/5p2/4r2q/2p5/8/5P1K/r7/8 w - - 0 49",
+      "chosen": "h3g4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "7R/p3B3/2p5/1p1kpB2/3b4/3P4/PP1K2P1/R7 b - - 2 35",
+      "chosen": "d4f2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r5k1/6pp/8/8/3B4/5q1p/p4P1K/3RR3 w - - 2 31",
+      "chosen": "d1a1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2k5/8/2r5/p4P2/8/PKP5/4r3/7q w - - 0 46",
+      "chosen": "b3a4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2b2p2/2n2k1p/3q4/6B1/4P1PP/5P2/1r4K1 w - - 1 33",
+      "chosen": "g1h2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4Q3/1R4pk/2p2r1p/5p1P/p1Q5/P7/1PP3P1/6K1 b - - 0 37",
+      "chosen": "f6f8",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "3r2k1/p1p3pp/5n2/5p2/3n1P2/6P1/3p2BP/1R2r1K1 w - - 4 33",
+      "chosen": "g1f2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b2knr/1p3pb1/p2Q4/3N4/2PpP2q/3P4/PP1NBPp1/R4RK1 b - - 0 21",
+      "chosen": "g8e7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2r5/p2k1pp1/5n1p/3p4/5b2/1NPKrP1P/P1R1N3/7R w - - 2 25",
+      "chosen": "d3d4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/6R1/8/3P1Q1P/8/3N4/3K1Pkb/8 b - - 2 62",
+      "chosen": "g2f1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r4r2/pppk2pp/8/P6P/8/2P1n3/4p2K/5q2 w - - 0 46",
+      "chosen": "a5a6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r6r/1p3k1p/1B1b1ppQ/1B1p4/P1p5/4P2P/3q2PK/8 w - - 2 33",
+      "chosen": "h6f4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1k5Q/1b6/r2R4/p1pp1P2/1P3Pn1/2N2B1P/1PP3K1/R7 b - - 1 33",
+      "chosen": "b8a7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/5p1k/5p1p/4n1P1/7P/8/3r1rK1/8 w - - 0 51",
+      "chosen": "g2g3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "k1B5/7q/pQ6/8/4NB2/5N2/P1P2K2/1R6 b - - 0 35",
+      "chosen": "h7e7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1Q1R4/r3nrpk/5pbp/4p3/q3P1P1/P1PP3P/3NKP2/R7 b - - 4 28",
+      "chosen": "a7a6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "r3r1k1/2p2ppp/1p2b3/1P1N2P1/p1Bp1b1P/PK2p3/1B6/3N3R w - - 0 31",
+      "chosen": "b3a2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/7p/p3P1k1/4Q3/2P1Np2/1B6/1P1K1P1P/8 b - - 0 43",
+      "chosen": "g6h6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r7/p1kn2p1/Qppb4/8/2B5/2P2p2/PP3q1r/1K1R4 w - - 0 30",
+      "chosen": "b2b3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5Q2/8/8/4N3/3N2P1/4KP2/1R5P/5k2 b - - 0 47",
+      "chosen": "f1e1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6r1/p3p3/3k4/2p5/p3P3/3P4/1PK4q/8 w - - 0 40",
+      "chosen": "c2c3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1rk4r/1bp2R1p/3pN3/p1p1p3/8/4K3/PPP5/3R4 b - - 1 28",
+      "chosen": "c7c6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "6r1/p1p2k2/Pp3p2/3Pp3/4P3/1R3P2/5q2/2K5 w - - 3 42",
+      "chosen": "b3c3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1r4k1/p1p2p2/4nPpQ/p7/2Ppq3/b7/PP6/K1B3R1 w - - 0 30",
+      "chosen": "b2a3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "2Q5/5k2/5p2/5R2/p3P3/P7/1P1N1P1Q/R3KB2 b Q - 0 33",
+      "chosen": "f7g7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "4k2r/p1p2ppp/1r3n2/1b1p4/Q2Pp1q1/4P3/3N1PPP/RN2K2R w KQk - 6 24",
+      "chosen": "a4a7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3Q4/4R3/5pk1/7p/2P3pP/6P1/P5K1/8 b - - 0 48",
+      "chosen": "g6f5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1k6/1pp4p/8/4p3/6b1/8/q4K2 w - - 0 52",
+      "chosen": "f1g2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "QQ6/4kp2/4p3/1BP3p1/3N4/5P1p/5P1K/8 b - - 0 38",
+      "chosen": "f7f6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3k1r1/1p4pp/2p1P1p1/p5B1/4R3/Q4N2/PP3PP1/R3KB2 b Qq - 1 18",
+      "chosen": "g8f8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/P5R1/7p/8/1P4kP/3B2P1/N1P5/2K5 b - - 2 40",
+      "chosen": "g4h3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "4k2r/5ppp/2p1p3/4N3/1p1qn2P/3BRQ2/1R1K1PP1/r7 w k - 2 23",
+      "chosen": "d2c2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "3rk1nr/pppqb1pp/2n5/3NPQ2/3PP3/6P1/PPP4P/R1B2RK1 b k - 0 12",
+      "chosen": "d7f5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "k6r/5pp1/3p1p2/2b4p/P6P/1Rp3q1/8/1R5K w - - 0 32",
+      "chosen": "b3c3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/8/p7/P3P3/2Rp4/k3p1P1/2P1P1B1/2K1B3 b - - 1 43",
+      "chosen": "d4d3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/5p2/6rP/r7/1p2p3/1Bb1B3/5PK1/7R w - - 1 37",
+      "chosen": "g2h2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4k3/p3np1p/3r4/2p1p3/4P3/P2p1PNb/3q3P/R5KR w - - 2 32",
+      "chosen": "a1d1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/2p1bppp/p4n2/6N1/2qp4/3b4/P4PPP/3K3R w - - 0 26",
+      "chosen": "g5f3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "N1bk2nr/pp1p1p1p/3Q3b/4n3/4P1P1/2P5/PPK1Nq1P/R4B1R b - - 2 16",
+      "chosen": "h6f4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/pkp2ppp/5n2/8/7P/2Pr2P1/P3r3/2K2b2 w - - 0 33",
+      "chosen": "c3c4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "7k/5Rp1/p5Qp/8/P1p3bq/4PP2/1PP2P2/2BR2K1 b - - 0 29",
+      "chosen": "h4h1",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "7r/p1r2kp1/8/8/2p3pP/P4nP1/2R2PK1/q7 w - - 2 30",
+      "chosen": "c2c1",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "2b4r/4kp2/p3p3/p1b4p/P4n2/1P6/3K4/1q6 w - - 2 35",
+      "chosen": "d2c3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3k4/6pp/2Q3n1/1PN5/8/6Pb/r3r3/5K2 w - - 1 37",
+      "chosen": "f1g1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5k2/pp4R1/5p2/5N2/8/P4P1p/1P1p3K/5q2 w - - 2 43",
+      "chosen": "f5e3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b1k3/pppn4/3pp1N1/8/3P3Q/P7/P1P2PPP/R3KB1R b KQ - 4 19",
+      "chosen": "c7c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/8/6R1/kPn5/2KNP3/3P3r/8/8 b - - 4 54",
+      "chosen": "c5d3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1Q6/8/8/4Q3/4P1P1/3k4/6K1/8 b - - 0 51",
+      "chosen": "d3e3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/pp3ppp/5n2/4r3/3pP3/P2p1PPK/3q3P/R6R w - - 0 24",
+      "chosen": "h1d1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "R3Q3/8/2p5/1p4k1/p1P1N1p1/2K5/6P1/3R4 b - - 0 39",
+      "chosen": "g5f5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/R5R1/2BB2pk/3p3r/2pP3p/8/1PP3P1/3K4 b - - 0 41",
+      "chosen": "h6g5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r2qrk2/ppp2ppB/2n1b3/4P3/3P2P1/P1N1b1p1/1PQ1N1P1/4RR1K w - - 0 22",
+      "chosen": "e2g3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r5k1/5pp1/2p2n1p/8/7K/5P1P/3p2P1/q3r3 w - - 0 40",
+      "chosen": "h4g3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "2r5/p3R2P/1p3k2/3N1p2/nPPn4/P2P4/3K1PP1/5B1R b - - 8 36",
+      "chosen": "f6g5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1bqkbnr/ppnpp2p/2p3p1/5B2/3P1P2/2N1P2N/PPP3PP/R1BQK2R b KQkq - 0 7",
+      "chosen": "g6f5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "1Q1R1b2/8/6pk/Q7/3BP3/5K1p/P6P/3R4 b - - 0 43",
+      "chosen": "f8e7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/4kp2/2p5/4p2R/1P1bP3/8/4B1rp/4K3 w - - 2 60",
+      "chosen": "e1f1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3r3r/2Q4p/kp4p1/5p2/2P1p1q1/8/1P3P2/2b2K2 w - - 1 33",
+      "chosen": "c7c6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4k3/1R1p1p2/2pBp1q1/4P3/2B1Qp1R/2N2P2/P1P5/5K2 b - - 0 41",
+      "chosen": "g6e4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/8/p2k4/8/5N2/KP6/P1r5/4q3 w - - 0 45",
+      "chosen": "f4d3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3r3k/1P3R2/6PN/8/p3p2K/7P/1P3P2/8 b - - 0 55",
+      "chosen": "a4a3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3q1rk1/5p2/7Q/3p1pNp/2nb1Bp1/P1r3P1/2P2P1P/R3R1K1 b - - 1 24",
+      "chosen": "d4g7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r4kr1/1pp2p2/2n4N/3Rp2p/p7/K1P5/1P3P2/1q6 w - - 2 29",
+      "chosen": "d5d2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4k2r/2pn1p2/3b4/4q2p/1pQ5/4P2p/2P2PK1/8 w k - 0 27",
+      "chosen": "g2f1",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "R7/8/4Qbk1/8/2K2B2/8/8/8 b - - 2 64",
+      "chosen": "g6g7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/p1p1rp2/2P3p1/3P1b2/P7/4BP2/3K4/1r5q w - - 0 32",
+      "chosen": "e3g5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5r1r/R6p/5k2/4p2P/2N1Pb2/P4N2/1PP2P1P/1K1R4 b - - 0 27",
+      "chosen": "h8g8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/pp3pp1/8/3R4/P3Q3/1q3P2/1P4PP/1K5R b - - 0 33",
+      "chosen": "g7g6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "4r2r/p2N1k1P/2p1pPn1/P5pQ/3PNb2/4B3/2P2PKP/RR6 b - - 0 28",
+      "chosen": "e8g8",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/p7/8/1pb5/8/2B5/KP2r2r/5q2 w - - 2 46",
+      "chosen": "c3e5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "2r4k/1p4pp/p4n2/5p2/1P3q2/1Qp2P1P/P1K1r1P1/5R2 w - - 2 29",
+      "chosen": "c2d3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/k4p2/7p/2bK3P/4nPr1/8/p7/1q6 w - - 0 49",
+      "chosen": "d5e5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "2k5/1bp2rp1/p2pp2r/3P4/2P5/P2BQPqP/6P1/R3R1K1 b - - 0 27",
+      "chosen": "e6d5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "r6k/ppp5/3b2B1/1b4p1/3PK3/7q/2P2P2/8 w - - 0 35",
+      "chosen": "f2f4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "4kr2/5pQ1/ppp5/q1pN4/4P3/5P2/PPP5/1K5R w - - 0 35",
+      "chosen": "h1h7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "4k2r/r1b2p2/p1N1p1p1/7p/7Q/3PP3/1PP3PP/R4RK1 b - - 0 28",
+      "chosen": "a7b7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1n1q3r/3p1kb1/2pBp3/1p1n1p2/3P4/2P3QP/1P1NBP1P/4K1R1 b - - 3 19",
+      "chosen": "g7h6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3kbr1/pp1b1p1p/4pn2/q2nQ3/P4B2/2N2N1P/1PP3P1/2KR1B1R b q - 1 14",
+      "chosen": "d7a4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "r1b2k2/1p1qn2B/p4p1b/2B4p/3P4/1Q3NP1/PPP2P1P/R3R1K1 b - - 0 20",
+      "chosen": "f8g7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "3r1b2/r1pPk2p/2P3p1/p1n5/P1B2R2/4P1PP/5P2/3R2K1 b - - 6 33",
+      "chosen": "c5a4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/ppr4p/6p1/1q1pP3/4QP2/6P1/P6P/3R3K w - - 0 32",
+      "chosen": "e4d5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "r4r1k/2R1Q2P/8/4Pp2/3p4/1q1P4/1P4P1/1NK4R b - - 10 48",
+      "chosen": "b3d3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1pp2Qkr/4B3/p7/P2P1P2/2P2qB1/1P5P/6K1 b - - 0 30",
+      "chosen": "g7h6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1R5Q/P7/2p5/4B3/2k1P3/8/2P5/6K1 b - - 0 50",
+      "chosen": "c6c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7Q/2P2p2/4p3/4Pkp1/8/5P1p/4BP1P/6RK b - - 2 44",
+      "chosen": "g5g4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5Q2/1pp4P/p7/8/8/1P1B1K2/P1Pk4/6Q1 b - - 2 42",
+      "chosen": "d2c3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/5p1k/5p1N/1p6/8/3qn1P1/5NKP/8 w - - 3 49",
+      "chosen": "g2g1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4r3/1pp5/2b2k1P/p1P5/8/P7/4p1PK/5q2 w - - 1 39",
+      "chosen": "h2h3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "rnbqkbnr/ppppp2p/5p2/8/5p2/P1P1P2P/1P1P2P1/RNBQKBNR b KQkq - 0 5",
+      "chosen": "f4e3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "2k5/6Q1/B1p4r/3pp3/P3P2p/5P2/1P1P1K2/R1B1R3 b - - 6 30",
+      "chosen": "c8b8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1pp5/2b1k3/4P1B1/8/4K3/3p2r1/q7 w - - 0 56",
+      "chosen": "g5f6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1R6/3R2p1/3b3p/3k3P/7P/5p2/1p1r4/6K1 w - - 0 46",
+      "chosen": "g1h1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/p3k2p/B7/P1N5/1P2pr2/2Bp4/3P3n/3K4 w - - 0 34",
+      "chosen": "a6b7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "6Q1/k7/6P1/4N3/Q2P4/1K6/8/8 b - - 0 47",
+      "chosen": "a7b7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2P3R1/8/4N3/4N3/3KB3/6k1/8 b - - 2 62",
+      "chosen": "g2h3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/kpp5/p7/7Q/P2P1P2/6P1/1P6/4R1K1 b - - 0 41",
+      "chosen": "c7c6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b1k2r/pp1nnp2/4p2p/BP6/2BPp2Q/6P1/P1P2P1P/R3K2R b KQkq - 2 15",
+      "chosen": "e7f5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/p1p4p/6p1/6P1/5K2/P7/P7/1brq4 w - - 0 38",
+      "chosen": "a3a4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "2k1K3/1pp4p/p6r/2N1B3/2P5/5p2/PP2nP2/3R4 b - - 4 36",
+      "chosen": "b7b6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/ppr5/8/4R3/8/5k2/PP6/1K6 w - - 4 44",
+      "chosen": "e5e1",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "8/2p3R1/3kp3/5p2/3P4/5P2/1r5P/2R3K1 b - - 0 29",
+      "chosen": "c7c6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/8/1Kn5/8/q7/4p3/3q4/8 w - - 0 70",
+      "chosen": "b6c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/6pp/3k4/p7/P3p1K1/1q2b3/2r3P1/8 w - - 2 47",
+      "chosen": "g4h3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2p1pp2/4k3/3q3p/8/1Q1P4/Pb2PP2/5K2 w - - 4 29",
+      "chosen": "b3b2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4kb1r/p1pnp1p1/4Qn2/3p3P/Pq2p1p1/8/1B1PPP2/4K1NR w Kk - 0 16",
+      "chosen": "b2f6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/4Kpp1/4b3/1p5r/8/8/3pr3/2q5 w - - 0 50",
+      "chosen": "e7d6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2Q5/1p6/p7/5p2/2k5/4BK2/1P6/8 b - - 1 47",
+      "chosen": "c4d5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1qk2p2/4b3/8/3Kp3/4P3/p4P1r/8 w - - 0 40",
+      "chosen": "d4c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "Q3R3/5pp1/8/1P1Pk2p/4p3/4K3/7P/8 b - - 1 38",
+      "chosen": "e5f5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/5pp1/5P1p/1p5n/3B1PK1/8/b1p1r3/3q4 w - - 0 48",
+      "chosen": "d4b2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "3R4/4k3/p2pN2p/3Brp1P/8/3p1PP1/1P3K1R/r7 w - - 3 46",
+      "chosen": "f3f4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "5k2/R7/8/8/1PP5/P4b2/5P1P/4R1K1 b - - 0 35",
+      "chosen": "f8g8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4kr2/2p5/7p/p6P/5pp1/3q3r/5RK1/8 w - - 0 48",
+      "chosen": "f2e2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "rn2k2r/1pp2pp1/p6p/3Qq3/7P/8/PPP1PPP1/3RKB1R b Kkq - 0 12",
+      "chosen": "e5b2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "5Q2/p2R4/2p1p2n/3kq3/7P/2P5/P2K2P1/4R3 b - - 2 37",
+      "chosen": "d5c4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4r3/8/1p6/4Nk2/3K4/1P1P4/8/2q2q2 w - - 2 49",
+      "chosen": "e5g6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4k3/1p3r1p/rPb1p3/2B1bpp1/2P1p3/P5P1/3RPPBP/3R2K1 b - - 3 25",
+      "chosen": "c6a4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "Q7/2p2p2/4k3/6P1/1P6/8/3B1KB1/1N6 b - - 0 37",
+      "chosen": "f7f6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "rn1qkb1r/1b1pnp2/p3p1p1/7p/2NP1B2/3B1P2/PPP1N1PP/R2QK2R b KQkq - 3 10",
+      "chosen": "f8g7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "7Q/5R2/P2pN3/8/1BP5/5B2/1KP2k2/8 b - - 0 45",
+      "chosen": "f2e3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4r3/pppb3p/6kP/8/2p3r1/P2n1R2/5K2/8 w - - 1 29",
+      "chosen": "f2f1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3r4/pp5k/4pn2/8/1P3p2/P3b3/2r1K3/R7 w - - 2 29",
+      "chosen": "e2f3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2N5/1p3k2/1P1B1p2/8/K6R/2q2r1p/r7 w - - 4 44",
+      "chosen": "a3b4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3k3r/pQ4p1/3p4/3Np1bP/6b1/PP3p2/3K2P1/2r4R w - - 0 27",
+      "chosen": "d2d3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2r1kr2/1p3p1B/pb4p1/3R4/R4P2/8/1Pn3PP/7K b - - 0 23",
+      "chosen": "c2e3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "3rr1k1/p4ppp/qp2p3/3nPP2/2p5/8/1PPB1QPP/2KR1R2 w - - 0 25",
+      "chosen": "f5e6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "3n4/pNQ5/6pp/6P1/P1k1P3/7b/1P5P/R1B3KR b - - 0 33",
+      "chosen": "c4d3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "5r1k/p3R2p/1p6/2pb1r2/8/P1P2PQP/PK4P1/3R4 b - - 2 27",
+      "chosen": "f8g8",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "3Q4/5pk1/1n5p/1p1p3q/5B2/5P2/1r2r1P1/2R2RK1 w - - 2 31",
+      "chosen": "g2g3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r5k1/ppp2r1p/4N1p1/5pB1/2n5/PQPq4/3p3P/3K2RR w - - 5 23",
+      "chosen": "e6f4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r2r2k1/1p3ppp/p2q4/P1p2b2/1nPPp1n1/BQ2P3/2P1BPPP/R4RK1 w - - 2 17",
+      "chosen": "h2h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "8/3k4/8/2QK1N2/8/8/8/8 b - - 2 80",
+      "chosen": "d7e8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1k1r1b1r/ppp1pppp/4bn2/8/1nqP4/2N1PP2/PPQBN1PP/3RKB1R w K - 11 12",
+      "chosen": "c2c1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4Qbkr/2p3pp/B3p3/8/3P3p/8/PK3q2/n7 w - - 0 30",
+      "chosen": "b2c3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2rq2k1/1p1b3p/p2P4/n1bBQpp1/8/P1N5/1PP2PPP/R3K2R b KQ - 2 25",
+      "chosen": "g8f8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/3P1b1p/5Q2/2pk4/P5P1/2P2P2/1P3P2/4R1K1 b - - 0 40",
+      "chosen": "d5c4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1R1n3Q/2pkp3/2b4P/2P5/p7/P1P1N3/5K2/8 b - - 0 39",
+      "chosen": "d8e6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2bQ4/3pppk1/2p4P/8/r3P1B1/2Pr4/PP1q1P2/R4K1R b - - 0 24",
+      "chosen": "g7h7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/1p3p1p/3r4/p1p5/P3pp2/7R/4p1r1/4K3 w - - 0 35",
+      "chosen": "h3h7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1p5p/p7/2Q2nk1/P7/8/1PPr2r1/7K w - - 0 33",
+      "chosen": "c5g1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/8/3K3p/6pk/2q3q1/8/5p2/8 w - - 2 51",
+      "chosen": "d6e5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/4kppp/p3p1P1/2p5/1b5n/1PK1P3/3P2q1/1b6 w - - 1 33",
+      "chosen": "c3c4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r4rk1/ppq2ppp/2n1b3/4p1N1/Pb2Q3/2N1B2P/1P3PP1/3R1RK1 b - - 3 15",
+      "chosen": "h7h6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "6r1/1P2b2R/p1pk4/2Np4/3P4/5P2/1PP2K2/8 b - - 2 31",
+      "chosen": "a6a5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1R4k1/6P1/5K2/8/8/8/8 b - - 1 64",
+      "chosen": "g7g8",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/5kpp/1n6/3p1p2/4pB1P/4P1P1/3b1P1K/r4q2 w - - 0 30",
+      "chosen": "h4h5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1pp3k1/8/1P1p4/1b1P3p/4P3/1P2r2q/1K6 w - - 0 33",
+      "chosen": "b1a1",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "2R5/5Qpk/3Nn3/7p/P5PP/8/5P2/5K2 b - - 0 50",
+      "chosen": "h5g4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/1N4bp/1r4p1/3pN1K1/3P1PP1/8/p6r/5R2 w - - 0 38",
+      "chosen": "b7d8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2Q5/3p4/1p2p3/1k2p3/P3P3/3P3P/1P2qP1K/R4R2 b - - 0 30",
+      "chosen": "b5b4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4k3/5p1p/2K1n3/8/3pb3/1p6/pB1b4/6q1 w - - 0 59",
+      "chosen": "c6b6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "4kr2/4n3/p3Qp2/q2n3p/b2P2pP/3PP3/PP2KPP1/2R2B1R b - - 2 21",
+      "chosen": "g4g3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "4Q3/pp6/1k2P3/5K2/P4BP1/7p/1P5P/4r3 b - - 0 36",
+      "chosen": "e1d1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r4b1r/1p2p1pp/p1n5/3k4/5P2/B3p3/6PP/q2nK2R w K - 0 28",
+      "chosen": "e1g1",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "4K3/8/3k4/3p4/3n4/3b4/5pr1/8 w - - 0 55",
+      "chosen": "e8d8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2Q5/Q7/3p1kp1/7p/2BP4/6P1/PP3K1P/R1B4R b - - 0 36",
+      "chosen": "g6g5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2r3k1/3Rb3/6B1/4B3/1p6/7P/PP3P1P/RK6 b - - 1 33",
+      "chosen": "e7f8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "Q7/6pk/7p/3QN3/3P1qP1/7P/5PK1/8 b - - 0 39",
+      "chosen": "f4e5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "5r2/2p2p2/2p3k1/4q2p/8/3b1K2/3r2P1/8 w - - 0 44",
+      "chosen": "g2g3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/6pp/1p2p3/1P2Bp1P/5P2/P4BP1/K3P3/2qr4 w - - 0 41",
+      "chosen": "a2b3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r4rk1/ppQ1n3/2p2p1p/7p/4P1b1/PP6/1KP2PP1/5q1q w - - 0 23",
+      "chosen": "c7e7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1Q2Q3/7R/2B5/5k2/8/2N3p1/1KP5/8 b - - 0 43",
+      "chosen": "f5g4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/5k1p/8/2p2pK1/7P/4P1P1/1q3q2/8 w - - 0 41",
+      "chosen": "h4h5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1r1r1k2/1P2b1pp/p1P1Qp2/8/2B1bq2/5N2/P4PPP/R4RK1 b - - 4 25",
+      "chosen": "e7c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/pr3ppp/8/2R5/3p4/3K3P/PP2PP1P/8 b - - 0 21",
+      "chosen": "b7b2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3k3/ppR5/2n5/3p2N1/3P2bR/2P3P1/PP1KP3/8 b q - 0 25",
+      "chosen": "g4f5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2bk1b1r/ppN2ppp/3p4/2p5/3nq3/8/PPP1PP1P/R1BQKB1R w KQ - 2 15",
+      "chosen": "c2c3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "3B1b2/p7/4kp2/4p3/3p4/3P2p1/KPP5/6qr w - - 0 37",
+      "chosen": "d8c7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "rn2k1nr/1pqb2p1/p2bppQp/3pN3/2pP4/2P1BN2/PP2PPPP/R3KB1R b KQq - 7 13",
+      "chosen": "e8f8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "rnbqkbnr/ppppp2p/B7/4Ppp1/1P6/8/P1PP1PPP/RNBQK1NR b KQkq - 1 4",
+      "chosen": "b8a6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "7Q/1p6/2p5/4QP2/2k1P3/P1N5/1P2K3/8 b - - 0 45",
+      "chosen": "c6c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3rk2r/p2qn1pp/2bb1p2/5P2/2Qp4/PB2N3/1P1P2PP/R1B1R1K1 b k - 3 21",
+      "chosen": "d4e3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "8/3k1p1p/8/p5P1/2rn1b2/8/6K1/1q6 w - - 0 49",
+      "chosen": "g2h3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2pbn2k/6pp/RP1pp3/1p2B3/1N1PK1P1/2r5/8 w - - 0 35",
+      "chosen": "e4f3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/6p1/4knp1/1p1b4/4pK2/4P2P/2r1P1B1/q7 w - - 0 42",
+      "chosen": "g2e4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/6k1/5q1p/2p4P/2K5/8/8/6q1 w - - 0 53",
+      "chosen": "c4b5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/5R2/p6r/3P2N1/4R3/6P1/PP6/6K1 b - - 4 42",
+      "chosen": "h6d6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/Q3R3/6PB/2kp4/2pb4/3P3P/PPP3KP/R7 b - - 0 28",
+      "chosen": "c5d6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5nk1/1Q6/5B2/5B2/5P2/P2P4/5P1P/7K b - - 0 46",
+      "chosen": "f8d7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r1k4q/8/2p3K1/q5Np/7P/8/5rP1/8 w - - 3 58",
+      "chosen": "g5h7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "5bkr/pq4pp/8/5nB1/K1Nn4/2P4R/PP3P2/8 w - - 0 28",
+      "chosen": "a2a3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1rq2k1/P4p2/R3bn1Q/1Bp1R3/3p4/3P3P/1P4P1/2B3K1 b - - 0 37",
+      "chosen": "c8c7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1R5Q/p3p3/3pk3/P2bp3/8/6P1/1K3P2/2R5 b - - 0 37",
+      "chosen": "e6d7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1r1r2k1/pb2bpp1/1pq2n1p/2p1pP2/2P3PP/PPN1B3/2Q1BP2/2R1R1K1 w - - 1 25",
+      "chosen": "g4g5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3Qr3/pp3kp1/2pN4/8/3R4/P1PK3p/1P4PP/7R b - - 2 28",
+      "chosen": "f7g6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1BR5/5k2/p7/5pp1/3n4/1P6/3r1PP1/5K2 w - - 4 39",
+      "chosen": "b3b4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "r1bq1kr1/p3bpp1/2pp3p/2p1N2n/P1B1P3/2N2Q2/1PP2PPP/R2R2K1 b - - 3 19",
+      "chosen": "d8e8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3q1bk1/5p2/p3p1p1/1b1pB3/3P2B1/P6Q/2P1NPPP/6K1 b - - 5 36",
+      "chosen": "b5e2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1p2k2p/6p1/8/1B6/1Q3qnP/P1P2b1K/3R4 b - - 8 39",
+      "chosen": "e7e8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2Q5/8/8/1R6/P7/1k6/5K2/8 b - - 2 49",
+      "chosen": "b3a2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1k6/2p4p/2P3pP/8/5K2/2b5/8/q3q3 w - - 0 45",
+      "chosen": "f4g5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "b3k2r/2p2ppp/p2b1p2/8/3Pq3/4B1P1/PP2BP1P/RN3RK1 w k - 1 18",
+      "chosen": "f1c1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7r/p4Q1p/7k/2bpqp2/P7/8/2P3KP/8 w - - 0 29",
+      "chosen": "g2h1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r7/P6R/1kr4P/Bp1ppp2/2p1n3/4P1P1/2P5/R5K1 b - - 1 40",
+      "chosen": "b6a6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3k1r1/p3np2/1p6/2ppq1p1/2P3Pp/B4P2/P1PQ4/2KR3R w q - 0 26",
+      "chosen": "c4d5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3r1k2/p1p2p1p/2PbbQ2/1N3p2/8/1P6/P1P2PPP/2r2BK1 b - - 8 27",
+      "chosen": "d6e7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b1Bk2/pp1p4/3N1p2/3n4/8/P1n5/7r/1KR5 w - - 4 32",
+      "chosen": "b1a1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4R3/kpp2p2/p7/8/2P3p1/PP6/2qr3p/K7 w - - 2 38",
+      "chosen": "e8a8",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/5k2/5p2/1pp5/4p1Kp/4P3/5q2/8 w - - 2 47",
+      "chosen": "g4h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "Q7/3p2p1/1B2p2k/4P3/3P1P1p/3B4/5K1P/1R6 b - - 0 31",
+      "chosen": "g7g6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1bq2kr/ppppb1pp/2n1p2n/5pNQ/4P3/2NPB3/PPP2PPP/R3KB1R b KQ - 5 8",
+      "chosen": "d7d5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "2rq1br1/3knB1p/pnpP1Q2/1p4p1/8/P1NP4/1PP2P1P/R3R1K1 b - - 0 18",
+      "chosen": "g5g4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6R1/2pkp2p/pp1p3r/1N6/2B5/1P3N1P/P1P2PP1/2KR4 b - - 3 22",
+      "chosen": "h6f6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/p4B1k/6p1/6Qp/3b2P1/8/PPP4P/1K6 b - - 0 29",
+      "chosen": "h7h8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3r1k1/p4pp1/2p3b1/qp1p3p/1b1P1P2/4P2B/1PP1N3/2K2RQR w - - 2 27",
+      "chosen": "f4f5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "3b3k/8/8/2K5/4q3/7P/1r1pB3/8 w - - 4 67",
+      "chosen": "c5d6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "2R5/4P1pk/1P3p2/2n4P/8/p1N2NP1/P1P3KP/8 b - - 0 33",
+      "chosen": "c5b7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r2q1rk1/5pp1/4p3/pp1b1nNQ/2nP4/3N2P1/PP3PBP/2R1R1K1 b - - 2 20",
+      "chosen": "g7g6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "6rk/p2p1p1p/1p6/3bq3/2Pp4/8/PP3K1P/5R2 w - - 0 37",
+      "chosen": "c4d5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2k5/1pp5/2q1p3/p3P1B1/4P2b/1PNQ3P/P1P2r2/1R4K1 b - - 1 28",
+      "chosen": "c6c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/1pp1rp1p/4n1bB/4p1P1/3pPq2/3P3K/2r5/6R1 w - - 0 41",
+      "chosen": "h6g7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/8/1pNk4/1P1PR3/3R4/8/P7/1K6 b - - 0 48",
+      "chosen": "d6c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7k/ppp3pp/2n3b1/3B4/5r2/8/P5PP/4b2K w - - 0 31",
+      "chosen": "a2a3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1k4r/1pp2N1p/4pnp1/p7/3b4/P2P2PP/2p1PPB1/R3KR2 w Q - 0 22",
+      "chosen": "a1c1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1R1Q4/5r1k/6pp/2q5/4P3/P1N3PP/2KN4/8 b - - 6 37",
+      "chosen": "c5a3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/5p2/1p2np1p/8/4b3/B3P2P/3P1P1K/1q4r1 w - - 0 33",
+      "chosen": "a3b2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/p5k1/Pp3p2/4bp2/2K5/1P6/8/3q3q w - - 0 43",
+      "chosen": "b3b4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/5r1p/5np1/6k1/p7/2P1Pb2/Pq6/R3R1K1 w - - 3 44",
+      "chosen": "a1b1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3r3k/5p1p/5np1/4p3/BRNrP3/5P2/p1P3PP/R6K w - - 4 31",
+      "chosen": "a1a2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "2Q5/1P6/R7/3B2k1/5b1p/7P/2K3P1/8 b - - 2 50",
+      "chosen": "f4b8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/5k1p/3n3p/3q4/5p2/8/5PPK/8 w - - 0 43",
+      "chosen": "f2f3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1p3kp1/2p1R3/5P2/6Pp/p1Br3P/r7/6K1 w - - 2 48",
+      "chosen": "c3g7",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/p1p2p1p/8/8/2b4P/P4P2/2p3PK/2r1q3 w - - 0 35",
+      "chosen": "h4h5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1kr2b2/ppp1pb2/8/1N1p4/3Q2p1/1P2P3/P3PPP1/R1BK1BNR b - - 5 23",
+      "chosen": "a7a6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r5k1/5ppp/8/RR2n3/2PBP3/8/2K1BPPP/8 b - - 0 31",
+      "chosen": "a8a5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r4rk1/3q2p1/2p5/1N2p1N1/P3Q1b1/8/1PP4P/R5K1 b - - 3 28",
+      "chosen": "c6b5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "1Q2Rn2/5pkp/6p1/6P1/P7/7K/5R1P/8 b - - 2 47",
+      "chosen": "f8e6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r2qk2r/1ppbb1pN/3p4/p1nPp3/8/P4N1P/1P3P2/RQB1KB1R b KQkq - 0 16",
+      "chosen": "c5b3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "Q3R3/3Q2p1/P5kp/8/8/5P2/7P/6K1 b - - 0 50",
+      "chosen": "g6g5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/8/8/4K3/3N4/5Q2/5k2/8 b - - 8 61",
+      "chosen": "f2e1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2k1r3/pbp5/1pq2P1p/2b1B1p1/2P5/P2Q1N2/1P3PPP/3R2K1 b - - 2 25",
+      "chosen": "e8e5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/5kp1/8/4p2P/2n5/3Kn3/4P3/q7 w - - 0 40",
+      "chosen": "d3e4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r6k/PR5P/8/8/5p2/3R1P2/8/6K1 b - - 0 51",
+      "chosen": "a8a7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3k2r/p4pp1/p1p5/3ppR2/6q1/P1KPq3/1PP5/8 w kq - 2 27",
+      "chosen": "f5f1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4r2k/3p1p1p/p2p1b1B/1p5P/8/3B1P1R/PPP5/1K6 w - - 0 28",
+      "chosen": "h3h1",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "8/1R4k1/5NP1/2P1PP2/8/7P/b2K4/8 b - - 2 52",
+      "chosen": "g7h6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/R1p3pp/8/1P1p1p2/KNnB4/2P3PP/4rP2/r7 w - - 9 35",
+      "chosen": "a4b3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/1p3ppp/8/PRP5/3r4/4pb2/2P4P/4K1R1 w - - 0 31",
+      "chosen": "g1g3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "6Q1/7R/8/1pp5/1k2p3/4P3/P7/4K3 b - - 0 48",
+      "chosen": "b4c3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r5k1/1R5p/2p3p1/3p4/4BqPn/8/P3PP1P/Q3K2R b K - 2 29",
+      "chosen": "f4e4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4r3/pp3p2/8/3k2B1/3p2P1/3n3p/1Pr2P2/5KR1 w - - 4 35",
+      "chosen": "g5d2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/5ppp/8/8/4bP2/2p3KP/3q4/8 w - - 0 43",
+      "chosen": "f4f5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r6k/1R1p2p1/4p2p/8/3p1P1P/3B4/3P1KP1/8 b - - 4 35",
+      "chosen": "a8a2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1Q6/R5b1/2k2p2/5n1P/5B2/2N2P2/1PP2K1P/7R b - - 0 29",
+      "chosen": "g7h6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2kr3r/1p1bqp2/2n1pnp1/pN1p4/3P1Q2/P4N2/1PP2P1P/1K2RBR1 b - - 10 20",
+      "chosen": "f6e4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "r1bkqr2/1p3pP1/1p1P4/p5B1/8/2RQ4/P4PPP/4R1K1 b - - 0 25",
+      "chosen": "d8d7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/ppp3p1/8/1q6/8/P7/3r2Kp/8 w - - 2 43",
+      "chosen": "g2h1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3k2r/1b1p1p1p/3Q3p/p1P1p3/1p1n4/4q1P1/1P1N1R1P/5RK1 w kq - 1 21",
+      "chosen": "d2c4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6rk/1pR4p/p7/P2Pp3/2p1P3/2P2P2/2r5/R3K3 w - - 1 35",
+      "chosen": "c7b7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "6k1/5ppp/2n4P/8/p3q1K1/6P1/3r4/8 w - - 1 42",
+      "chosen": "g4h3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/p1p2k2/P1n2p2/4pNp1/R4bP1/2P2PK1/2r5/8 w - - 2 34",
+      "chosen": "g3h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2b2k1r/p3npb1/3Q2p1/8/3Pp3/7P/PPqP1P2/R1B1K2R b KQ - 3 21",
+      "chosen": "h8h5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "8/8/4Q3/1P4k1/2N3p1/P7/2K2PP1/8 b - - 0 55",
+      "chosen": "g4g3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "2r4k/P2R4/6P1/8/5R2/3P2K1/6P1/8 b - - 0 48",
+      "chosen": "h8g8",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "7r/5PRP/1kpQ4/3p4/1P1P4/P1P1P3/3KB3/8 b - - 2 39",
+      "chosen": "h8h7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/3K3q/8/2N5/1q1k4/8/8/8 w - - 2 71",
+      "chosen": "d7e6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/5k2/1p4p1/4q1P1/8/1r2P1K1/5P2/3q4 w - - 2 45",
+      "chosen": "f2f4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "4Q1Q1/1k6/pp5p/5N2/8/P1N5/1PP2PK1/R3R3 b - - 0 32",
+      "chosen": "b7a7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r2n2k1/pp4pp/2pBb3/6P1/4B3/2P5/PP5P/5RK1 b - - 0 21",
+      "chosen": "e6a2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "1r4k1/p7/3p3p/2p5/3q2p1/P4r2/2PB3P/2K3R1 w - - 1 31",
+      "chosen": "g1g4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "r5k1/p5pp/2p5/1p1r2N1/5p1P/QPK5/PP3qP1/5B2 w - - 0 24",
+      "chosen": "a3e7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b1rbk1/1q3p2/1pp2N1p/2n1pQp1/p1P5/P3BNP1/1P2PP1P/3R1RK1 b - - 8 20",
+      "chosen": "g8h8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "5b2/R2k4/2r2p2/N2p2p1/2n3P1/6Br/PPP4P/1K2R3 b - - 4 29",
+      "chosen": "d7c8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b2rk1/pp4pp/2n5/4p3/8/Pq3p2/1P2N2P/R1B1KB2 w - - 0 22",
+      "chosen": "e2g3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1r2r1k1/pbp3pp/p7/3q4/1n1P3P/NP2p1P1/5N1K/BQ2R2R w - - 2 28",
+      "chosen": "f2d3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r1b2q2/pppk1p2/7Q/3p4/3n2p1/P5P1/1Pr2PP1/5K1R w - - 0 23",
+      "chosen": "h6f8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2k5/1pp3Q1/p3NP2/1N1p1p2/3P1q2/5P2/PPP1KP2/7R b - - 0 32",
+      "chosen": "f4f3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "2k5/p1p2R2/Pp5P/8/2P3K1/P7/5PP1/8 b - - 2 39",
+      "chosen": "c8b8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3r1k1/pR6/7R/5N2/4nn2/B7/5PPK/1N6 b - - 6 40",
+      "chosen": "e4g5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2N5/R4kp1/8/7p/4B3/P6P/1BP3K1/8 b - - 1 43",
+      "chosen": "f7e6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4r3/p1k4p/2p3p1/3b4/3P4/2R5/P2Kr1Pb/8 w - - 4 32",
+      "chosen": "d2c1",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "2Q5/5nk1/8/P4Q2/5K2/8/8/8 b - - 2 59",
+      "chosen": "f7d6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4r1r1/pp3Npp/5P2/8/8/2k5/5bPP/3K4 w - - 2 27",
+      "chosen": "f7d6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r3r3/p5kp/5n1p/5Q2/3P4/2q5/5PP1/3K4 w - - 4 40",
+      "chosen": "f5c2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/Q4k1p/3Pb3/4P3/7K/5q2/3B3P/5BR1 b - - 5 33",
+      "chosen": "f7f8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1Q6/R7/8/5k2/5P2/3P2P1/7P/6K1 b - - 0 54",
+      "chosen": "f5g4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1p6/p2k4/2PPp1q1/Q2n2b1/P2BN1P1/5r2/R1K5 b - - 0 39",
+      "chosen": "d6c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "7R/8/3p4/2p2bkB/2P2n2/6p1/p5rp/B6K w - - 2 67",
+      "chosen": "h5f3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7k/1b2bp1p/3p4/3Pp3/3B2Q1/6P1/5P1K/2r1q3 w - - 4 35",
+      "chosen": "d4e3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6R1/1Np5/3pR2q/3P2kp/6n1/2N5/1PP2PQb/7K b - - 6 41",
+      "chosen": "g5f4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "7k/7P/7K/8/4BN2/8/8/b7 b - - 10 70",
+      "chosen": "a1c3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "2r4k/4q3/6Rp/3QP3/2p2B2/P7/2P2NPP/6K1 b - - 0 34",
+      "chosen": "c8f8",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "1k1r4/8/6n1/p1b3N1/2P1p3/6qP/1P2K3/5R2 w - - 0 31",
+      "chosen": "g5e4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4Q3/2Q5/8/1P3KP1/8/2k5/8/8 b - - 0 61",
+      "chosen": "c3d3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "7Q/6R1/8/3k4/2p2B2/5P2/2P3K1/8 b - - 0 45",
+      "chosen": "d5d4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1b1p1k1p/p7/1p2P3/3p4/Pr1P3B/2p2r2/2K3R1 w - - 0 44",
+      "chosen": "h3d7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/2p2k2/2n5/7p/5K2/8/8/3b2q1 w - - 0 45",
+      "chosen": "f4e4",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "6rk/5R2/4R2p/p7/1bP2P1P/1rN2K2/1P3P2/8 b - - 3 39",
+      "chosen": "h6h5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3Q4/5p1k/2q4p/p3R3/1B4Q1/P1P5/5PPP/6K1 b - - 0 35",
+      "chosen": "c6g6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "rk1R1b1r/5p2/b1p3pp/8/4n3/p4NP1/P1P1NB1P/1K1R4 b - - 3 24",
+      "chosen": "b8b7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "r7/ppp1BQpk/7p/n4p2/4q2P/6PK/8/8 w - - 2 31",
+      "chosen": "e7b4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3k4/p1p1b3/4Q3/1P6/3Bp3/1PK1P3/P2r2r1/8 w - - 0 46",
+      "chosen": "e6d5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "4r1k1/1pp2p2/3p4/p2P2b1/P5qp/1P3R1R/5KQ1/4r3 w - - 6 38",
+      "chosen": "g2g4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "3B2k1/pp3ppp/8/8/8/3bnP1P/PP4PK/5q2 w - - 4 32",
+      "chosen": "g2g4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "6k1/pp3ppp/1qp2n2/2br4/1P3P2/P1PB1RPK/2Q4P/R1B3r1 w - - 5 27",
+      "chosen": "b4c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "r2q1rk1/ppp1bp1p/5n2/3pnbp1/PP3N2/2P1P2P/1B1N1PP1/R2QKB1R w KQ - 0 12",
+      "chosen": "f4e2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "3rk1r1/1pp1pp2/p2b3p/5b2/4q3/2P1PN1P/PP2BKP1/3R1Q1R w - - 8 20",
+      "chosen": "e2d3",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": true
+    },
+    {
+      "fen": "4R3/5rpk/5p1p/1P5P/3B4/3P2Q1/3K1P2/8 b - - 0 34",
+      "chosen": "g7g5",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "3k1b2/pp3pp1/2N2n1r/8/4p2n/P3P2q/1PP1BP1P/R2QK2R b - - 0 21",
+      "chosen": "d8e8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4r1k1/5p1p/p5p1/P7/1p1B4/1PpK1bP1/2P4P/R7 w - - 0 34",
+      "chosen": "a1a4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "r4rk1/pp1nbp1p/2p1b1pQ/q2p4/3B4/P1NBP2P/2PK1PP1/R6R b - - 1 18",
+      "chosen": "c6c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "r1b1r1k1/1pp2pp1/3p2q1/3B2Pp/1nP2Q2/pP2BPR1/P3P3/2K4R w - - 3 24",
+      "chosen": "g3g1",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "8/4n3/4k2P/4q3/7K/6P1/5P2/3q4 w - - 0 56",
+      "chosen": "h6h7",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r4bk1/4pp1p/6p1/4Q3/4P3/6PP/1B1P2P1/3R1K2 b - - 2 32",
+      "chosen": "h7h5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "Q1b1kb1r/2p1np2/4p1p1/1p2p1N1/4B3/2q1B1Pp/P1P2P1P/1R4K1 w k - 0 21",
+      "chosen": "b1b5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "5r2/p1R5/4B3/4k1Q1/P3P3/4n1N1/1P1b1qPP/7K b - - 4 29",
+      "chosen": "e5e6",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "7k/8/2K2q2/8/8/8/b7/1q6 w - - 2 65",
+      "chosen": "c6c5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1p4B1/p1p1k3/5pn1/3R4/1P1P1p2/2r2P1p/5K1B w - - 2 43",
+      "chosen": "d4a4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": true
+    },
+    {
+      "fen": "1Q6/2p1nk1p/4p3/7p/4pNn1/B3P3/2q2PP1/6K1 w - - 5 31",
+      "chosen": "f4h3",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "B7/4R3/pb1k2p1/5p2/1P6/2P3P1/3P3K/4R3 b - - 0 33",
+      "chosen": "b6f2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "k7/p2R4/8/2p5/4P1q1/3Q2B1/PPK5/5r2 b - - 9 41",
+      "chosen": "f1f6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "8/1R1kPR2/7p/2pp4/8/p3P3/1PP1K1PP/2B5 b - - 1 34",
+      "chosen": "d7e8",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "8/5Bp1/7k/p3R3/8/7P/1P2PP2/5K2 b - - 2 37",
+      "chosen": "g7g6",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    },
+    {
+      "fen": "6r1/1q6/7P/5p2/1pkn3Q/8/5P2/7K w - - 2 43",
+      "chosen": "h1h2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "1Q5Q/5k2/7R/5b2/3p4/6p1/2PK4/7R b - - 0 53",
+      "chosen": "g3g2",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r7/1p1b2k1/2p1p3/p3PpN1/P2p4/6K1/5P2/6q1 w - - 4 38",
+      "chosen": "g3f4",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "r5k1/ppp2p1p/1q6/3r4/5Bb1/6P1/PP5P/3RR2K w - - 4 25",
+      "chosen": "d1d5",
+      "allows_unseen_mate": true,
+      "allows_mate": true,
+      "saves_game": false
+    },
+    {
+      "fen": "4kb1r/p6p/1pn2p2/7P/7q/1KP5/8/5q2 w k - 0 32",
+      "chosen": "b3b2",
+      "allows_unseen_mate": false,
+      "allows_mate": false,
+      "saves_game": false
+    }
+  ]
+}

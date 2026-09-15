@@ -411,6 +411,19 @@ noted. Full table: `uv run python -m chess_nn.report`.
     0.376, n=737, ~4 SE) is now robust, yet it plays worse (finding 43): an
     unresolved mismatch. `chess_nn.search_check` on a stratified val sample
     tests whether static order survives quiescence and changes the chosen move.
+51. **Mate-in-one benchmark through play-move (730 held-out positions: 109
+    defensible, 621 lost) — selection-biased, so compare only on positions
+    from other models' games.** Each model allows the mate in 100% of the
+    positions its own games produced (h1024 40/40 and 197/197; rank-a-h512-w0,
+    identical to the h512 source model, 39/39 and 200/200). On positions from
+    h1024 + kb256 games (70 defensible / 421 lost), unseen mates still
+    allowed: rank-a-h512-w0 47 (67%) / 289 (69%); w0.5 41 (59%) / 267 (63%);
+    w2 44 (63%) / 275 (65%); threat-a-t64-w0 35 (50%) / 283 (67%);
+    threat-a-t64-w0.1 39 (56%) / 253 (60%). On kb256-source positions alone
+    (30 / 224), h1024 allows 19 (63%) / 133 (59%). No model avoids these
+    reliably; ThreatNet w0's lower defensible rate is ~2 SE at n=70, and
+    lost-position rates are indistinguishable. Treated as a small, secondary
+    signal (5-10% of decisive errors).
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),

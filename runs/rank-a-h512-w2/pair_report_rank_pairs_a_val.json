@@ -1,0 +1,22 @@
+{
+  "mate-in-one rule": {
+    "pairs": 0,
+    "accuracy": null
+  },
+  "tactical score gap (>= 300 cp)": {
+    "pairs": 86,
+    "accuracy": 0.43
+  },
+  "moderate score gap (100-299 cp)": {
+    "pairs": 223,
+    "accuracy": 0.498
+  },
+  "repetition rule": {
+    "pairs": 9,
+    "accuracy": 0.556
+  },
+  "all": {
+    "pairs": 318,
+    "accuracy": 0.481
+  }
+}
