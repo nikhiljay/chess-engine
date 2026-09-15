@@ -114,7 +114,13 @@ noted. Full table: `uv run python -m chess_nn.report`.
     the mix). Caveat: the file is not shuffled — 200k lines at line 60M have
     median depth 23 (start: 30), 10.3% mates (18.6%), 15% ≤10 pieces (24%) —
     so the pilot slice is not representative of a full-file sample.
-18. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
+18. **Eval-db endgames at ~12% share: no clear gain.** June 0-3 + July 0-1 +
+    587,700 pilot positions with ≤10 pieces (h512): L1 64.8% / L2 49.2%
+    (baseline 65.2 / 50.0); with the mate ladder 68.0 / 46.5. L1 +2.8 is
+    inside seed noise and L2 fell; repetition-while-winning stays 59-65.
+    A seed-1 replicate of the ladder run checks the L1 number. Full eval-db
+    conversion is deprioritized.
+19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
 ## State at the interruption

@@ -5,6 +5,7 @@
   "defaults": {"epochs": 20, "batch_size": 16384, "hidden": 512, "head": [32, 32], "wdl_scale_cp": 400},
   "runs": [
     {"name": "evp-eg-h512-s400"},
-    {"name": "evp-eg-h512-s400-ladder", "mate_base_cp": 3000, "mate_step_cp": 20}
+    {"name": "evp-eg-h512-s400-ladder", "mate_base_cp": 3000, "mate_step_cp": 20},
+    {"name": "evp-eg-h512-s400-ladder-seed1", "mate_base_cp": 3000, "mate_step_cp": 20, "seed": 1}
   ]
 }
