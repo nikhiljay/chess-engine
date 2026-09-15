@@ -103,9 +103,10 @@ noted. Full table: `uv run python -m chess_nn.report`.
   `data/shards_selfplay/shard_selfplay_a_0000.npz` (154,944 positions).
 - Every sweep listed under "Resuming" finished; results are in `runs/` and
   committed.
-- The July 2017 download was still in progress
-  (`data/lichess_2017-07.pgn.zst.part`, resumable); July sampling and
-  labeling have not run.
+- The July 2017 download finished (`data/lichess_2017-07.pgn.zst`); July
+  sampling was running when work stopped and will be cut off by the update.
+  Re-run it from scratch (it overwrites `data/candidates_2017-07.txt`), then
+  label July.
 
 ## Next steps after the interruption
 
