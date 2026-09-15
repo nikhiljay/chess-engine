@@ -1,0 +1,12 @@
+{
+  "shards": ["data/shards/shard_000[0-3].npz", "data/shards/shard_2017-07_000[0-1].npz"],
+  "levels": [1, 2],
+  "openings": "data/dev_openings_100.txt",
+  "defaults": {"epochs": 20, "batch_size": 16384, "hidden": 512, "head": [32, 32], "wdl_scale_cp": 1000, "cp_loss_weight": 0.2,
+               "shaping_threshold_cp": 300},
+  "runs": [
+    {"name": "jj6-h512-s1000-cp20-shape-mid", "shaping_pawn_cp": 40, "shaping_trade_cp": 15, "shaping_mopup_cp": 50},
+    {"name": "jj6-h512-s1000-cp20-shape-strong", "shaping_pawn_cp": 80, "shaping_trade_cp": 30, "shaping_mopup_cp": 100},
+    {"name": "jj6-h512-s1000-cp20-shape-mid-seed1", "shaping_pawn_cp": 40, "shaping_trade_cp": 15, "shaping_mopup_cp": 50, "seed": 1}
+  ]
+}

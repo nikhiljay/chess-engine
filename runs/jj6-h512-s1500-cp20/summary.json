@@ -1,0 +1,23 @@
+{
+  "params": 428641,
+  "positions": 4361752,
+  "final_train_loss": 0.1979510638277962,
+  "final_val_loss": 0.0018118125385094858,
+  "harness_validation": true,
+  "onnx_parity_max_abs_diff": 1.33514404296875e-05,
+  "onnx_parity_ok": true,
+  "sanity": {
+    "startpos": {
+      "eval": 0.506,
+      "pass": false
+    },
+    "queen_up": {
+      "eval": 11.052,
+      "pass": true
+    },
+    "queen_down": {
+      "eval": -9.684,
+      "pass": true
+    }
+  }
+}

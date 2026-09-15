@@ -193,6 +193,16 @@ noted. Full table: `uv run python -m chess_nn.report`.
     is the best of four noisy runs, not the recipe's level, so it is not
     treated as the ≥72% official-run milestone. Next:
     `sweeps/jj6_scale3.json` (s1500 + cp 0.2, s1000 + cp 0.2 seed 1, h1024).
+28. **s1000 + cp 0.2 puts dev L1 at ~70%; L2 stays in the low 50s.** s1000 +
+    cp 0.2 seed 1: 70.8 / 49.2 (seed 0 69.2 / 53.2 → mean 70.0 / 51.2);
+    s1000 + cp 0.1 seeds mean 67.9 / 54.0. s1500 + cp 0.2: 60.5 / 50.7, so
+    both knobs high at once hurts. h1024 (856k params) + s1000 + cp 0.2:
+    69.8 / 54.2 with 13 L1 losses — width barely moves L2. L2
+    repetition-while-winning is still 67-78: converting those games is
+    worth ~15-20 L2 points, so conversion remains the path to L2.
+    Next: `sweeps/jj6_shape2.json` — progress shaping (finding 8) retried at
+    3-7× the bonuses on top of s1000 + cp 0.2, where the pawn loss keeps
+    gradient in won positions.
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 

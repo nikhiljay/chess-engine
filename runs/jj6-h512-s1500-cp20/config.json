@@ -1,0 +1,35 @@
+{
+  "name": "jj6-h512-s1500-cp20",
+  "shards": [
+    "/Users/nikhildsouza/workspace/chess-challenge/training/data/shards/shard_0000.npz",
+    "/Users/nikhildsouza/workspace/chess-challenge/training/data/shards/shard_0001.npz",
+    "/Users/nikhildsouza/workspace/chess-challenge/training/data/shards/shard_0002.npz",
+    "/Users/nikhildsouza/workspace/chess-challenge/training/data/shards/shard_0003.npz",
+    "/Users/nikhildsouza/workspace/chess-challenge/training/data/shards/shard_2017-07_0000.npz",
+    "/Users/nikhildsouza/workspace/chess-challenge/training/data/shards/shard_2017-07_0001.npz"
+  ],
+  "hidden": 512,
+  "head": [
+    32,
+    32
+  ],
+  "epochs": 20,
+  "batch_size": 16384,
+  "lr": 0.001,
+  "weight_decay": 0.0001,
+  "val_frac": 0.02,
+  "seed": 0,
+  "wdl_scale_cp": 1500,
+  "score_clamp_cp": 2500,
+  "mate_base_cp": null,
+  "mate_step_cp": 20,
+  "shaping_threshold_cp": null,
+  "shaping_pawn_cp": 10,
+  "shaping_trade_cp": 4,
+  "shaping_mopup_cp": 15,
+  "cp_loss_weight": 0.2,
+  "cp_loss_clip_pawns": 50.0,
+  "device": "mps",
+  "limit": null,
+  "runs_dir": "/Users/nikhildsouza/workspace/chess-challenge/training/runs"
+}
