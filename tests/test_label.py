@@ -33,6 +33,42 @@ def test_quiet_move_filter():
     assert not is_quiet_best_move(promo, "a7a8q")
 
 
+class FakeEngine:
+    """Returns scripted (score, best move) per depth and records requested depths."""
+
+    def __init__(self, by_depth):
+        self.by_depth = by_depth
+        self.depths = []
+
+    def analyse(self, fen, depth):
+        self.depths.append(depth)
+        return self.by_depth[depth]
+
+
+def test_deep_search_replaces_lopsided_scores():
+    engine = FakeEngine({9: ((900, 0), "g1f3"), 14: ((32000, 5), "b1c3")})
+    fen, score, mate, _ = label_position(engine, chess.STARTING_FEN, 9, deep_depth=14, deep_threshold_cp=600)
+    assert (score, mate) == (32000, 5)
+    assert engine.depths == [9, 14]
+
+
+def test_deep_search_skips_balanced_and_mate_scores():
+    balanced = FakeEngine({9: ((120, 0), "g1f3"), 14: ((999, 0), "g1f3")})
+    assert label_position(balanced, chess.STARTING_FEN, 9, deep_depth=14)[1] == 120
+    assert balanced.depths == [9]
+    mate = FakeEngine({9: ((32000, 3), "g1f3"), 14: ((32000, 2), "g1f3")})
+    assert label_position(mate, chess.STARTING_FEN, 9, deep_depth=14)[2] == 3
+    assert mate.depths == [9]
+
+
+def test_deep_search_best_move_decides_quiet_filter():
+    # Deeper search finds a capture as best move, so the position is dropped.
+    engine = FakeEngine({9: ((900, 0), "g1f3"), 14: ((1200, 0), "e2e4")})
+    board_fen = "rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 2"
+    engine.by_depth[14] = ((1200, 0), "e4d5")
+    assert label_position(engine, board_fen, 9, deep_depth=14) is None
+
+
 @pytest.mark.skipif(shutil.which("stockfish") is None, reason="stockfish not installed")
 def test_stockfish_labels_startpos():
     engine = Stockfish()

@@ -98,28 +98,45 @@ class Stockfish:
         self.proc.wait(timeout=5)
 
 
-def label_position(engine: Stockfish, fen: str, depth: int) -> Row | None:
-    """Label one position; None if it has no score or its best move is not quiet."""
+def label_position(
+    engine: Stockfish,
+    fen: str,
+    depth: int,
+    deep_depth: int | None = None,
+    deep_threshold_cp: int = 600,
+) -> Row | None:
+    """Label one position; None if it has no score or its best move is not quiet.
+
+    With deep_depth set, lopsided positions (|score| >= deep_threshold_cp without
+    a mate score) are searched again deeper, which finds forced mates that the
+    base depth reports only as large centipawn scores.
+    """
     board = chess.Board(fen)
     score, best = engine.analyse(fen, depth)
-    if score is None or best == "(none)" or not is_quiet_best_move(board, best):
+    if score is None or best == "(none)":
+        return None
+    if deep_depth and score[1] == 0 and abs(score[0]) >= deep_threshold_cp:
+        deep_score, deep_best = engine.analyse(fen, deep_depth)
+        if deep_score is not None and deep_best != "(none)":
+            score, best = deep_score, deep_best
+    if not is_quiet_best_move(board, best):
         return None
     score_cp, mate = score
     return fen, score_cp, mate, feature_indices(board)
 
 
 _engine: Stockfish | None = None
-_depth = 0
+_label_args: tuple[int, int | None, int] = (0, None, 0)
 
 
-def _init_worker(stockfish_path: str, depth: int) -> None:
-    global _engine, _depth
+def _init_worker(stockfish_path: str, depth: int, deep_depth: int | None, deep_threshold_cp: int) -> None:
+    global _engine, _label_args
     _engine = Stockfish(stockfish_path)
-    _depth = depth
+    _label_args = (depth, deep_depth, deep_threshold_cp)
 
 
 def _label_worker(fen: str) -> Row | None:
-    return label_position(_engine, fen, _depth)
+    return label_position(_engine, fen, *_label_args)
 
 
 def main() -> None:
@@ -127,6 +144,8 @@ def main() -> None:
     parser.add_argument("--candidates", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, default=SHARDS_DIR)
     parser.add_argument("--depth", type=int, default=9)
+    parser.add_argument("--deep-depth", type=int, help="re-search lopsided non-mate positions at this depth")
+    parser.add_argument("--deep-threshold-cp", type=int, default=600)
     parser.add_argument("--workers", type=int, default=10)
     parser.add_argument("--stockfish", default="stockfish")
     parser.add_argument("--shard-size", type=int, default=SHARD_SIZE)
@@ -142,7 +161,8 @@ def main() -> None:
     elif args.limit:
         fens = fens[: args.limit]
 
-    with Pool(args.workers, initializer=_init_worker, initargs=(args.stockfish, args.depth)) as pool:
+    init_args = (args.stockfish, args.depth, args.deep_depth, args.deep_threshold_cp)
+    with Pool(args.workers, initializer=_init_worker, initargs=init_args) as pool:
         if args.bench:
             start = time.time()
             kept = sum(row is not None for row in pool.imap(_label_worker, fens, chunksize=16))
