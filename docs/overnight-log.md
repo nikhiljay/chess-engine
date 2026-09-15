@@ -262,6 +262,11 @@ noted. Full table: `uv run python -m chess_nn.report`.
     main leak is losses (60% of games), not conversion, so the ranking pairs
     keep every clearly worse move (gap ≥ 100 cp), not only repetition slips.
     Also L3: jj6-h512-s1000-cp10 57.5/200 (29%).
+37. **L3 on dev openings (W/D/L).** jj6-h1024-s1000-cp20 29.0% (20/76/104);
+    jj6-h512-s1000-cp10-seed1 28.0% (23/66/111); jj6-h512-s1000-cp10 28.7%
+    (16/83/101); kb-h256-s1000-cp20 33.2% (31/71/98); kb-h512-s1000-cp20
+    26.8% (18/71/111). Every model loses about half its L3 games; king
+    buckets h256 is the best L3 score so far but within ~±3 of the rest.
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
