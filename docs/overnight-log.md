@@ -254,6 +254,14 @@ noted. Full table: `uv run python -m chess_nn.report`.
     decisions (good continuation vs the tempting move), then capacity.
     ThreatNet (in-graph attack/threat features, `threat_hidden`) is written
     and tested but parked until the ranking signal is measured.
+36. **Recorded games (h1024, random training openings, no random moves).**
+    L2: 400 games, score 46.6% — 103 wins, 167 draws (all threefold
+    repetition), 130 losses (all checkmate), median 69 plies. L3: 24.2% —
+    35 wins, 124 repetition draws, 241 checkmate losses, median 71 plies.
+    No stalemates or fifty-move draws; games run to mate. Against L3 the
+    main leak is losses (60% of games), not conversion, so the ranking pairs
+    keep every clearly worse move (gap ≥ 100 cp), not only repetition slips.
+    Also L3: jj6-h512-s1000-cp10 57.5/200 (29%).
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
