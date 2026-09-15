@@ -323,6 +323,19 @@ noted. Full table: `uv run python -m chess_nn.report`.
       mate in one and safe moves exist, up to 4 safe alternatives (Stockfish's
       best first) are paired against it regardless of the lost filter, and
       reported separately from score-gap and repetition-rule pairs.
+42. **Static pair accuracy by kind (rank_pairs_a_val, 318 pairs; built
+    before the mate kind).** Tactical score gap ≥300 cp (n=86) / moderate
+    100-299 (n=223) / repetition rule (n=9) / all:
+    - rank-a-h512-w0 (plain, no ranking): 0.384 / 0.345 / 0.444 / 0.358
+    - rank-a-h512-w0.5: 0.442 / 0.448 / 0.778 / 0.456
+    - rank-a-h512-w2: 0.430 / 0.498 / 0.556 / 0.481
+    - threat-a-h512-t64-w0 (ThreatNet, no ranking): 0.512 / 0.413 / 0.222 / 0.434
+    ThreatNet without any ranking loss ranks tactical pairs best (0.51 vs
+    0.38 plain), consistent with threat features exposing consequences the
+    search misses, but n=86 puts that at ~2.4 standard errors and n=9
+    repetition pairs says nothing. Firmer evidence has to come from the
+    larger diagnosis and from move selection on the held-out mate
+    benchmark.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
