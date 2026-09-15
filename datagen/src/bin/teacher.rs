@@ -337,6 +337,17 @@ fn quiescence(evaluator: &dyn Evaluator, board: &Board, mut alpha: f32, beta: f3
     alpha
 }
 
+/// What one move is worth to an evaluator, searched with a full window.
+fn move_value(evaluator: &dyn Evaluator, game: &GameState, mv: Move) -> f32 {
+    let mut child = game.board.clone();
+    child.play_unchecked(mv);
+    match status_of(&child) {
+        Status::Lost => MATE_SCORE_F,
+        Status::Drawn => DRAW_SCORE_F,
+        Status::Ongoing => -quiescence(evaluator, &child, f32::NEG_INFINITY, f32::INFINITY),
+    }
+}
+
 /// Depth-1 root search. Returns the chosen move and its score.
 fn choose_move(evaluator: &dyn Evaluator, game: &GameState) -> Option<(Move, f32)> {
     let legal = game.legal_moves();
@@ -605,8 +616,11 @@ fn mode_compare(cfg: &Config) {
             replay(&games[i], |game, recorded| {
                 let (student_mv, student_score) = choose_move(student, game).expect("student move");
                 let (teacher_mv, teacher_score) = choose_move(&teacher, game).expect("teacher move");
+                // What each move is worth to the teacher, so a disagreement can be priced.
+                let teacher_best = move_value(&teacher, game, teacher_mv);
+                let teacher_on_student = move_value(&teacher, game, student_mv);
                 out.push(format!(
-                    r#"{{"game":{},"ply":{},"fen":"{}","recorded":"{}","student":"{}","student_score":{:.4},"teacher":"{}","teacher_score":{:.4},"agree":{}}}"#,
+                    r#"{{"game":{},"ply":{},"fen":"{}","recorded":"{}","student":"{}","student_score":{:.4},"teacher":"{}","teacher_score":{:.4},"teacher_best_value":{:.4},"teacher_value_of_student_move":{:.4},"cost":{:.4},"agree":{}}}"#,
                     i,
                     game.history.len(),
                     game.board,
@@ -615,6 +629,9 @@ fn mode_compare(cfg: &Config) {
                     student_score,
                     format_move(teacher_mv),
                     teacher_score,
+                    teacher_best,
+                    teacher_on_student,
+                    teacher_best - teacher_on_student,
                     teacher_mv == student_mv,
                 ));
             });
