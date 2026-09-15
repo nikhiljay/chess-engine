@@ -152,6 +152,10 @@ noted. Full table: `uv run python -m chess_nn.report`.
     54 / 54 (59 / 59). With the mate ladder: 64.0 / 48.5, repetition-while-
     winning 65 / 64. L1 +3.8 is at the edge of seed noise; L2 −6.2 is beyond
     it. A seed-1 replicate of the plain run checks the L1 number.
+    h256 + loops_a: L1 68.5% / L2 46.5% (June+July h256 62.3 / 49.2), L1
+    losses 30 → 19 — the same L1 pattern as h512 (losses 25 → 19), so the L1
+    gain holds across two widths. L2 again does not improve: 122 draws,
+    repetition-while-winning 56 → 80.
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
