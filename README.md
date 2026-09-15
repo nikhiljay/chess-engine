@@ -28,6 +28,22 @@ uv run python -m chess_nn.evaluate runs/v1-h256/model.onnx --levels 1 2
 uv run python -m chess_nn.evaluate runs/v1-h256/model.onnx --levels 1 --official
 ```
 
+## Sweeps and reports
+
+```bash
+uv run python -m chess_nn.sweep sweeps/shard0.json   # train + evaluate a JSON list of runs
+uv run python -m chess_nn.report                     # table of every run's results
+```
+
+## Positions from the net's own games
+
+```bash
+(cd datagen && cargo build --release)
+datagen/target/release/datagen runs/<run>/model.onnx --out data/selfplay.txt \
+  --games 100000 --threads 8 --level 2 --random-move-prob 0.1 --sample-prob 0.25
+uv run python -m chess_nn.label --candidates data/selfplay.txt --prefix shard_selfplay --depth 9
+```
+
 ## Play against a model
 
 ```bash
