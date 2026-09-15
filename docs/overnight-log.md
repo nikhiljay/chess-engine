@@ -103,6 +103,17 @@ noted. Full table: `uv run python -m chess_nn.report`.
     200k-line sample: 72.7% kept, median depth 30, 18.6% mate scores (human
     data 2.0%), 24% of positions with ≤10 pieces — the won endgames the net
     fails to convert.
+17. **Eval-database pilot hurts.** First 10M lines at 40% sampling → 2.80M
+    positions (61 s). h512 on those alone: L1 52.0% / L2 33.2% (losses
+    60 / 101). Mixed with June 0-3 + July 0-1 (7.17M, 39% eval-db): L1 60.5% /
+    L2 45.5%, repetition-while-winning 70 / 55 — below the human-only 65.2 /
+    50.0 on both levels. Likely cause: analysis-board positions and depth-30+
+    middlegame scores the depth-1 net cannot learn. Next test: only the
+    eval-db endgames (≤10 pieces) mixed in at a small share
+    (`sweeps/evpilot_eg.json`: 587,700 pilot positions, 50% mates, ~12% of
+    the mix). Caveat: the file is not shuffled — 200k lines at line 60M have
+    median depth 23 (start: 30), 10.3% mates (18.6%), 15% ≤10 pieces (24%) —
+    so the pilot slice is not representative of a full-file sample.
 18. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
