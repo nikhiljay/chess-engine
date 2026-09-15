@@ -1,5 +1,5 @@
 {
-  "name": "quiet-move",
+  "name": "paradigm-puzzle-chess-engine",
   "private": true,
   "type": "module",
   "description": "Play page for the chess-challenge eval net: a TypeScript engine that mirrors the harness search.",

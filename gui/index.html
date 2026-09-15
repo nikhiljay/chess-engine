@@ -1,4 +1,4 @@
-<title>Quiet Move</title>
+<title>Paradigm Puzzle Chess Engine</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -98,8 +98,8 @@
     gap: 16px 40px; padding-bottom: 20px; border-bottom: 1px solid var(--rule);
   }
   .masthead h1 {
-    margin: 0; font: 800 clamp(44px, 7vw, 76px)/0.86 var(--display);
-    letter-spacing: 0.005em; text-transform: uppercase;
+    margin: 0; max-width: 16ch; font: 800 clamp(38px, 5.4vw, 64px)/0.9 var(--display);
+    letter-spacing: 0.005em; text-transform: uppercase; text-wrap: balance;
   }
   .masthead p { margin: 10px 0 0; max-width: 58ch; color: var(--ink-soft); text-wrap: pretty; }
   .spec { margin: 0; display: grid; grid-template-columns: auto auto; gap: 4px 18px; font: 400 12.5px/1.45 var(--mono); }
@@ -209,8 +209,11 @@
   .decision-move { font: 800 34px/1 var(--display); letter-spacing: 0.01em; }
   .decision-caption { color: var(--ink-soft); font-size: 13px; text-align: right; }
   .moves { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+  .panel-note { margin: -4px 0 12px; font-size: 13px; color: var(--ink-soft); text-wrap: pretty; }
+  .panel-note:empty { display: none; }
   .moves li {
     display: grid; grid-template-columns: 58px minmax(0, 1fr) 72px; align-items: center; gap: 10px;
+    padding-left: 8px; margin-left: -11px; border-left: 3px solid transparent;
     font: 400 13px/1.9 var(--mono); font-variant-numeric: tabular-nums;
   }
   .moves .bar { height: 6px; border-radius: 3px; background: var(--rule); position: relative; overflow: hidden; }
@@ -218,6 +221,8 @@
   .moves li.chosen { font-weight: 500; }
   .moves li.chosen .bar span { background: var(--accent); }
   .moves .score { text-align: right; }
+  .moves li.played { border-left-color: var(--ink); font-weight: 500; }
+  .moves li.gap { display: block; line-height: 1; color: var(--ink-soft); border-left-color: transparent; }
   .panel-foot { margin: 10px 0 0; font: 400 11.5px/1.5 var(--mono); color: var(--ink-soft); }
 
   .sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
@@ -240,8 +245,6 @@
   .sheet .ply.current { background: var(--accent-tint); }
   .sheet-empty { color: var(--ink-soft); font-size: 14px; padding: 10px 0; margin: 0; }
 
-  .fineprint { margin: 0; color: var(--ink-soft); font-size: 13px; max-width: 65ch; }
-  .fineprint kbd { font: 500 12px/1 var(--mono); padding: 1px 4px; border: 1px solid var(--rule); border-radius: 3px; }
 
   @media (prefers-reduced-motion: reduce) { .gauge-fill { transition: none; } }
 </style>
@@ -249,7 +252,7 @@
 <div class="page">
   <header class="masthead">
     <div>
-      <h1>Quiet Move</h1>
+      <h1>Paradigm Puzzle Chess Engine</h1>
       <p>Play the eval net from the leaderboard push. It looks one move ahead, follows captures until the position is quiet, and scores what it sees — the same search the harness runs.</p>
     </div>
     <dl class="spec" id="spec"></dl>
@@ -299,6 +302,7 @@
           <div class="decision-move" id="decision-move">—</div>
           <div class="decision-caption" id="decision-caption"></div>
         </div>
+        <p class="panel-note" id="panel-note"></p>
         <ol class="moves" id="moves"></ol>
         <p class="panel-foot" id="panel-foot"></p>
       </section>
@@ -316,7 +320,6 @@
         <div class="sheet" id="sheet"></div>
       </section>
 
-      <p class="fineprint">Drag a piece, or tap it and then a square. While the net thinks, move ahead of time — premoves play the instant it's your turn; right-click or <kbd>Esc</kbd> cancels them. Right-click a square to mark it, right-drag to draw an arrow. <kbd>←</kbd> <kbd>→</kbd> step through the moves, <kbd>End</kbd> returns to the game. Scores are the net's own judgement in pawns for the side choosing the move.</p>
     </aside>
   </main>
 </div>

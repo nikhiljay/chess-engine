@@ -1,5 +1,6 @@
-// Quiet Move: play the eval net with chess.com-style input — drag or tap,
-// premoves, right-click marks and arrows, move review with the arrow keys.
+// Paradigm Puzzle Chess Engine: play the eval net with chess.com-style input — drag or tap,
+// premoves, right-click marks and arrows, move review with the arrow keys —
+// and see how the net scores every legal move in whatever position is shown.
 
 import { MATE, createEngine, type Analysis, type Engine } from "./engine.ts";
 import type { AnalyseRequest, AnalyseResponse, WeightGlobals } from "./protocol.ts";
@@ -41,7 +42,7 @@ interface Drag {
   size: number;
 }
 
-type Panel = { kind: "decision" | "read"; result: Analysis } | null;
+type Analyser = (fen: string) => Promise<Analysis>;
 
 const GLYPH: Record<ChessPieceType, string> = { k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟" };
 const TEXT_STYLE = "︎"; // keep the chess glyphs from rendering as emoji
@@ -50,6 +51,7 @@ const FILES = "abcdefgh";
 const SHOWN_MOVES = 9;
 const MIN_REPLY_MS = 300; // gives premoves a window and lets the reply read as a move
 const ANIM_MS = 170;
+const REVIEW_DEBOUNCE_MS = 120; // holding an arrow key scores only where you stop
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function $<T extends HTMLElement = HTMLElement>(id: string): T {
@@ -59,14 +61,14 @@ function $<T extends HTMLElement = HTMLElement>(id: string): T {
 }
 
 let engine: Engine;
-let analyseAsync: (fen: string) => Promise<Analysis>;
+let analyseForMove: Analyser; // the net's own moves
+let analyseForPanel: Analyser; // the panel, on a separate worker so it never delays a reply
 let game: Chess;
 let human: ChessColor = "w";
 let flipped = false;
 let selected: string | null = null;
 let targets: string[] = [];
 let thinking = false;
-let panel: Panel = null;
 let keys: string[] = [];
 let premoves: Premove[] = [];
 let generation = 0; // bumped by new game / take back so stale net replies are ignored
@@ -77,6 +79,9 @@ let pendingPromotion: ChessMove[] | null = null;
 let viewPly: number | null = null; // null = the live position
 let soundOn = true;
 let audio: AudioContext | null = null;
+let panelTimer: ReturnType<typeof setTimeout> | null = null;
+const analyses = new Map<string, Analysis>(); // by FEN; the search is deterministic
+const analysing = new Set<string>();
 const marks = { squares: new Set<string>(), arrows: new Map<string, Premove>() };
 const squares: HTMLButtonElement[] = [];
 const buttonAt = new Map<string, HTMLButtonElement>();
@@ -84,10 +89,12 @@ const buttonAt = new Map<string, HTMLButtonElement>();
 const positionKey = (chess: Chess): string => chess.fen().split(" ").slice(0, 4).join(" ");
 const fileIndex = (square: string): number => FILES.indexOf(square[0]);
 const rankIndex = (square: string): number => Number(square[1]) - 1;
+const uciOf = (move: ChessMove): string => move.from + move.to + (move.promotion ?? "");
+const sideName = (color: ChessColor): string => (color === "w" ? "White" : "Black");
 
 // ------------------------------------------------------------------ engine
 
-function createAnalyser(): (fen: string) => Promise<Analysis> {
+function createAnalyser(): Analyser {
   const local = (fen: string): Promise<Analysis> =>
     new Promise((resolve) => setTimeout(() => resolve(engine.analyse(fen)), 0));
   interface Job {
@@ -138,8 +145,8 @@ function createAnalyser(): (fen: string) => Promise<Analysis> {
 }
 
 // The engine speaks UCI; chess.js supplies the move names people read.
-function withSan(result: Analysis): Analysis {
-  const names = new Map(game.moves({ verbose: true }).map((m) => [m.from + m.to + (m.promotion ?? ""), m.san]));
+function withSan(result: Analysis, fen: string): Analysis {
+  const names = new Map(new Chess(fen).moves({ verbose: true }).map((m) => [uciOf(m), m.san]));
   for (const m of result.moves) m.san = names.get(m.uci) ?? m.uci;
   result.best = result.moves.find((m) => m.uci === result.best.uci) ?? result.best;
   return result;
@@ -167,6 +174,8 @@ function positionAtPly(ply: number): Chess {
   for (const m of game.history({ verbose: true }).slice(0, ply)) replay.move(m);
   return replay;
 }
+
+const shownPosition = (): Chess => (viewPly === null ? game : positionAtPly(viewPly));
 
 interface Outcome {
   title: string;
@@ -280,6 +289,46 @@ function premoveTargets(pieces: Map<string, ChessPiece>, from: string): string[]
 
 // ------------------------------------------------------------------ render
 
+const PIECE_TYPES: ChessPieceType[] = ["k", "q", "r", "b", "n", "p"];
+
+// Chess glyphs sit off-centre in their em box (side bearings, baseline), so
+// measure each glyph's ink in the loaded font and shift it to the true centre.
+async function centerPieceGlyphs(): Promise<void> {
+  const family = getComputedStyle(document.documentElement).getPropertyValue("--glyph").trim();
+  const size = 200;
+  const font = `${size}px ${family}`;
+  try {
+    await document.fonts.load(font, PIECE_TYPES.map((type) => GLYPH[type]).join(""));
+  } catch {
+    // Measure whichever font the browser falls back to.
+  }
+  const ctx = document.createElement("canvas").getContext("2d");
+  if (!ctx) return;
+  ctx.font = font;
+  ctx.textAlign = "left";
+  ctx.textBaseline = "alphabetic";
+  const rules: string[] = [];
+  for (const type of PIECE_TYPES) {
+    const m = ctx.measureText(GLYPH[type] + TEXT_STYLE);
+    // With line-height 1 the glyph box is one em tall and the baseline sits in the half-leading model's place.
+    const baseline = (size - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxAscent;
+    const inkCenterX = (m.actualBoundingBoxRight - m.actualBoundingBoxLeft) / 2;
+    const inkCenterY = baseline + (m.actualBoundingBoxDescent - m.actualBoundingBoxAscent) / 2;
+    const dx = (m.width / 2 - inkCenterX) / size;
+    const dy = (size / 2 - inkCenterY) / size;
+    if (Number.isFinite(dx) && Number.isFinite(dy)) {
+      rules.push(`.piece[data-type="${type}"] { translate: ${dx.toFixed(4)}em ${dy.toFixed(4)}em; }`);
+    }
+  }
+  let style = document.getElementById("piece-centering");
+  if (!style) {
+    style = document.createElement("style");
+    style.id = "piece-centering";
+    document.head.appendChild(style);
+  }
+  style.textContent = rules.join("\n");
+}
+
 function buildBoard(): void {
   const board = $("board");
   const marksLayer = $("marks");
@@ -334,7 +383,7 @@ function renderBoard(view: Chess): void {
       button.className = classes.join(" ");
       let html = "";
       if (piece) {
-        html += `<span class="piece ${piece.color}${live && hidden === name ? " lifted" : ""}">${GLYPH[piece.type]}${TEXT_STYLE}</span>`;
+        html += `<span class="piece ${piece.color}${live && hidden === name ? " lifted" : ""}" data-type="${piece.type}">${GLYPH[piece.type]}${TEXT_STYLE}</span>`;
       }
       if (col === 0) html += `<span class="coord rank">${rank}</span>`;
       if (row === 7) html += `<span class="coord file">${FILES[fileIdx]}</span>`;
@@ -371,11 +420,10 @@ function renderMarks(): void {
   $("marks").innerHTML = svg;
 }
 
-function plyLabel(ply: number): string {
-  if (ply === 0) return "Starting position";
+/** "12. Rxh3" or "12… Nf6" for the move that reached `ply`. */
+function moveLabel(ply: number): string {
   const san = game.history()[ply - 1];
-  const number = Math.ceil(ply / 2);
-  return `After ${number}${ply % 2 === 1 ? "." : "…"} ${san}`;
+  return `${Math.ceil(ply / 2)}${ply % 2 === 1 ? "." : "…"} ${san}`;
 }
 
 function renderStatus(view: Chess): void {
@@ -400,7 +448,7 @@ function renderStatus(view: Chess): void {
   const sub = $("status-sub");
   sub.classList.remove("warn");
   if (!live) {
-    title.textContent = plyLabel(viewPly ?? 0);
+    title.textContent = viewPly ? `After ${moveLabel(viewPly)}` : "Starting position";
     sub.textContent = `Move review. ← → step through the game; End or a tap on the board returns to it.${thinking ? " The net is thinking." : ""}`;
     return;
   }
@@ -433,46 +481,109 @@ function renderStatus(view: Chess): void {
   } else if (game.history().length === 0) {
     sub.textContent = "Drag a piece, or tap it and then a highlighted square.";
   } else {
-    sub.textContent = `Move ${Math.floor(game.history().length / 2) + 1}. You are playing ${human === "w" ? "White" : "Black"}.`;
+    sub.textContent = `Move ${Math.floor(game.history().length / 2) + 1}. You are playing ${sideName(human)}.`;
   }
 }
 
-function renderPanel(): void {
+// Scores the shown position on the panel worker, unless it is cached or already being scored.
+function requestPanelAnalysis(fen: string): void {
+  if (panelTimer) clearTimeout(panelTimer);
+  panelTimer = setTimeout(
+    () => {
+      panelTimer = null;
+      if (analyses.has(fen) || analysing.has(fen)) return;
+      analysing.add(fen);
+      void analyseForPanel(fen).then((result) => {
+        analysing.delete(fen);
+        analyses.set(fen, withSan(result, fen));
+        if (shownPosition().fen() === fen) renderPanel(shownPosition());
+      });
+    },
+    viewPly === null ? 0 : REVIEW_DEBOUNCE_MS,
+  );
+}
+
+function renderPanel(view: Chess): void {
+  const label = $("panel-label");
+  const headMove = $("decision-move");
+  const caption = $("decision-caption");
+  const note = $("panel-note");
   const list = $("moves");
-  if (!panel) {
-    $("panel-label").textContent = "How the net saw it";
-    $("decision-move").textContent = "—";
-    $("decision-caption").textContent = "";
+  const foot = $("panel-foot");
+  const fen = view.fen();
+  const mover = view.turn();
+  const history = game.history({ verbose: true });
+  const shownPly = viewPly ?? history.length;
+  const live = viewPly === null;
+  label.textContent = `${mover === human ? "Your options" : "The net's options"} · ${sideName(mover)}`;
+
+  const clear = (message: string): void => {
+    headMove.textContent = "—";
+    caption.textContent = "";
+    note.textContent = message;
     list.innerHTML = "";
-    $("panel-foot").textContent = "";
+    foot.textContent = "";
+  };
+  const legalCount = view.moves({ verbose: true }).length;
+  if (legalCount === 0 || (live && outcome())) {
+    clear("The game is over here — there are no moves to score.");
     return;
   }
-  const { kind, result } = panel;
+
+  const result = analyses.get(fen);
+  if (!result) {
+    if (!analysing.has(fen)) requestPanelAnalysis(fen);
+    headMove.textContent = "…";
+    caption.textContent = `scoring ${legalCount} legal moves`;
+    note.textContent = "";
+    list.innerHTML = "";
+    foot.textContent = "";
+    return;
+  }
+
+  const played = shownPly < history.length ? history[shownPly] : null;
+  const playedUci = played ? uciOf(played) : null;
+  const playedIndex = playedUci ? result.moves.findIndex((m) => m.uci === playedUci) : -1;
+  const whoFor = mover === human ? "for you" : "for the net";
+  headMove.textContent = result.best.san ?? result.best.uci;
+  caption.textContent = `its pick ${whoFor} · ${fmtPawns(result.best.score)}`;
+
+  if (played && playedIndex >= 0) {
+    const who = played.color === human ? "You played" : "The net played";
+    const entry = result.moves[playedIndex];
+    const rank = playedIndex === 0 ? "its top pick" : `ranked #${playedIndex + 1} of ${result.moves.length}`;
+    note.textContent = `${who} ${entry.san ?? entry.uci} (${fmtPawns(entry.score)}) — ${rank}.`;
+  } else if (live && history.length && history[history.length - 1].color !== human) {
+    const lastMove = history[history.length - 1];
+    const before = analyses.get(positionAtPly(history.length - 1).fen());
+    const entry = before?.moves.find((m) => m.uci === uciOf(lastMove));
+    note.textContent = entry
+      ? `The net just played ${lastMove.san} (${fmtPawns(entry.score)} for it). Press ← to see everything it weighed.`
+      : `The net just played ${lastMove.san}. Press ← to see everything it weighed.`;
+  } else {
+    note.textContent = "";
+  }
+
   const clamp = (score: number): number => Math.max(-20, Math.min(20, score));
   const scores = result.moves.map((m) => clamp(m.score));
   const hi = Math.max(...scores);
   const lo = Math.min(...scores);
-  if (kind === "decision") {
-    $("panel-label").textContent = "The net's last move";
-    $("decision-caption").textContent = `${fmtPawns(result.best.score)} for the net`;
-  } else {
-    $("panel-label").textContent = "Your options, as the net scores them";
-    $("decision-caption").textContent = `its pick for you · ${fmtPawns(result.best.score)}`;
-  }
-  $("decision-move").textContent = result.best.san ?? result.best.uci;
-  list.innerHTML = result.moves
-    .slice(0, SHOWN_MOVES)
-    .map((m) => {
-      const width = hi === lo ? 100 : 8 + (92 * (clamp(m.score) - lo)) / (hi - lo);
-      const chosen = m.uci === result.best.uci ? "chosen" : "";
-      const score = `${m.exact ? "" : "≤ "}${fmtPawns(m.score)}`;
-      return `<li class="${chosen}"><span>${m.san ?? m.uci}</span><span class="bar"><span style="width:${width.toFixed(1)}%"></span></span><span class="score">${score}</span></li>`;
-    })
-    .join("");
-  const more = result.moves.length - SHOWN_MOVES;
+  const row = (index: number): string => {
+    const m = result.moves[index];
+    const width = hi === lo ? 100 : 8 + (92 * (clamp(m.score) - lo)) / (hi - lo);
+    const classes = [m.uci === result.best.uci ? "chosen" : "", m.uci === playedUci ? "played" : ""].join(" ").trim();
+    const score = `${m.exact ? "" : "≤ "}${fmtPawns(m.score)}`;
+    return `<li class="${classes}"><span>${m.san ?? m.uci}</span><span class="bar"><span style="width:${width.toFixed(1)}%"></span></span><span class="score">${score}</span></li>`;
+  };
+  let rows = result.moves.slice(0, SHOWN_MOVES).map((_, i) => row(i)).join("");
+  if (playedIndex >= SHOWN_MOVES) rows += `<li class="gap" aria-hidden="true">⋯</li>${row(playedIndex)}`;
+  list.innerHTML = rows;
+
+  const hiddenCount = result.moves.length - SHOWN_MOVES - (playedIndex >= SHOWN_MOVES ? 1 : 0);
   const bounded = result.moves.some((m) => !m.exact);
-  $("panel-foot").textContent =
-    (more > 0 ? `+ ${more} more legal moves · ` : "") +
+  foot.textContent =
+    (hiddenCount > 0 ? `+ ${hiddenCount} more legal moves · ` : "") +
+    (played ? "left bar marks the move played · " : "") +
     (bounded ? "≤ marks moves cut off once clearly worse · " : "") +
     `${result.nodes.toLocaleString()} positions searched · ${Math.round(result.ms)} ms`;
 }
@@ -495,9 +606,8 @@ function renderSheet(): void {
     rows += `<li><span class="num">${i / 2 + 1}.</span>${cell(i)}${cell(i + 1)}</li>`;
   }
   sheet.innerHTML = `<ol>${rows}</ol>`;
-  const current = sheet.querySelector(".current");
   if (viewPly === null) sheet.scrollTop = sheet.scrollHeight;
-  else current?.scrollIntoView({ block: "nearest" });
+  else sheet.querySelector(".current")?.scrollIntoView({ block: "nearest" });
 }
 
 function renderNav(): void {
@@ -510,10 +620,10 @@ function renderNav(): void {
 }
 
 function render(): void {
-  const view = viewPly === null ? game : positionAtPly(viewPly);
+  const view = shownPosition();
   renderBoard(view);
   renderStatus(view);
-  renderPanel();
+  renderPanel(view);
   renderSheet();
   renderNav();
   $<HTMLButtonElement>("take-back").disabled = game.history().length < (human === "b" ? 2 : 1);
@@ -622,20 +732,30 @@ function playHuman(move: ChessMove, animate: boolean): void {
   keys.push(positionKey(game));
   clearMarks();
   playSound(played);
+  if (!outcome()) requestNetMove();
   render();
   if (animate) animateMove(played.from, played.to);
-  if (!outcome()) requestNetMove();
 }
 
 function requestNetMove(): void {
   thinking = true;
   const token = generation;
+  const fen = game.fen();
   const started = performance.now();
+  const cached = analyses.get(fen);
+  if (!cached) analysing.add(fen);
+  const search = cached ? Promise.resolve(cached) : analyseForMove(fen);
   render();
-  void analyseAsync(game.fen()).then((result) => {
+  void search.then((raw) => {
+    const result = cached ?? withSan(raw, fen);
+    if (!cached) {
+      analysing.delete(fen);
+      analyses.set(fen, result);
+      if (shownPosition().fen() === fen) renderPanel(shownPosition());
+    }
     const wait = Math.max(0, MIN_REPLY_MS - (performance.now() - started));
     setTimeout(() => {
-      if (token === generation) applyNetMove(withSan(result), token);
+      if (token === generation) applyNetMove(result, token);
     }, wait);
   });
 }
@@ -645,7 +765,6 @@ function applyNetMove(result: Analysis, token: number): void {
   const played = game.move({ from: best.from, to: best.to, promotion: best.promotion ?? undefined });
   if (!played) return;
   keys.push(positionKey(game));
-  panel = { kind: "decision", result };
   thinking = false;
   playSound(played);
 
@@ -682,7 +801,7 @@ function askPromotion(to: string, options: ChessMove[]): void {
   const choices: ChessPieceType[] = ["q", "n", "r", "b"];
   strip.innerHTML =
     choices
-      .map((type) => `<button type="button" data-type="${type}" aria-label="Promote to ${NAMES[type]}"><span class="piece ${human}">${GLYPH[type]}${TEXT_STYLE}</span></button>`)
+      .map((type) => `<button type="button" data-type="${type}" aria-label="Promote to ${NAMES[type]}"><span class="piece ${human}" data-type="${type}">${GLYPH[type]}${TEXT_STYLE}</span></button>`)
       .join("") + `<button type="button" class="promo-cancel" data-type="" aria-label="Cancel promotion">×</button>`;
   strip.hidden = false;
   render();
@@ -757,7 +876,7 @@ function floatPiece(piece: ChessPiece): { el: HTMLDivElement; size: number } {
   el.style.width = `${size}px`;
   el.style.height = `${size}px`;
   el.style.fontSize = `${size * 0.76}px`;
-  el.innerHTML = `<span class="piece ${piece.color}">${GLYPH[piece.type]}${TEXT_STYLE}</span>`;
+  el.innerHTML = `<span class="piece ${piece.color}" data-type="${piece.type}">${GLYPH[piece.type]}${TEXT_STYLE}</span>`;
   document.body.appendChild(el);
   return { el, size };
 }
@@ -929,17 +1048,6 @@ function keyboardSquare(square: string): void {
 
 // ---------------------------------------------------------------- controls
 
-function readOptions(): void {
-  panel = null;
-  if (outcome() || game.turn() !== human) return;
-  const token = generation;
-  void analyseAsync(game.fen()).then((result) => {
-    if (token !== generation || thinking || game.turn() !== human) return;
-    panel = { kind: "read", result: withSan(result) };
-    renderPanel();
-  });
-}
-
 function resetInteraction(): void {
   generation++;
   thinking = false;
@@ -957,13 +1065,8 @@ function newGame(): void {
   flipped = human === "b";
   game.reset();
   rebuildKeys();
-  panel = null;
-  if (human === "b") {
-    requestNetMove();
-  } else {
-    readOptions();
-    render();
-  }
+  if (human === "b") requestNetMove();
+  else render();
 }
 
 function takeBack(): void {
@@ -976,12 +1079,8 @@ function takeBack(): void {
     undone++;
   }
   rebuildKeys();
-  if (!outcome() && game.turn() !== human) {
-    requestNetMove();
-  } else {
-    readOptions();
-    render();
-  }
+  if (!outcome() && game.turn() !== human) requestNetMove();
+  else render();
 }
 
 function renderSpec(): void {
@@ -998,7 +1097,8 @@ function renderSpec(): void {
 
 function start(state: SavedState): void {
   engine = createEngine(window.NET_META, window.NET_WEIGHTS_B64);
-  analyseAsync = createAnalyser();
+  analyseForMove = createAnalyser();
+  analyseForPanel = createAnalyser();
   game = new Chess();
   if (state.pgn) game.load_pgn(state.pgn);
   human = state.human ?? "w";
@@ -1008,6 +1108,7 @@ function start(state: SavedState): void {
   rebuildKeys();
   buildBoard();
   renderSpec();
+  void centerPieceGlyphs();
 
   const board = $("board");
   board.addEventListener("pointerdown", onPointerDown);
@@ -1065,12 +1166,8 @@ function start(state: SavedState): void {
 
   window.claude?.hot?.snapshot?.(() => ({ pgn: game.pgn(), human, flipped, soundOn }));
 
-  if (!outcome() && game.turn() !== human) {
-    requestNetMove();
-  } else {
-    readOptions();
-    render();
-  }
+  if (!outcome() && game.turn() !== human) requestNetMove();
+  else render();
 }
 
 const hot = window.claude?.hot;
