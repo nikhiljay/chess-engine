@@ -162,6 +162,22 @@ noted. Full table: `uv run python -m chess_nn.report`.
     (6 per loop), 6 in check, 32.5 legal moves on average. Next: on one
     parent set, compare each model's harness move with Stockfish's top moves
     to test whether the net picks draw-ish moves when a winning one exists.
+24. **At loop positions the net does not blunder; it shuffles among moves
+    Stockfish also rates as winning.** 180 parents from note 23, Stockfish
+    depth 10 (best move, and `searchmoves` for the net's move); 143 have a
+    best move ≥ +300 cp. jj6-h512: agrees with Stockfish's best 32.2%,
+    median loss 15 cp, mean 86 cp (capped at 1000); in winning parents its
+    move stays ≥ +300 in 96.5% and drops to ≤ +100 in 0.7%. loopa-h512:
+    28.9%, 15 cp, 78 cp, 97.2%, 1.4%. So per-move Stockfish scores barely
+    separate progress from shuffling, and a loss that ranks siblings by
+    them has little to learn from. What breaks a loop is long-horizon
+    progress (mate distance, pawn advance, trades), which depth-10 cp does
+    not express. The sibling-ranking loss is not pursued.
+25. **Loop data replicate: the L1 gain was mostly noise and L2 is worse.**
+    loopa-h512 seed 1: L1 65.5% / L2 42.8% (seed 0: 69.0 / 43.8). Loop-data
+    h512 mean L1 67.3 / L2 43.3 against the human-only 65.2 / 50.0; h256
+    68.5 / 46.5 against 62.3 / 49.2. Loop children at 8.2% trade a small L1
+    gain for a clear L2 loss, so they are not used going forward.
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
@@ -182,30 +198,33 @@ noted. Full table: `uv run python -m chess_nn.report`.
 
 ## Next steps after the interruption
 
-**Leaderboard #1 is not beaten yet.** Best dev results (200 games per level):
-`j4sp-h512-s400-ladder-cp10` L1 64.8% / L2 49.0%, `j4-h512-32x32-s400`
-63.7 / 49.8, `j4-h256-32x32-s400` 64.0 / 45.0. No model reached 70% on dev
-L1, so no official run was made.
+**Updated 2026-09-15 midday. Leaderboard #1 is not beaten yet.** Best dev
+results (200 games per level): `jj6-h512-s400` (June 0-3 + July 0-1, 4.36M)
+L1 65.2% / L2 50.0%; `j4-h512-32x32-s400` 63.7 / 49.8. No model has reached
+70% on dev L1, so no official run has been made.
 
-What moved the numbers: more human data (+7 L1, 726k → 2.9M) and fresh
-self-play positions at ~18% share (+5-7 L1 via fewer losses). What did not:
-WDL scale 800/1000, mate ladder, progress shaping, pawn-space loss 0.02/0.1,
-repeating one self-play shard. The remaining leak is conversion: ~45% of games
-end in threefold repetition, most with the net clearly winning.
+Ruled out since the interruption (findings 15-25): more human data (July),
+the Lichess eval database whole or endgames-only, and loop-children
+self-play data (L1 +~2, L2 −6). Earlier: WDL scale 800/1000 at 726k, mate
+ladder, progress shaping at 10-15 cp, pawn-space loss 0.02/0.1, repeated
+self-play. Finding 24: at loop positions the net plays moves Stockfish also
+rates as winning (median loss 15 cp), so the leak is lack of progress, not
+blunders, and per-move Stockfish scores cannot teach progress.
 
-1. **Finish the data.** Resume June shards 4-6, then July; train h256 and h512
-   on the full ~5M (then ~10M). This is the one lever that helped reliably.
-2. **Fresh self-play at scale, targeted at loops.** Run `datagen` with the best
-   model at full CPU (no competing jobs) to produce ≥1M new positions, not
-   repeats. Add a datagen mode with `--random-move-prob 0` that keeps positions
-   only from games ending in repetition while the net is ahead, so labels land
-   exactly on the loop positions; label with `--deep-depth 14`.
-3. **Retrain on June (+ July) + fresh self-play at ~20% share** and compare
-   `repetition_while_winning` against the j4 baselines with ≥2 seeds; single
-   runs differ by ~±3 points.
-4. **Revisit h128 once data reaches ~9M.** The leaderboard model is h128 at 9M;
-   here h128 trailed h256 at 2.9M, which may be a data-size effect.
-5. Only once dev L1 ≥ ~72%: run `--official` for Level 1 (then Level 2).
+Candidate next steps, most informative first:
+1. **Calibrate dev vs official (needs the user's OK).** One `--official`
+   run of `jj6-h512-s400` at L1 and L2 — a measurement, not tuning. #1
+   passes L2 at 70% with 99k params while our 429k net scores 50% on dev
+   L2; the gap is either the opening sets or a real technique gap, and the
+   next steps differ.
+2. **Scale + pawn loss at full data.** WDL scale 800-1000 was only tried at
+   726k; retry at 4.36M with `cp_loss_weight` 0.1, ≥2 seeds. In won
+   positions the scale-400 target is saturated, leaving eval differences
+   between winning moves unconstrained.
+3. **Strong progress shaping in won endgames.** Earlier bonuses (10-15 cp)
+   sat inside eval error; retry at 50-100 cp per step for |score| ≥ 600 with
+   the pawn loss so the gradient survives.
+4. **h128 at larger data** (#1's likely recipe: h128, scale 800, 9M).
 
 ## Resuming after an interruption
 
