@@ -611,6 +611,54 @@ noted. Full table: `uv run python -m chess_nn.report`.
     any such change is judged by games from its own play. The targeted-data
     experiment (decision_data keeps exactly those leaves, labeled like
     broad data) follows from this; no ranking variant does.
+63. **The leaderboard server plays 2 games per level from the start
+    position (verified 2026-09-15).** From the public API
+    (paradigm.xyz/puzzles/api/v1/chess/leaderboard, /submissions/{id},
+    /puzzles/api/chess/submissions/{id}/replays, /replays/{id}), fetched
+    directly:
+    - `st-h128-s800-9M` (@drCathieSo_eth, 2026-08-10, 99,358 params) is #3,
+      not #1: L1 2/2, L2 2/2, L3 0/2, `totalGames: 2` per level, every game
+      `openingIndex: 0`, all six replays start from the standard start
+      position. No weights, code or description are public; the name's
+      reading stays a guess (99,358 is not a plain 1540→128→1 EvalNet).
+    - #1 `onnx minify` (93 params) and #2 `salieri's revenge^6` (94 params)
+      each played 8 games: 2/2 at L1-L4, all opening 0.
+    - Our local L1-L3 baseline bots choose every one of the 238 baseline
+      moves in st-h128's six server games (`datagen replay_check`), so the
+      server's opponents match this checkout and games are deterministic.
+    - Harness main (8e3a59d) equals the local clone (nn.rs identical). PR
+      #20 (full-window root, no NN check extensions) was merged on
+      2026-03-17 but the repo was re-initialized after it and current main
+      has neither change; which NN search build the server runs is not
+      verifiable from replays without the model. Open issue #24 reports a
+      local 83% vs server 50% at L1 and `totalGames: 2`, unanswered.
+    So a server "pass" means winning two deterministic start-position
+    games, not ≥70% over 50 games; it is not comparable to our 200-game
+    dev scores and says little about general strength. The small-model gap
+    to explain is not "99k passes L2 over 50 games while 856k scores 54%".
+64. **Server-equivalent start-position test for 11 existing models
+    (2026-09-15; measurement only, not used to select).** `chess_nn.evaluate
+    --openings data/startpos_openings.txt --levels 1 2 3 4` (a pass needs
+    2/2):
+    | run | params | L1 | L2 | L3 | L4 |
+    |---|---|---|---|---|---|
+    | jj6-h1024-s1000-cp20 (default) | 856,161 | 1 (W L) | 1 (W L) | 0.5 (D L) | 1 (D D) |
+    | rank-b-h1024-w0-seed1 | 856,163 | 1 (D D) | 1.5 (W D) | 0.5 (D L) | 0 |
+    | b99k-h128-none-s800 | 98,947 | 1 (D D) | 1.5 (W D) | 0 | 0.5 |
+    | b99k-h128-none-s800-seed1 | 98,947 | 1 (D D) | 0 | 1 (W L) | 0.5 |
+    | rank-a-h512-w0 | 428,643 | 1 (W L) | 0.5 | 0 | 0.5 |
+    | kb-h256-s1000-cp20 | 1,596,583 | 1 (D D) | 1 (W L) | 0 | 0 |
+    | threat-a-h512-t64-w0 | 629,422 | 1.5 (W D) | 1 (D D) | 0 | 0 |
+    | cap-h3072-s1000-cp20 | 2,566,243 | **2 (W W)** | 1 (W L) | 0.5 | 0.5 |
+    | cap-h8192-s1000-cp20 | 6,841,443 | 1.5 (W D) | 0.5 | 0.5 | 0 |
+    | rank-b-h1024-w005 | 856,161 | 1 (W L) | 0 | 0.5 | 0.5 |
+    | rank-b-h1024-w005-seed1 | 856,161 | 1 (W L) | 1 (D D) | 1 (W L) | 0.5 |
+    88 games: 15 wins, 42 losses by checkmate, 31 repetition draws (17 of
+    them after the net had been winning). Only cap-h3072 would "pass" a
+    level (L1); none passes L2. Two games per level cannot rank these
+    models — seeds of one recipe differ from 0 to 1.5 at L2 — but it shows
+    what a server pass takes: two wins in a row, where a repetition draw is
+    as fatal as a loss. st-h128 won all four of its L1-L2 games by mate.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
