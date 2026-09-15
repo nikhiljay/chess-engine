@@ -78,9 +78,15 @@ uv run python -m chess_nn.label --candidates data/selfplay_L2_a.txt \
   --out-dir data/shards_selfplay --prefix shard_selfplay_a \
   --depth 9 --deep-depth 14 --deep-threshold-cp 600 --workers 6
 
-# Sweeps (skip finished runs)
+# Sweeps (skip finished runs and levels)
 uv run python -m chess_nn.sweep sweeps/shard0_seeds.json
 uv run python -m chess_nn.sweep sweeps/shard0_selfplay.json
+uv run python -m chess_nn.sweep sweeps/june4.json
+uv run python -m chess_nn.sweep sweeps/june4b.json
+uv run python -m chess_nn.sweep sweeps/june4_shaped.json
+
+# Table of every run
+uv run python -m chess_nn.report
 
 # July download, then sampling and labeling
 (cd data && curl -C - -o lichess_2017-07.pgn.zst.part \
