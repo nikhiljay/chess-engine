@@ -20,7 +20,7 @@ from chess_nn.encoding import dense_from_sparse, dense_numpy
 from chess_nn.export import export_onnx, parity_check, sanity_checks, validate_with_harness
 from chess_nn.harness import RUNS_DIR, SHARDS_DIR, VALIDATE_MODEL, load_harness_tool
 from chess_nn.model import EvalNet, KingBucketNet, ThreatNet, count_params, cp_loss, rank_loss, wdl_loss
-from chess_nn.rank_pairs import load_pairs
+from chess_nn.rank_pairs import KINDS, load_pairs
 from chess_nn.shaping import progress_bonus
 from chess_nn.shards import load_shards
 
@@ -107,6 +107,8 @@ class TrainConfig:
     rank_margin_pawns: float = 0.2
     rank_temperature_pawns: float = 0.5
     rank_batch_size: int = 4096
+    # Pair kinds to train on (rank_pairs.KINDS); validation accuracy always uses all kinds.
+    rank_kinds: list[str] = field(default_factory=lambda: list(KINDS))
     device: str = field(default_factory=default_device)
     limit: int | None = None
     runs_dir: str = str(RUNS_DIR)
@@ -167,7 +169,7 @@ def run_training(cfg: TrainConfig) -> Path:
     )
     targets = torch.from_numpy(targets_np).to(device)
     val_idx, train_idx = val_idx_cpu.to(device), train_idx_cpu.to(device)
-    rank_train = load_pairs(cfg.rank_pairs, device) if cfg.rank_weight and cfg.rank_pairs else None
+    rank_train = load_pairs(cfg.rank_pairs, device, cfg.rank_kinds) if cfg.rank_weight and cfg.rank_pairs else None
     rank_val = load_pairs(cfg.rank_val_pairs, device) if cfg.rank_val_pairs else None
 
     if cfg.threat_hidden:

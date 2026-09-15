@@ -131,7 +131,7 @@ def diagnose_game(args: tuple[int, dict]) -> tuple[dict, list[dict]]:
         board.push(move)
         seen[board._transposition_key()] += 1
         history.append(uci)
-    return summarize_game(game, decisions), decisions
+    return {"game": index, **summarize_game(game, decisions)}, decisions
 
 
 def report(summaries: list[dict]) -> dict:

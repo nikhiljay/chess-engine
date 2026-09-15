@@ -187,6 +187,7 @@ def evaluate(args: argparse.Namespace) -> None:
                     "saves_game": item.get("saves_game"),
                 })
             savable = [r for r in rows if r["saves_game"]]
+            lost = [r for r in rows if r["saves_game"] is False]
             report = {
                 "bench": bench.name,
                 "positions": len(rows),
@@ -194,9 +195,12 @@ def evaluate(args: argparse.Namespace) -> None:
                 "allowed_any_mate": sum(r["allows_mate"] for r in rows),
                 "savable_positions": len(savable),
                 "allowed_unseen_mate_when_savable": sum(r["allows_unseen_mate"] for r in savable),
+                "lost_positions": len(lost),
+                "allowed_unseen_mate_when_lost": sum(r["allows_unseen_mate"] for r in lost),
             }
             report["allowed_unseen_mate_rate"] = round(report["allowed_unseen_mate"] / max(len(rows), 1), 3)
             report["allowed_unseen_mate_rate_when_savable"] = round(report["allowed_unseen_mate_when_savable"] / max(len(savable), 1), 3)
+            report["allowed_unseen_mate_rate_when_lost"] = round(report["allowed_unseen_mate_when_lost"] / max(len(lost), 1), 3)
             (run / f"mate_bench_{bench.stem}.json").write_text(json.dumps({**report, "rows": rows}, indent=2))
             print(f"{run.name:34s} {bench.stem}: allowed unseen mate {report['allowed_unseen_mate']}/{len(rows)} "
                   f"({report['allowed_unseen_mate_rate']:.1%}); when savable {report['allowed_unseen_mate_when_savable']}/{len(savable)} "

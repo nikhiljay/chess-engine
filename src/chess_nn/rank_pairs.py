@@ -2,26 +2,30 @@
 
 Three kinds of pair, each holding the positions two moves lead to:
 
-  - mate-in-one pairs: the net's move allowed a mate in one that the harness
-    search never examines (chess_nn.mate_in_one) while moves allowing no mate
-    existed; up to MATE_ALTERNATIVES of those safe moves (Stockfish's best
-    first) are each paired against it. Kept even in lost positions, since the
-    search cannot see this and avoiding the mate is always the better move.
-  - score pairs: the net's move was clearly worse than Stockfish's best (by at
-    least --min-gap-cp, scored with the game history).
-  - repetition pairs: the net was winning (best >= WIN_CP) and its move went
-    back into a position already seen in the game while Stockfish's best move
-    did not. Stockfish only scores the move that completes a threefold as a
-    draw, so these shuffles often look nearly as good as progress; the rule
-    labels them anyway, whatever the centipawn gap.
+  - mate_in_one: the net's move allowed a mate in one that the harness search
+    never examines (chess_nn.mate_in_one) while moves allowing no mate existed;
+    up to MATE_ALTERNATIVES of those safe moves (Stockfish's best first) are
+    each paired against it. Kept even in lost positions, since the search
+    cannot see this and avoiding the mate is always the better move.
+  - score: the net's move was clearly worse than Stockfish's best (by at least
+    --min-gap-cp, scored with the game history).
+  - repetition: the net was winning (best >= WIN_CP) and its move went back
+    into a position already seen in the game while Stockfish's best move did
+    not. Stockfish only scores the move that completes a threefold as a draw,
+    so these shuffles often look nearly as good as progress; the rule labels
+    them anyway, whatever the centipawn gap.
+
+A pair is also flagged decisive when the position was defensible before the
+move (best >= DEFENSIBLE_CP) and the net's move made it losing (<= -WIN_CP):
+a large drop alone can come from a lost position or leave a win still won.
 
 The net scores a position from its side to move's view, so the mover should see
 the better child scored lower; model.rank_loss trains exactly that ordering.
 Score and repetition pairs are skipped when either child is in check or the
 game is over there — the harness resolves those with a search rather than the
 net's static eval — and when the position was already lost. Pairs are split by
-game into train and validation files, so validation accuracy measures
-positions from unseen games.
+game into train and validation files (features in .npz, the positions and moves
+in .jsonl), so validation measures positions from unseen games.
 
 Usage:
   uv run python -m chess_nn.rank_pairs data/diagnosis_h1024_L2 data/diagnosis_h1024_L3 --out data/rank_pairs_a
@@ -43,6 +47,7 @@ from chess_nn.harness import TRAINING_ROOT
 from chess_nn.mate_in_one import safe_moves, unseen_mate
 
 MIN_GAP_CP = 100
+DEFENSIBLE_CP = -100
 MATE_ALTERNATIVES = 4
 VAL_EVERY = 10  # one game in ten goes to validation
 KINDS = ("mate_in_one", "score", "repetition")
@@ -71,6 +76,29 @@ def repeats_position(decision: dict, uci: str) -> bool:
     return board._transposition_key() in seen
 
 
+def is_decisive(decision: dict) -> bool:
+    """The move turned a defensible position into a losing one."""
+    return decision["best_cp"] >= DEFENSIBLE_CP and decision["played_cp"] <= -WIN_CP
+
+
+def _pair(decision: dict, game_key: str, good_move: str, good: list[int], bad: list[int], gap: int, kind: str) -> dict:
+    return {
+        "game": game_key,
+        "ply": decision["ply"],
+        "fen": decision["fen"],
+        "good_move": good_move,
+        "bad_move": decision["played"],
+        "best_cp": decision["best_cp"],
+        "played_cp": decision["played_cp"],
+        "good": good,
+        "bad": bad,
+        "gap_cp": max(gap, 0),
+        "repeats": decision["repeats"],
+        "decisive": is_decisive(decision),
+        "kind": kind,
+    }
+
+
 def mate_in_one_pairs(decision: dict, game_key: str) -> list[dict]:
     """Safe alternatives paired against a move that allowed an unseen mate in one."""
     board = chess.Board(decision["fen"])
@@ -88,7 +116,7 @@ def mate_in_one_pairs(decision: dict, game_key: str) -> list[dict]:
         good = child_features(decision["fen"], uci)
         if good is not None:
             gap = decision["best_cp"] - decision["played_cp"] if uci == decision["best"] else 0
-            pairs.append({"game": game_key, "good": good, "bad": bad, "gap_cp": max(gap, 0), "repeats": decision["repeats"], "kind": "mate_in_one"})
+            pairs.append(_pair(decision, game_key, uci, good, bad, gap, "mate_in_one"))
         if len(pairs) == MATE_ALTERNATIVES:
             break
     return pairs
@@ -124,7 +152,7 @@ def build_pairs(
         bad = child_features(d["fen"], d["played"])
         if good is None or bad is None:
             continue
-        pairs.append({"game": game_key, "good": good, "bad": bad, "gap_cp": max(gap, 0), "repeats": d["repeats"], "kind": kind})
+        pairs.append(_pair(d, game_key, d["best"], good, bad, gap, kind))
     return pairs
 
 
@@ -141,28 +169,43 @@ def to_arrays(pairs: list[dict]) -> dict[str, np.ndarray]:
         "repeats": np.array([p["repeats"] for p in pairs], dtype=bool),
         "repetition_rule": np.array([p["kind"] == "repetition" for p in pairs], dtype=bool),
         "mate_rule": np.array([p["kind"] == "mate_in_one" for p in pairs], dtype=bool),
+        "decisive": np.array([p["decisive"] for p in pairs], dtype=bool),
     }
+
+
+def pair_kinds(arrays: dict[str, np.ndarray]) -> np.ndarray:
+    """Kind name per pair from the saved flags."""
+    kinds = np.full(len(arrays["good"]), "score", dtype=object)
+    kinds[arrays["repetition_rule"]] = "repetition"
+    if "mate_rule" in arrays:
+        kinds[arrays["mate_rule"]] = "mate_in_one"
+    return kinds
 
 
 def is_validation(game_key: str) -> bool:
     return zlib.crc32(game_key.encode()) % VAL_EVERY == 0
 
 
-def load_pairs(paths: list[str], device: torch.device) -> tuple[torch.Tensor, torch.Tensor]:
-    """Concatenated (good, bad) feature rows [P, 68] on `device`; relative paths are under training/."""
+def load_pairs(paths: list[str], device: torch.device, kinds: list[str] | None = None) -> tuple[torch.Tensor, torch.Tensor]:
+    """Concatenated (good, bad) feature rows [P, 68] on `device`, keeping only `kinds` if given.
+
+    Relative paths are under training/.
+    """
     goods, bads = [], []
     for p in paths:
         path = Path(p) if Path(p).is_absolute() else TRAINING_ROOT / p
         with np.load(path) as data:
-            goods.append(data["good"])
-            bads.append(data["bad"])
+            arrays = {key: data[key] for key in data.files}
+        keep = np.ones(len(arrays["good"]), dtype=bool) if kinds is None else np.isin(pair_kinds(arrays), list(kinds))
+        goods.append(arrays["good"][keep])
+        bads.append(arrays["bad"][keep])
     return torch.from_numpy(np.concatenate(goods)).to(device), torch.from_numpy(np.concatenate(bads)).to(device)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("diagnoses", type=Path, nargs="+", help="chess_nn.diagnose output directories")
-    parser.add_argument("--out", type=Path, required=True, help="writes <out>_train.npz and <out>_val.npz")
+    parser.add_argument("--out", type=Path, required=True, help="writes <out>_{train,val}.npz and .jsonl")
     parser.add_argument("--min-gap-cp", type=int, default=MIN_GAP_CP)
     parser.add_argument("--no-repetition-pairs", action="store_true")
     parser.add_argument("--no-mate-pairs", action="store_true")
@@ -177,8 +220,12 @@ def main() -> None:
     args.out.parent.mkdir(parents=True, exist_ok=True)
     for name, subset in (("train", train), ("val", val)):
         np.savez(f"{args.out}_{name}.npz", **to_arrays(subset))
+        with open(f"{args.out}_{name}.jsonl", "w") as meta:
+            for p in subset:
+                meta.write(json.dumps({k: v for k, v in p.items() if k not in ("good", "bad")}) + "\n")
     counts = ", ".join(f"{sum(p['kind'] == kind for p in pairs):,} {kind}" for kind in KINDS)
-    print(f"{len(pairs):,} pairs ({counts}): {len(train):,} train, {len(val):,} val → {args.out}_*.npz")
+    decisive = sum(p["decisive"] for p in pairs)
+    print(f"{len(pairs):,} pairs ({counts}; {decisive:,} decisive): {len(train):,} train, {len(val):,} val → {args.out}_*")
 
 
 if __name__ == "__main__":

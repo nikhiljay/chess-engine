@@ -8,8 +8,8 @@ from chess_nn.rank_pairs import MIN_GAP_CP, build_pairs, child_features, is_vali
 START = chess.STARTING_FEN
 
 
-def decision(best="e2e4", played="a2a3", best_cp=40, played_cp=40 - MIN_GAP_CP, fen=START, game=0, repeats=False):
-    return {"game": game, "fen": fen, "best": best, "played": played, "best_cp": best_cp, "played_cp": played_cp, "repeats": repeats}
+def decision(best="e2e4", played="a2a3", best_cp=40, played_cp=40 - MIN_GAP_CP, fen=START, game=0, repeats=False, ply=0):
+    return {"game": game, "ply": ply, "fen": fen, "best": best, "played": played, "best_cp": best_cp, "played_cp": played_cp, "repeats": repeats}
 
 
 def test_pair_holds_the_positions_each_move_leads_to():
@@ -54,7 +54,7 @@ def test_rank_loss_rewards_scoring_the_better_child_lower():
 def test_repetition_rule_pairs_a_shuffle_with_progress_whatever_the_gap():
     start = "4k3/8/8/8/8/8/8/R3K3 w - - 0 1"
     shuffle = {
-        "game": 3, "start_fen": start, "history": ["e1e2", "e8e7", "e2e1", "e7e8"], "fen": start,
+        "game": 3, "ply": 4, "start_fen": start, "history": ["e1e2", "e8e7", "e2e1", "e7e8"], "fen": start,
         "best": "a1a7", "best_cp": 900, "played": "e1e2", "played_cp": 880, "repeats": True,
     }
     [pair] = build_pairs([shuffle], "d")
@@ -93,3 +93,24 @@ def test_mate_in_one_pairs_keep_safe_defences_even_when_lost():
     assert build_pairs([decision_632], "diag", mate_pairs=False) == []  # otherwise dropped as already lost
     arrays = to_arrays(pairs)
     assert arrays["mate_rule"].all() and not arrays["repetition_rule"].any()
+
+
+def test_decisive_flag_and_kind_filtering(tmp_path):
+    import numpy as np
+
+    from chess_nn.rank_pairs import is_decisive, load_pairs, pair_kinds
+
+    assert is_decisive({"best_cp": -50, "played_cp": -400})
+    assert not is_decisive({"best_cp": -200, "played_cp": -900})  # already worse than defensible
+    assert not is_decisive({"best_cp": 900, "played_cp": 400})  # a big drop that still wins
+    pairs = build_pairs([decision(best_cp=0, played_cp=-500), decision(game=1, best_cp=500, played_cp=380)], "d")
+    assert [p["decisive"] for p in pairs] == [True, False]
+    assert pairs[0]["fen"] == START and pairs[0]["good_move"] == "e2e4" and pairs[0]["bad_move"] == "a2a3"
+    arrays = to_arrays(pairs)
+    arrays["mate_rule"][1] = True
+    assert list(pair_kinds(arrays)) == ["score", "mate_in_one"]
+    path = tmp_path / "pairs.npz"
+    np.savez(path, **arrays)
+    good, bad = load_pairs([str(path)], torch.device("cpu"), kinds=["mate_in_one"])
+    assert good.shape == (1, 68) and bad.shape == (1, 68)
+    assert load_pairs([str(path)], torch.device("cpu"))[0].shape == (2, 68)
