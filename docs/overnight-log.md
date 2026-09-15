@@ -185,6 +185,14 @@ noted. Full table: `uv run python -m chess_nn.report`.
     Single seed; the s800 seeds already differ by 3.7 on L2.
     `sweeps/jj6_scale2.json` runs a seed-1 replicate, s1500 + cp 0.1 and
     s1000 + cp 0.2.
+27. **Large WDL scale + pawn loss is a real, modest gain.** s1000 + cp 0.1
+    seed 1: L1 **72.0%** / L2 50.7% (seed 0: 63.7 / 57.2); s1500 + cp 0.1:
+    69.0 / 53.0; s1000 + cp 0.2: 69.2 / 53.2 (L1 losses 14). Mean of the four
+    runs L1 68.5 / L2 53.5 against s400's 65.2 / 50.0 — all four beat the
+    baseline on at least one level and none falls below it on both. The 72.0
+    is the best of four noisy runs, not the recipe's level, so it is not
+    treated as the ≥72% official-run milestone. Next:
+    `sweeps/jj6_scale3.json` (s1500 + cp 0.2, s1000 + cp 0.2 seed 1, h1024).
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 

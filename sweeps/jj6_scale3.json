@@ -1,0 +1,11 @@
+{
+  "shards": ["data/shards/shard_000[0-3].npz", "data/shards/shard_2017-07_000[0-1].npz"],
+  "levels": [1, 2],
+  "openings": "data/dev_openings_100.txt",
+  "defaults": {"epochs": 20, "batch_size": 16384, "hidden": 512, "head": [32, 32], "wdl_scale_cp": 1000, "cp_loss_weight": 0.2},
+  "runs": [
+    {"name": "jj6-h512-s1500-cp20", "wdl_scale_cp": 1500},
+    {"name": "jj6-h512-s1000-cp20-seed1", "seed": 1},
+    {"name": "jj6-h1024-s1000-cp20", "hidden": 1024}
+  ]
+}
