@@ -28,6 +28,16 @@ uv run python -m chess_nn.evaluate runs/v1-h256/model.onnx --levels 1 2
 uv run python -m chess_nn.evaluate runs/v1-h256/model.onnx --levels 1 --official
 ```
 
+## Play against a model
+
+```bash
+uv run python -m chess_nn.play runs/m1-h256/model.onnx --color black
+```
+
+Moves as SAN (`e4`, `Nf3`, `O-O`) or UCI (`e2e4`); commands `moves`, `undo`,
+`fen`, `help`, `quit`. The net's moves come from the harness `play-move`
+binary, so it plays exactly as in `compete`. The PGN prints when you quit.
+
 ## Tests
 
 ```bash

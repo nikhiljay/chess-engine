@@ -15,6 +15,7 @@ RUNS_DIR = TRAINING_ROOT / "runs"
 OFFICIAL_OPENINGS = HARNESS_ROOT / "data" / "openings.txt"
 COMPETE_BIN = HARNESS_ROOT / "target" / "release" / "compete"
 DUMP_ENCODING_BIN = HARNESS_ROOT / "target" / "release" / "dump-encoding"
+PLAY_MOVE_BIN = HARNESS_ROOT / "target" / "release" / "play-move"
 REFERENCE_ENCODING = HARNESS_ROOT / "tools" / "encoding.py"
 VALIDATE_MODEL = HARNESS_ROOT / "tools" / "validate_model.py"
 
