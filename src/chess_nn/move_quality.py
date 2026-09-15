@@ -81,7 +81,15 @@ def _score(decision: dict) -> dict:
         history = decision["history"]
         position = f"position fen {decision['start_fen']}" + (f" moves {' '.join(history)}" if history else "")
         chosen_cp = search(_engine, position, _depth, chosen)[0]
-    return {"best_cp": decision["best_cp"], "chosen_cp": chosen_cp, "agree": chosen == decision["best"], "chosen": chosen}
+    return {
+        "game": decision["game"],
+        "ply": decision["ply"],
+        "best": decision["best"],
+        "best_cp": decision["best_cp"],
+        "chosen": chosen,
+        "chosen_cp": chosen_cp,
+        "agree": chosen == decision["best"],
+    }
 
 
 def main() -> None:
@@ -100,6 +108,8 @@ def main() -> None:
             rows = pool.map(_score, decisions, chunksize=8)
         result = {"diagnosis": args.diagnosis.name, "depth": args.depth, "seed": args.seed, **summarize(rows)}
         (run / f"move_quality_{args.diagnosis.name}.json").write_text(json.dumps(result, indent=2))
+        with open(run / f"move_quality_{args.diagnosis.name}_rows.jsonl", "w") as out:
+            out.writelines(json.dumps(row) + "\n" for row in rows)
         print(f"{run.name:30s} {json.dumps(result)}")
 
 
