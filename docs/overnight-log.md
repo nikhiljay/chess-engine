@@ -472,6 +472,15 @@ noted. Full table: `uv run python -m chess_nn.report`.
     lower the turning-move count on games recorded with the same datagen
     flags. `chess_nn.move_quality` scores five runs' choices on 1,500
     sampled decisions from these games.
+56. **Capacity h3072 (2,566,243 params) does not beat the default.** L1
+    67.0% (134/200) / L2 54.8% (109.5) / L3 25.0% (50) against h1024's 69.8
+    / 54.2 / 29.0; val loss 0.00273 vs 0.00287. Cost: ~33 s/epoch (~11 min
+    for 20 epochs) and 453-514 s per level of games, with the CPU shared.
+    Move quality on 1,500 random held-out decisions (agreement / mean loss /
+    large-drop rate / turning moves among 981 defensible):
+    h1024 0.358 / 86 cp / 7.5% / 29 (3.0%); rank-a-h512-w0 0.364 / 81 cp /
+    7.0% / 31 (3.2%); rank-a-h512-w2 0.343 / 90 cp / 7.8% / 29 (3.0%) — no
+    measurable difference at ~30 turning moves each. h8192 training.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
