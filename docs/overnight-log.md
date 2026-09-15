@@ -481,6 +481,21 @@ noted. Full table: `uv run python -m chess_nn.report`.
     h1024 0.358 / 86 cp / 7.5% / 29 (3.0%); rank-a-h512-w0 0.364 / 81 cp /
     7.0% / 31 (3.2%); rank-a-h512-w2 0.343 / 90 cp / 7.8% / 29 (3.0%) — no
     measurable difference at ~30 turning moves each. h8192 training.
+57. **Move quality on 1,500 random held-out decisions, all five runs — no
+    reliable differences.** Agreement / mean loss / large-drop rate / turning
+    moves among 981 defensible: h1024 0.358 / 86 cp / 7.5% / 29;
+    rank-a-h512-w0 0.364 / 81 / 7.0% / 31; rank-a-h512-w2 0.343 / 90 / 7.8% /
+    29; threat-a-t64-w0 0.377 / 75 / 5.9% / 27; threat-a-t64-w0.1 0.362 / 83 /
+    7.1% / 31. ThreatNet w0 is best on every column, but by ~1 SE (6 cp
+    mean loss, 16 fewer large drops in 1,500, 4 fewer turning moves); its
+    2-4 point game deficit is likewise inside seed noise (same-recipe seeds
+    have differed by up to 8 L1 points: 63.7 vs 72.0). The ThreatNet
+    "mismatch" is most likely noise on both sides; neither games nor move
+    quality show a real difference. Ranking at w2 raised mean loss (81 → 90
+    cp) — with finding 52, the objective as trained shifts choices without
+    improving them. Smallest remaining ranking test (`sweeps/rank_b.json`):
+    ~24k score pairs (mate-in-one and repetition off), weight 0.05, on the
+    default h1024 recipe, seeds 0 and 1, with a matched seed-1 control.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),

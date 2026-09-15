@@ -1,0 +1,12 @@
+{
+  "diagnosis": "diagnosis_heldout_h1024",
+  "depth": 12,
+  "seed": 0,
+  "decisions": 1500,
+  "agreement": 0.343,
+  "mean_loss_cp": 90.2,
+  "large_drop_rate": 0.078,
+  "defensible_decisions": 981,
+  "turning_moves": 29,
+  "turning_rate": 0.0296
+}
