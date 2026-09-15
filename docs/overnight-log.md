@@ -440,6 +440,12 @@ noted. Full table: `uv run python -m chess_nn.report`.
     quality is not yet measured. Mate-in-one pairs survive least (search
     accuracy 0.03-0.14): the bad move is usually a capture that quiescence
     scores as winning material. ThreatNet results pending.
+53. **ThreatNet with ranking (threat-a-h512-t64-w0.1, 629,422 harness
+    params incl. ~49k fixed attack matrices): L1 62.7% (76/99/25) / L2
+    51.5% (50/106/44) / L3 27.0% (17/74/109).** ThreatNet w0: 66.5 / 49.5 /
+    27.0; matched plain control rank-a-h512-w0: 69.2 / 53.2 / 29.0; default
+    jj6-h1024-s1000-cp20: 69.8 / 54.2 / 29.0. No ranking or ThreatNet model
+    beats the default or the plain control in games.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
