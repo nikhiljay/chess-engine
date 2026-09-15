@@ -378,6 +378,12 @@ noted. Full table: `uv run python -m chess_nn.report`.
     (8/6R1/8/8/3p4/2pK1Q2/6p1/6k1 b) every legal move (c2, Kh2, Kh1) scores
     exactly −100,000 (mated), so only the tie-break order differs. Search
     accuracy and selected-move results from it can be trusted.
+48. **kb-h256 diagnosis (2,432 games not won, depth 12) matches h1024.**
+    981 repetition draws, 785 (80%) genuinely won; 1,451 losses, 840 (58%)
+    with a turning move (median first at ply 39, drop 559 cp), 112 never
+    defensible; 55 of 840 first turning moves (6.5%) allowed an unseen mate
+    in one; 3,576 of 4,586 large drops (78%) were not turning moves. The
+    failure pattern is not specific to one architecture.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
