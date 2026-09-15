@@ -1,7 +1,8 @@
 .venv/
 __pycache__/
 .pytest_cache/
-data/
+data/*
+!data/dev_openings.txt
 *.onnx
 *.onnx.data
 *.pt
