@@ -15,7 +15,7 @@ from pathlib import Path
 
 import chess
 
-from chess_nn.harness import DEV_OPENINGS
+from chess_nn.harness import DEV_OPENINGS, read_opening_fens
 from chess_nn.sample_positions import iter_games, load_opening_keys, position_key
 
 
@@ -26,8 +26,11 @@ def build_dev_openings(
     games: int = 200_000,
     pool: int = 300,
     seed: int = 0,
+    exclude: list[Path] | None = None,
 ) -> list[str]:
     official = load_opening_keys()
+    for path in exclude or []:
+        official |= {position_key(chess.Board(fen)) for fen in read_opening_fens(path)}
     counts: Counter[str] = Counter()
     examples: dict[str, str] = {}
     used = 0
@@ -60,12 +63,14 @@ def main() -> None:
     parser.add_argument("--out", type=Path, default=DEV_OPENINGS)
     parser.add_argument("--count", type=int, default=50)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--ply", type=int, default=6)
+    parser.add_argument("--exclude", type=Path, nargs="*", default=[], help="opening files whose positions a line may not pass through")
     args = parser.parse_args()
 
-    fens = build_dev_openings(args.pgn, count=args.count, seed=args.seed)
+    fens = build_dev_openings(args.pgn, count=args.count, ply=args.ply, seed=args.seed, exclude=args.exclude)
     header = [
-        f"# Dev openings: {len(fens)} common Lichess positions after 6 plies,",
-        "# excluding any line that passes through an official opening.",
+        f"# Openings: {len(fens)} common Lichess positions after {args.ply} plies ({args.pgn.name}, seed {args.seed}),",
+        "# excluding any line that passes through an official opening" + (f" or {', '.join(p.name for p in args.exclude)}" if args.exclude else "") + ".",
     ]
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text("\n".join(header + fens) + "\n")
