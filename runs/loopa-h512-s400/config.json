@@ -1,0 +1,43 @@
+{
+  "name": "loopa-h512-s400",
+  "shards": [
+    "data/shards/shard_0000.npz",
+    "data/shards/shard_0001.npz",
+    "data/shards/shard_0002.npz",
+    "data/shards/shard_0003.npz",
+    "data/shards/shard_2017-07_0000.npz",
+    "data/shards/shard_2017-07_0001.npz",
+    "data/shards_loops/shard_loops_a_0000.npz",
+    "data/shards_loops/shard_loops_a_0001.npz",
+    "data/shards_loops/shard_loops_a_0002.npz",
+    "data/shards_loops/shard_loops_a_0003.npz",
+    "data/shards_loops/shard_loops_a_0004.npz",
+    "data/shards_loops/shard_loops_a_0005.npz",
+    "data/shards_loops/shard_loops_a_0006.npz",
+    "data/shards_loops/shard_loops_a_0007.npz"
+  ],
+  "hidden": 512,
+  "head": [
+    32,
+    32
+  ],
+  "epochs": 20,
+  "batch_size": 16384,
+  "lr": 0.001,
+  "weight_decay": 0.0001,
+  "val_frac": 0.02,
+  "seed": 0,
+  "wdl_scale_cp": 400.0,
+  "score_clamp_cp": 2500,
+  "mate_base_cp": null,
+  "mate_step_cp": 20,
+  "shaping_threshold_cp": null,
+  "shaping_pawn_cp": 10,
+  "shaping_trade_cp": 4,
+  "shaping_mopup_cp": 15,
+  "cp_loss_weight": 0.0,
+  "cp_loss_clip_pawns": 50.0,
+  "device": "mps",
+  "limit": null,
+  "runs_dir": "/Users/nikhildsouza/workspace/chess-challenge/training/runs"
+}

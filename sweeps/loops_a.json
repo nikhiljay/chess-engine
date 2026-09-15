@@ -6,6 +6,7 @@
   "runs": [
     {"name": "loopa-h512-s400"},
     {"name": "loopa-h512-s400-ladder", "mate_base_cp": 3000, "mate_step_cp": 20},
-    {"name": "loopa-h256-s400", "hidden": 256}
+    {"name": "loopa-h256-s400", "hidden": 256},
+    {"name": "loopa-h512-s400-seed1", "seed": 1}
   ]
 }

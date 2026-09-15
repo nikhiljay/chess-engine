@@ -144,6 +144,14 @@ noted. Full table: `uv run python -m chess_nn.report`.
     (35-38% free) from other processes after the OS update. That run is
     reused as `runs/loopa-h512-s400` (same shards, order, seed and settings).
     Sweeps now run with `PYTHONUNBUFFERED=1` so logs survive a kill.
+    A third kill hit during loopa-h256's games; at that moment the ChatGPT
+    app's Codex renderer held 8.6 GB, the compressor ~11 GB, and swap was 0.
+22. **Loop children at 8.2%: best L1 yet, but L2 falls and conversion is not
+    fixed.** June 0-3 + July 0-1 + loops_a (h512): L1 69.0% / L2 43.8%
+    (baseline 65.2 / 50.0), losses 19 / 68, repetition-while-winning
+    54 / 54 (59 / 59). With the mate ladder: 64.0 / 48.5, repetition-while-
+    winning 65 / 64. L1 +3.8 is at the edge of seed noise; L2 −6.2 is beyond
+    it. A seed-1 replicate of the plain run checks the L1 number.
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
