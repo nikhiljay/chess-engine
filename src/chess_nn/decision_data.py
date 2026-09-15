@@ -22,6 +22,7 @@ Usage:
 
 import argparse
 import json
+import random
 import sys
 import time
 from collections import Counter
@@ -111,6 +112,18 @@ def load_decisions(directory: Path) -> list[dict]:
     return [json.loads(line) for line in (directory / "decisions.jsonl").read_text().splitlines() if line.strip()]
 
 
+def select_fens(decisions: list[dict], mode: str, min_cp: int = 300, sample: int | None = None, seed: int = 0) -> list[str]:
+    """Decision positions to expand: 'turning' (defensible → losing moves) or 'winning' (best_cp >= min_cp).
+
+    With `sample`, a seeded random subset of that many distinct positions.
+    """
+    chosen = is_decisive if mode == "turning" else (lambda d: d["best_cp"] >= min_cp)
+    fens = sorted({d["fen"] for d in decisions if chosen(d)})
+    if sample is not None and sample < len(fens):
+        fens = sorted(random.Random(seed).sample(fens, sample))
+    return fens
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("diagnoses", type=Path, nargs="+", help="training-source chess_nn.diagnose directories")
@@ -118,16 +131,22 @@ def main() -> None:
     parser.add_argument("--exclude", type=Path, nargs="*", default=[], help="held-out diagnosis directories")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--workers", type=int, default=8)
+    parser.add_argument("--select", choices=["turning", "winning"], default="turning",
+                        help="expand turning decisions, or every decision with best_cp >= --min-cp")
+    parser.add_argument("--min-cp", type=int, default=300)
+    parser.add_argument("--sample", type=int, help="a seeded random subset of this many decision positions")
+    parser.add_argument("--seed", type=int, default=0)
     args = parser.parse_args()
 
     excluded = set()
     for directory in args.exclude:
         for d in load_decisions(directory):
             excluded.add(position_key(chess.Board(d["fen"])))
-    turning = {d["fen"] for directory in args.diagnoses for d in load_decisions(directory) if is_decisive(d)}
+    decisions = [d for directory in args.diagnoses for d in load_decisions(directory)]
+    turning = select_fens(decisions, args.select, args.min_cp, args.sample, args.seed)
     start = time.time()
     with Pool(args.workers, initializer=_init, initargs=(str(args.net),)) as pool:
-        collected = pool.map(_positions, sorted(turning), chunksize=4)
+        collected = pool.map(_positions, turning, chunksize=4)
     kinds = sum((k for _, k in collected), Counter())
     seen, kept, dropped = set(), [], 0
     for fen in (f for group, _ in collected for f in group):

@@ -1,6 +1,6 @@
 import chess
 
-from chess_nn.decision_data import decision_positions, quiescence_leaf
+from chess_nn.decision_data import decision_positions, quiescence_leaf, select_fens
 from chess_nn.search_check import move_value
 
 VALUES = {chess.PAWN: 1, chess.KNIGHT: 3, chess.BISHOP: 3, chess.ROOK: 5, chess.QUEEN: 9, chess.KING: 0}
@@ -49,3 +49,18 @@ def test_decision_positions_are_the_leaves_the_search_scores_each_move_by():
     assert after_ke2.fen() in positions  # a quiet child quiescence stands pat on
     assert kinds["leaf"] >= 1 and kinds["child"] >= 1
     assert kinds["child"] + kinds["leaf"] + kinds["terminal"] == board.legal_moves.count()
+
+
+def test_select_fens_by_turning_or_winning_with_a_seeded_sample():
+    decisions = [
+        {"fen": "a", "best_cp": 50, "played_cp": -400},  # turning
+        {"fen": "b", "best_cp": 350, "played_cp": 300},  # winning
+        {"fen": "c", "best_cp": 900, "played_cp": -500},  # winning and turning
+        {"fen": "d", "best_cp": 120, "played_cp": 100},
+        {"fen": "c", "best_cp": 900, "played_cp": 850},  # same position again
+    ]
+    assert select_fens(decisions, "turning") == ["a", "c"]
+    assert select_fens(decisions, "winning", min_cp=300) == ["b", "c"]
+    sample = select_fens(decisions, "winning", min_cp=100, sample=2, seed=1)
+    assert len(sample) == 2 and set(sample) <= {"b", "c", "d"}
+    assert sample == select_fens(decisions, "winning", min_cp=100, sample=2, seed=1)

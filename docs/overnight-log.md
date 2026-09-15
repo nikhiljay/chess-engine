@@ -679,7 +679,15 @@ noted. Full table: `uv run python -m chess_nn.report`.
     The first intervention to cut winning repetitions clearly (−25 at L2),
     but only 3 became wins and losses rose by 22. Progress shaping
     (finding 29) and king buckets (finding 32) showed the same trade. Not
-    replicated or expanded.
+    replicated or expanded. Stockfish depth 12 with history on both models'
+    L2 games the net did not win: losses after a winning position 38 vs 20,
+    losses from level or worse positions 27 vs 23; repetition draws with a
+    win 60 vs 86, the slip now a median 20 plies before the end (control
+    2.5). Both reach a winning position in 81-83% of all L2 games and win
+    37-39% of those. So the extra losses come from positions the net was
+    converting: when it stops shuffling it walks into tactics it cannot
+    see. Conversion is gated by tactical safety, not by the lack of a
+    progress signal alone.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
