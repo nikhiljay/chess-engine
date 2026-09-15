@@ -361,6 +361,17 @@ noted. Full table: `uv run python -m chess_nn.report`.
     exactly one, and the search's mate-in-one blind spot explains only a small
     share of them. Training analysis now prioritizes turning moves (the
     `decisive` flag on pairs).
+46. **Capacity experiment on the strongest established setup (user
+    direction, 2026-09-15).** The ranking objective failed in rank_a and
+    ThreatNet without ranking played worse, so capacity is tested on plain
+    EvalNet with s1000 + cp 0.2 on June 0-3 + July 0-1 (4.36M), 20 epochs,
+    batch 16384, lr 1e-3, seed 0, graded L1-L3 on dev_openings_100 — the
+    recipe of the current default, jj6-h1024-s1000-cp20 (856,163 params:
+    69.8 / 54.2 / 29.0; 8.5 s/epoch, 2.8 min to train; games 67 / 72 / 235 s
+    with a free CPU). `sweeps/capacity_a.json` adds h3072 (2,566,243 params)
+    and h8192 (6,841,443). The harness limits only parameters (10M); ONNX
+    files are ~4 bytes per parameter. Promising sizes get a seed-1 repeat
+    before any default change.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
