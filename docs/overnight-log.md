@@ -29,7 +29,12 @@ noted. Full table: `uv run python -m chess_nn.report`.
    findings 2 and 4 are within this noise; only h128-s800 looks clearly worse.
    Conclusion: at 726k human positions, architecture/scale/ladder choices
    barely matter; the data and the repetition leak do.
-6. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
+6. **June shards 0-3 (2.9M positions):** h256-s400 L1 64.0% / L2 45.0%,
+   +7 / +5 over the shard-0 seed mean, so more data does help the 215k net;
+   h128-s400 56.5% / 41.8%, no gain, so width matters once data grows.
+   Train/val gap nearly closed (0.0087 / 0.0092). Repetition still ~38% of
+   games, with 56 (L1) and 37 (L2) of them the net ahead by its own eval.
+7. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
 ## In progress at time of writing
