@@ -60,7 +60,12 @@ noted. Full table: `uv run python -m chess_nn.report`.
    Next test: `sweeps/june4_selfplay.json` — shards 0-3 plus self-play
    positions, with the mate ladder and an auxiliary Huber loss in pawns
    (`cp_loss_weight`) that keeps gradient between large advantages.
-10. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
+10. **Self-play data (`data/shards_selfplay/shard_selfplay_a_0000.npz`):**
+    154,944 positions kept of 212,568 (depth 9, depth-14 re-search at
+    |score| ≥ 600, ~50 positions/s with 6 workers). 14.3% are mate scores
+    (human data: 2.0%), 44% are non-mate |score| ≥ 600, 77% are |score| ≥ 300,
+    i.e. heavily weighted toward won positions, as intended.
+11. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
 ## In progress at time of writing
