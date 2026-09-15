@@ -347,6 +347,20 @@ noted. Full table: `uv run python -m chess_nn.report`.
     genuinely won (median best +8.2 pawns), 839 slipped; 1,312 losses, 1,059
     (81%) with one blunder (median ply 38), 628 (48%) after having been
     winning. The net's move matched Stockfish's best in 37.7% of decisions.
+45. **Tightening finding 44: most large drops do not decide the game.** A
+    turning move takes a defensible position (Stockfish best with history
+    >= -100 cp) to a losing one (net's move <= -300 cp) — `chess_nn.turning`.
+    Lost games with at least one turning move: L2 71/130 (55%), L3 142/241
+    (59%), larger h1024 set 796/1,312 (61%). Large drop but no turning move:
+    57 / 96 / 477; never defensible: 13 / 26 / 111. Of all large drops in lost
+    games (larger set), 3,180 of 4,099 (78%) were not turning moves — already
+    lost, or still ahead afterwards. First turning move: median ply 34 / 43 /
+    37, median drop 676 / 616 / 561 cp, and it allowed an unseen mate in one in
+    7/71, 7/142, 59/796 (~5-10%). So "81% of losses hinge on one blunder"
+    overstated it: ~55-61% of losses contain a real turning move, usually
+    exactly one, and the search's mate-in-one blind spot explains only a small
+    share of them. Training analysis now prioritizes turning moves (the
+    `decisive` flag on pairs).
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
