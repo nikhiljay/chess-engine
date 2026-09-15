@@ -14,7 +14,7 @@ from onnx import TensorProto, helper, numpy_helper
 
 from chess_nn.encoding import HALF_SIZE, TENSOR_SIZE, dense_numpy, encode_sparse
 from chess_nn.harness import VALIDATE_MODEL, load_harness_tool
-from chess_nn.model import EvalNet
+from chess_nn.model import KING_PLANE, EvalNet, KingBucketNet
 
 # name → (fen, predicate on the eval in pawns)
 SANITY_POSITIONS = {
@@ -28,22 +28,61 @@ def _weight(name: str, tensor: torch.Tensor) -> onnx.TensorProto:
     return numpy_helper.from_array(tensor.detach().cpu().numpy().astype(np.float32), name)
 
 
+def _int64(name: str, values: list[int]) -> onnx.TensorProto:
+    return numpy_helper.from_array(np.array(values, dtype=np.int64), name)
+
+
+def _transformer(model: EvalNet, half: str, out: str) -> tuple[list[onnx.TensorProto], list[onnx.NodeProto]]:
+    """Initializers (shared by both halves, so only emitted for 'stm') and nodes for one half."""
+    if not isinstance(model, KingBucketNet):
+        initializers = [_weight("ft.weight", model.ft.weight), _weight("ft.bias", model.ft.bias)] if half == "stm" else []
+        nodes = [
+            helper.make_node("Gemm", [half, "ft.weight", "ft.bias"], [f"{out}_lin"], transB=1),
+            helper.make_node("Clip", [f"{out}_lin", "clip_min", "clip_max"], [out]),
+        ]
+        return initializers, nodes
+
+    initializers = []
+    if half == "stm":
+        weight, bias = model.merged_transformer()
+        initializers = [
+            _weight("ft.bucket_weight", weight),
+            _weight("ft.bucket_bias", bias),
+            _int64("bucket_of_square", model.bucket_of_square.tolist()),
+            _int64("king_start", [KING_PLANE]),
+            _int64("king_end", [KING_PLANE + 64]),
+            _int64("king_axis", [1]),
+            _int64("axis1", [1]),
+        ]
+    # One bucket's weights per position via Gather, so inference costs one
+    # transformer multiply regardless of the bucket count.
+    nodes = [
+        helper.make_node("Slice", [half, "king_start", "king_end", "king_axis"], [f"{out}_king"]),
+        helper.make_node("ArgMax", [f"{out}_king"], [f"{out}_square"], axis=1, keepdims=0),
+        helper.make_node("Gather", ["bucket_of_square", f"{out}_square"], [f"{out}_bucket"], axis=0),
+        helper.make_node("Gather", ["ft.bucket_weight", f"{out}_bucket"], [f"{out}_w"], axis=0),
+        helper.make_node("Gather", ["ft.bucket_bias", f"{out}_bucket"], [f"{out}_b"], axis=0),
+        helper.make_node("Unsqueeze", [half, "axis1"], [f"{out}_row"]),
+        helper.make_node("MatMul", [f"{out}_row", f"{out}_w"], [f"{out}_mm"]),
+        helper.make_node("Squeeze", [f"{out}_mm", "axis1"], [f"{out}_flat"]),
+        helper.make_node("Add", [f"{out}_flat", f"{out}_b"], [f"{out}_lin"]),
+        helper.make_node("Clip", [f"{out}_lin", "clip_min", "clip_max"], [out]),
+    ]
+    return initializers, nodes
+
+
 def export_onnx(model: EvalNet, path) -> None:
     initializers = [
-        _weight("ft.weight", model.ft.weight),
-        _weight("ft.bias", model.ft.bias),
         numpy_helper.from_array(np.array([HALF_SIZE, HALF_SIZE], dtype=np.int64), "split_sizes"),
         numpy_helper.from_array(np.array(0.0, dtype=np.float32), "clip_min"),
         numpy_helper.from_array(np.array(1.0, dtype=np.float32), "clip_max"),
     ]
-    nodes = [
-        helper.make_node("Split", ["board", "split_sizes"], ["stm", "nstm"], axis=1),
-        helper.make_node("Gemm", ["stm", "ft.weight", "ft.bias"], ["ft_stm"], transB=1),
-        helper.make_node("Gemm", ["nstm", "ft.weight", "ft.bias"], ["ft_nstm"], transB=1),
-        helper.make_node("Clip", ["ft_stm", "clip_min", "clip_max"], ["act_stm"]),
-        helper.make_node("Clip", ["ft_nstm", "clip_min", "clip_max"], ["act_nstm"]),
-        helper.make_node("Concat", ["act_stm", "act_nstm"], ["accumulator"], axis=1),
-    ]
+    nodes = [helper.make_node("Split", ["board", "split_sizes"], ["stm", "nstm"], axis=1)]
+    for half, out in (("stm", "act_stm"), ("nstm", "act_nstm")):
+        half_inits, half_nodes = _transformer(model, half, out)
+        initializers += half_inits
+        nodes += half_nodes
+    nodes.append(helper.make_node("Concat", ["act_stm", "act_nstm"], ["accumulator"], axis=1))
     x = "accumulator"
     for i, layer in enumerate(model.head):
         initializers += [_weight(f"head{i}.weight", layer.weight), _weight(f"head{i}.bias", layer.bias)]

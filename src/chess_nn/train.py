@@ -19,7 +19,7 @@ import torch
 from chess_nn.encoding import dense_from_sparse, dense_numpy
 from chess_nn.export import export_onnx, parity_check, sanity_checks, validate_with_harness
 from chess_nn.harness import RUNS_DIR, SHARDS_DIR
-from chess_nn.model import EvalNet, count_params, cp_loss, wdl_loss
+from chess_nn.model import EvalNet, KingBucketNet, count_params, cp_loss, wdl_loss
 from chess_nn.shaping import progress_bonus
 from chess_nn.shards import load_shards
 
@@ -95,6 +95,8 @@ class TrainConfig:
     # loss stays WDL-only so runs remain comparable.
     cp_loss_weight: float = 0.0
     cp_loss_clip_pawns: float = 50.0
+    # Feature transformer chosen by each side's own king square (model.KingBucketNet).
+    king_buckets: bool = False
     device: str = field(default_factory=default_device)
     limit: int | None = None
     runs_dir: str = str(RUNS_DIR)
@@ -143,7 +145,8 @@ def run_training(cfg: TrainConfig) -> Path:
     targets = torch.from_numpy(targets_np).to(device)
     val_idx, train_idx = val_idx_cpu.to(device), train_idx_cpu.to(device)
 
-    model = EvalNet(cfg.hidden, tuple(cfg.head)).to(device)
+    model_class = KingBucketNet if cfg.king_buckets else EvalNet
+    model = model_class(cfg.hidden, tuple(cfg.head)).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=cfg.lr, weight_decay=cfg.weight_decay)
     steps_per_epoch = math.ceil(len(train_idx) / cfg.batch_size)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=cfg.epochs * steps_per_epoch)
@@ -189,7 +192,7 @@ def run_training(cfg: TrainConfig) -> Path:
     sanity = sanity_checks(onnx_path)
 
     summary = {
-        "params": count_params(model),
+        "params": model.exported_params() if isinstance(model, KingBucketNet) else count_params(model),
         "positions": n,
         "final_train_loss": metrics[-1]["train_loss"],
         "final_val_loss": metrics[-1]["val_loss"],

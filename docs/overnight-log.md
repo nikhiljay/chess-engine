@@ -210,6 +210,20 @@ noted. Full table: `uv run python -m chess_nn.report`.
     while-winning drops only slightly (L2 67-70 → 56-59) while losses rise
     (L2 41-51 → 57-74): the bonus makes the net overvalue pawn pushes and
     trades. Shaping is ruled out.
+30. **Wider head and longer training: no gain.** On s1000 (h512): head
+    128×32 (530k params) + cp 0.2: L1 69.2% / L2 51.7%; + cp 0.1: 68.5 /
+    46.5; 40 epochs + cp 0.2: 64.2 / 49.2. The head and epoch count are not
+    the limit.
+31. **King-bucketed feature transformer (`king_buckets: true`).** Each
+    perspective's transformer is chosen by its own king square: queenside /
+    kingside × back rank / 2nd / 3rd-4th / 5th-8th = 8 buckets
+    (`model.KingBucketNet`). Training stores shared + per-bucket delta
+    weights so rare buckets start from the shared transformer; export merges
+    them and picks each position's bucket with ArgMax → Gather inside the
+    graph, so inference costs one transformer multiply. h512 ≈ 3.19M
+    harness-counted params, h256 ≈ 1.6M. Tests: zero deltas equal EvalNet,
+    ONNX parity, harness validation and param count
+    (`tests/test_king_buckets.py`). First sweep: `sweeps/kb1.json`.
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
