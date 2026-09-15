@@ -44,6 +44,15 @@ def test_parse_head():
     assert parse_head("") == []
 
 
+def test_cp_loss_separates_big_advantages_and_clips():
+    from chess_nn.model import cp_loss
+
+    evals = torch.tensor([8.5])
+    assert cp_loss(evals, torch.tensor([850.0])) == 0
+    assert cp_loss(evals, torch.tensor([3980.0])) > cp_loss(evals, torch.tensor([3000.0])) > 0
+    assert cp_loss(torch.tensor([50.0]), torch.tensor([32000.0])) == 0
+
+
 def test_larger_wdl_scale_separates_big_advantages():
     evals = torch.tensor([8.0])
     target = torch.tensor([2500.0])

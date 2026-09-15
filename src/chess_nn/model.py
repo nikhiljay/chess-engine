@@ -35,6 +35,17 @@ def count_params(model: nn.Module) -> int:
     return sum(p.numel() for p in model.parameters())
 
 
+def cp_loss(eval_pawns: torch.Tensor, score_cp: torch.Tensor, clip_pawns: float = 50.0) -> torch.Tensor:
+    """Huber loss in pawns against targets clipped to ±clip_pawns.
+
+    Unlike the WDL loss, this keeps full gradient between large advantages
+    (e.g. +8 pawns vs a laddered mate), which a depth-1 search needs in order
+    to rank progress moves above shuffles in won positions.
+    """
+    target = torch.clamp(score_cp / 100.0, -clip_pawns, clip_pawns)
+    return torch.nn.functional.smooth_l1_loss(eval_pawns, target)
+
+
 def wdl_loss(eval_pawns: torch.Tensor, score_cp: torch.Tensor, scale_cp: float = 400.0) -> torch.Tensor:
     """MSE between predicted and target win probabilities.
 

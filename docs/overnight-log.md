@@ -41,12 +41,26 @@ noted. Full table: `uv run python -m chess_nn.report`.
    (L1 76 → 95-103) with the net ahead in 64-71 of them. L1 is capped near
    64% until conversion is fixed; h512 converting its "winning" repetitions
    would score ~81%.
-8. **Progress shaping (in progress):** `chess_nn/shaping.py` adds a
+8. **Progress shaping: no improvement.** `chess_nn/shaping.py` adds a
    winning-side bonus to non-mate targets with |score| ≥ 300 cp: 10 cp per
    pawn rank advanced, 4 cp per point of material traded off, and 15 cp per
    step of mop-up (losing king to the edge, kings close) once the loser has
-   no pawns and ≤ a rook. Sweep: `sweeps/june4_shaped.json` (s400, s1000).
-9. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
+   no pawns and ≤ a rook. h256 on shards 0-3: s400 L1 62.7% / L2 43.0% with
+   repetition-while-winning rising to 75 / 68; s1000 61.0 / 45.5. The two
+   positions in a shuffle loop have identical progress features, so the
+   bonus cannot break the tie, and 10-15 cp sits inside the net's eval error.
+9. **Loop diagnosis (h512, shards 0-3).** At loop positions the net's scores
+   for its top moves are nearly flat in won endgames: KR+P vs K with mate in 5,
+   Rg7 +8.61 / Rf7 +8.60 / h7 +8.59 / Rb7 +8.50, while Stockfish sees mate in
+   4-7 for three of them and +14 for the fourth. It also sometimes prefers moves Stockfish rates as
+   draws (Re5: net +7.31, Stockfish 0). The WDL loss at scale 400 maps +8 and
+   mate to nearly the same win probability, so the net gets almost no gradient
+   to rank them. (Caveat: children were ranked by static eval; the harness
+   uses quiescence, so capture moves are overrated in that listing.)
+   Next test: `sweeps/june4_selfplay.json` — shards 0-3 plus self-play
+   positions, with the mate ladder and an auxiliary Huber loss in pawns
+   (`cp_loss_weight`) that keeps gradient between large advantages.
+10. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
 ## In progress at time of writing

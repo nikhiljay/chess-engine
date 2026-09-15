@@ -19,7 +19,7 @@ import torch
 from chess_nn.encoding import dense_from_sparse, dense_numpy
 from chess_nn.export import export_onnx, parity_check, sanity_checks, validate_with_harness
 from chess_nn.harness import RUNS_DIR, SHARDS_DIR
-from chess_nn.model import EvalNet, count_params, wdl_loss
+from chess_nn.model import EvalNet, count_params, cp_loss, wdl_loss
 from chess_nn.shaping import progress_bonus
 from chess_nn.shards import load_shards
 
@@ -91,6 +91,10 @@ class TrainConfig:
     shaping_pawn_cp: int = 10
     shaping_trade_cp: int = 4
     shaping_mopup_cp: int = 15
+    # Weight of an auxiliary Huber loss in pawns (0 = WDL loss only). Validation
+    # loss stays WDL-only so runs remain comparable.
+    cp_loss_weight: float = 0.0
+    cp_loss_clip_pawns: float = 50.0
     device: str = field(default_factory=default_device)
     limit: int | None = None
     runs_dir: str = str(RUNS_DIR)
@@ -156,6 +160,8 @@ def run_training(cfg: TrainConfig) -> Path:
             batch = order[s : s + cfg.batch_size]
             out = model(dense_from_sparse(features[batch])).squeeze(1)
             loss = wdl_loss(out, targets[batch], cfg.wdl_scale_cp)
+            if cfg.cp_loss_weight:
+                loss = loss + cfg.cp_loss_weight * cp_loss(out, targets[batch], cfg.cp_loss_clip_pawns)
             optimizer.zero_grad(set_to_none=True)
             loss.backward()
             optimizer.step()
