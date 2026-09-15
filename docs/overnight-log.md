@@ -123,6 +123,12 @@ noted. Full table: `uv run python -m chess_nn.report`.
     eval-db conversion is dropped (the download is kept in `data/`).
     Loop-children generation (jj6-h512 vs L1, 8000 games): 2,280 loops
     (28.5%), 347,571 positions in 523 s.
+19. **Loop children are slow to label.** `label --bench 2000` at depth 9 +
+    deep 14 (≥600 cp): 103 positions/s with datagen sharing the CPU, 52.9%
+    kept (most loop children are lopsided, so most get the deep re-search).
+    Candidates from L1 + L2 are deduplicated, shuffled (seed 0) and labeled
+    in 100k shards so partial results are usable and a restart loses at most
+    one shard.
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
@@ -221,9 +227,10 @@ uv run python -m chess_nn.sweep sweeps/evpilot_eg.json   # pilot endgames only
 for L in 1 2; do datagen/target/release/datagen runs/jj6-h512-s400/model.onnx \
   --out data/loops_L${L}_a.txt --games 8000 --threads 10 --level $L --random-move-prob 0 \
   --sample-prob 0 --loop-plies 16 --min-eval 3 --seed 1$L; done
-awk '!seen[$0]++' data/loops_L1_a.txt data/loops_L2_a.txt > data/loops_a.txt
+# dedupe + shuffle (seed 0); rerunning this reproduces the same order, so label resumes
+uv run python -c "import random; fens = list(dict.fromkeys(l.strip() for f in ['data/loops_L1_a.txt', 'data/loops_L2_a.txt'] for l in open(f) if l.strip())); random.Random(0).shuffle(fens); open('data/loops_a.txt', 'w').write('\n'.join(fens) + '\n')"
 uv run python -m chess_nn.label --candidates data/loops_a.txt --out-dir data/shards_loops \
-  --prefix shard_loops_a --depth 9 --deep-depth 14 --deep-threshold-cp 600
+  --prefix shard_loops_a --depth 9 --deep-depth 14 --deep-threshold-cp 600 --shard-size 100000
 uv run python -m chess_nn.sweep sweeps/loops_a.json
 
 # July download, then sampling and labeling
