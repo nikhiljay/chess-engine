@@ -204,6 +204,18 @@ uv run python -m chess_nn.import_evals --evals data/lichess_db_eval.jsonl.zst \
   --out-dir data/shards_evaldb --sample-prob 0.03
 uv run python -m chess_nn.sweep sweeps/evdb_only.json
 uv run python -m chess_nn.sweep sweeps/evdb_mix.json
+uv run python -m chess_nn.sweep sweeps/evpilot_eg.json   # pilot endgames only
+
+# Loop children (2026-09-15): children of repetition positions the net thought
+# it was winning, from jj6-h512 vs Levels 1 and 2 (200 games → 72 loops, ~12k positions)
+(cd datagen && cargo build --release)
+for L in 1 2; do datagen/target/release/datagen runs/jj6-h512-s400/model.onnx \
+  --out data/loops_L${L}_a.txt --games 8000 --threads 10 --level $L --random-move-prob 0 \
+  --sample-prob 0 --loop-plies 16 --min-eval 3 --seed 1$L; done
+awk '!seen[$0]++' data/loops_L1_a.txt data/loops_L2_a.txt > data/loops_a.txt
+uv run python -m chess_nn.label --candidates data/loops_a.txt --out-dir data/shards_loops \
+  --prefix shard_loops_a --depth 9 --deep-depth 14 --deep-threshold-cp 600
+uv run python -m chess_nn.sweep sweeps/loops_a.json
 
 # July download, then sampling and labeling
 (cd data && curl -C - -o lichess_2017-07.pgn.zst.part \
