@@ -1,0 +1,16 @@
+{
+  "name": "m1-h256",
+  "shards": [
+    "data/shards_m1/shard_0000.npz"
+  ],
+  "hidden": 256,
+  "epochs": 20,
+  "batch_size": 1024,
+  "lr": 0.001,
+  "weight_decay": 0.0001,
+  "val_frac": 0.02,
+  "seed": 0,
+  "device": "mps",
+  "limit": null,
+  "runs_dir": "/Users/nikhildsouza/workspace/chess-challenge/training/runs"
+}
