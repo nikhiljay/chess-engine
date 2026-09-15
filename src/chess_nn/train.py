@@ -19,7 +19,8 @@ import torch
 from chess_nn.encoding import dense_from_sparse, dense_numpy
 from chess_nn.export import export_onnx, parity_check, sanity_checks, validate_with_harness
 from chess_nn.harness import RUNS_DIR, SHARDS_DIR, VALIDATE_MODEL, load_harness_tool
-from chess_nn.model import EvalNet, KingBucketNet, ThreatNet, count_params, cp_loss, wdl_loss
+from chess_nn.model import EvalNet, KingBucketNet, ThreatNet, count_params, cp_loss, rank_loss, wdl_loss
+from chess_nn.rank_pairs import load_pairs
 from chess_nn.shaping import progress_bonus
 from chess_nn.shards import load_shards
 
@@ -99,6 +100,13 @@ class TrainConfig:
     king_buckets: bool = False
     # Width of the attack/threat feature transformer (model.ThreatNet); 0 = off.
     threat_hidden: int = 0
+    # Move-ranking pairs from chess_nn.rank_pairs (paths under training/); rank_weight 0 = off.
+    rank_pairs: list[str] = field(default_factory=list)
+    rank_val_pairs: list[str] = field(default_factory=list)
+    rank_weight: float = 0.0
+    rank_margin_pawns: float = 0.2
+    rank_temperature_pawns: float = 0.5
+    rank_batch_size: int = 4096
     device: str = field(default_factory=default_device)
     limit: int | None = None
     runs_dir: str = str(RUNS_DIR)
@@ -113,6 +121,19 @@ def _loss_over(model, features, targets, indices, batch_size, scale_cp) -> float
         out = model(dense_from_sparse(features[batch])).squeeze(1)
         total += wdl_loss(out, targets[batch], scale_cp) * len(batch)
     return total.item() / len(indices)
+
+
+@torch.no_grad()
+def _pair_accuracy(model, pairs, batch_size) -> float:
+    """Fraction of pairs where the net scores the better move's child lower (prefers it)."""
+    model.eval()
+    good, bad = pairs
+    correct = 0
+    for start in range(0, len(good), batch_size):
+        g = model(dense_from_sparse(good[start : start + batch_size])).squeeze(1)
+        b = model(dense_from_sparse(bad[start : start + batch_size])).squeeze(1)
+        correct += int((g < b).sum().item())
+    return correct / max(len(good), 1)
 
 
 def run_training(cfg: TrainConfig) -> Path:
@@ -146,6 +167,8 @@ def run_training(cfg: TrainConfig) -> Path:
     )
     targets = torch.from_numpy(targets_np).to(device)
     val_idx, train_idx = val_idx_cpu.to(device), train_idx_cpu.to(device)
+    rank_train = load_pairs(cfg.rank_pairs, device) if cfg.rank_weight and cfg.rank_pairs else None
+    rank_val = load_pairs(cfg.rank_val_pairs, device) if cfg.rank_val_pairs else None
 
     if cfg.threat_hidden:
         model = ThreatNet(cfg.hidden, tuple(cfg.head), cfg.threat_hidden).to(device)
@@ -171,6 +194,11 @@ def run_training(cfg: TrainConfig) -> Path:
             loss = wdl_loss(out, targets[batch], cfg.wdl_scale_cp)
             if cfg.cp_loss_weight:
                 loss = loss + cfg.cp_loss_weight * cp_loss(out, targets[batch], cfg.cp_loss_clip_pawns)
+            if rank_train is not None:
+                pick = torch.randint(0, len(rank_train[0]), (cfg.rank_batch_size,), device=device)
+                good = model(dense_from_sparse(rank_train[0][pick])).squeeze(1)
+                bad = model(dense_from_sparse(rank_train[1][pick])).squeeze(1)
+                loss = loss + cfg.rank_weight * rank_loss(good, bad, cfg.rank_margin_pawns, cfg.rank_temperature_pawns)
             optimizer.zero_grad(set_to_none=True)
             loss.backward()
             optimizer.step()
@@ -182,6 +210,7 @@ def run_training(cfg: TrainConfig) -> Path:
             "epoch": epoch,
             "train_loss": train_loss,
             "val_loss": val_loss,
+            "rank_val_accuracy": _pair_accuracy(model, rank_val, cfg.batch_size) if rank_val is not None else None,
             "lr": scheduler.get_last_lr()[0],
             "seconds": round(time.time() - start, 1),
         })

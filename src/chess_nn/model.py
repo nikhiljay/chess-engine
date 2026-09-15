@@ -145,6 +145,16 @@ def cp_loss(eval_pawns: torch.Tensor, score_cp: torch.Tensor, clip_pawns: float 
     return torch.nn.functional.smooth_l1_loss(eval_pawns, target)
 
 
+def rank_loss(good_child: torch.Tensor, bad_child: torch.Tensor, margin_pawns: float = 0.2, temperature_pawns: float = 0.5) -> torch.Tensor:
+    """Logistic ranking loss over the positions two moves lead to.
+
+    The net scores a child from its side to move's view (the opponent), so the
+    mover prefers the child scored lower: this pushes eval(good child) at least
+    `margin_pawns` below eval(bad child).
+    """
+    return torch.nn.functional.softplus((good_child - bad_child + margin_pawns) / temperature_pawns).mean()
+
+
 def wdl_loss(eval_pawns: torch.Tensor, score_cp: torch.Tensor, scale_cp: float = 400.0) -> torch.Tensor:
     """MSE between predicted and target win probabilities.
 
