@@ -65,7 +65,13 @@ noted. Full table: `uv run python -m chess_nn.report`.
     |score| ≥ 600, ~50 positions/s with 6 workers). 14.3% are mate scores
     (human data: 2.0%), 44% are non-mate |score| ≥ 600, 77% are |score| ≥ 300,
     i.e. heavily weighted toward won positions, as intended.
-11. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
+11. **Self-play positions cut losses, not repetition.** h256-s400 on shard 0 +
+    self-play (881k, 18% self-play): L1 64.0% / L2 38.2% with 22 L1 losses
+    (shard-0 seeds: 35-43 losses, L1 mean 57.0, L2 mean 40.4); with the mate
+    ladder 62.0 / 39.2. L1 gains +5-7 over the seed mean, beyond noise, but
+    repetition-while-winning stays at 57-62 and L2 does not move. The mate
+    ladder shows no effect even with 14% mates in the self-play data.
+12. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
 ## In progress at time of writing
@@ -125,6 +131,7 @@ uv run python -m chess_nn.sweep sweeps/june4.json
 uv run python -m chess_nn.sweep sweeps/june4b.json
 uv run python -m chess_nn.sweep sweeps/june4_shaped.json
 uv run python -m chess_nn.sweep sweeps/june4_selfplay.json
+uv run python -m chess_nn.sweep sweeps/june4_selfplay_cp.json
 
 # Table of every run
 uv run python -m chess_nn.report
