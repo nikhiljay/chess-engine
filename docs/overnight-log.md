@@ -118,8 +118,11 @@ noted. Full table: `uv run python -m chess_nn.report`.
     587,700 pilot positions with ≤10 pieces (h512): L1 64.8% / L2 49.2%
     (baseline 65.2 / 50.0); with the mate ladder 68.0 / 46.5. L1 +2.8 is
     inside seed noise and L2 fell; repetition-while-winning stays 59-65.
-    A seed-1 replicate of the ladder run checks the L1 number. Full eval-db
-    conversion is deprioritized.
+    Seed-1 replicate of the ladder run: 65.2 / 42.0, so the 68.0 was noise
+    and L2 is worse on both seeds. Eval-db endgames are ruled out; the full
+    eval-db conversion is dropped (the download is kept in `data/`).
+    Loop-children generation (jj6-h512 vs L1, 8000 games): 2,280 loops
+    (28.5%), 347,571 positions in 523 s.
 19. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
