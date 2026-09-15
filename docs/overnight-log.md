@@ -303,6 +303,26 @@ noted. Full table: `uv run python -m chess_nn.report`.
     features do not expose, so next: many more pairs (diagnosis_b), much
     smaller weights (0.05, 0.2), and ThreatNet's attack/threat inputs, with
     and without ranking (`sweeps/threat_a.json`, `sweeps/rank_b.json`).
+41. **Diagnostic game (human vs jj6-h1024-s1000-cp20, 32...Nxe4 33. Rh8#).**
+    The harness search follows only captures, promotions and castling (or
+    all moves in check), so a quiet mating reply is never examined from a
+    position not in check (`chess_nn.mate_in_one`).
+    - Through play-move, all six existing nets (h1024, h512, kb-h256,
+      rank-a w0/w0.5/w2) choose 32...Nxe4.
+    - After 32. f3 Black has 30 moves: 5 (every knight move — the knight
+      guards h7/h8) allow 33. Rh8#, unseen by the search; 25 avoid mate in
+      one, but with the game history Stockfish depth 20 rates all 25 lost
+      (best 32...Bxd5 −8.6 pawns; 10 are forced mates). Here avoiding the
+      immediate mate would not have saved the game; the position was
+      already −8.0.
+    - Pipeline: diagnose scores the decision (best Bxd5 −827, Nxe4 mated) but
+      build_pairs dropped it as an already-lost position (best ≤ −300), and
+      would only ever have kept Stockfish's best as the good side. No safe
+      reply gives check, so the in-check exclusion removed nothing here.
+      Fix: a `mate_in_one` pair kind — when the net's move allows an unseen
+      mate in one and safe moves exist, up to 4 safe alternatives (Stockfish's
+      best first) are paired against it regardless of the lost filter, and
+      reported separately from score-gap and repetition-rule pairs.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),

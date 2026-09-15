@@ -63,3 +63,33 @@ def test_repetition_rule_pairs_a_shuffle_with_progress_whatever_the_gap():
     assert build_pairs([{**shuffle, "best_cp": 200, "played_cp": 180}], "d") == []  # not winning
     assert build_pairs([{**shuffle, "best": "e1d1", "played": "e1e2"}], "d")[0]["kind"] == "repetition"  # d1 is new
     assert build_pairs([{**shuffle, "best": "e1e2", "played": "e1d1", "repeats": False}], "d") == []
+
+
+def test_mate_in_one_pairs_keep_safe_defences_even_when_lost():
+    import io
+
+    import chess.pgn
+
+    from test_mate_in_one import DIAGNOSTIC_PGN
+
+    moves = list(chess.pgn.read_game(io.StringIO(DIAGNOSTIC_PGN)).mainline_moves())
+    board = chess.Board()
+    for move in moves[:63]:
+        board.push(move)
+    decision_632 = {
+        "game": 0, "ply": 63, "fen": board.fen(), "start_fen": chess.STARTING_FEN, "history": [m.uci() for m in moves[:63]],
+        "best": "b7d5", "best_cp": -827, "played": "f6e4", "played_cp": -9999, "repeats": False,
+    }
+    pairs = build_pairs([decision_632], "diag")
+    assert len(pairs) == 4 and {p["kind"] for p in pairs} == {"mate_in_one"}
+    after_nxe4 = board.copy()
+    after_nxe4.push_uci("f6e4")
+    assert all(p["bad"] == feature_indices(after_nxe4) for p in pairs)
+    after_bxd5 = board.copy()
+    after_bxd5.push_uci("b7d5")
+    assert pairs[0]["good"] == feature_indices(after_bxd5)  # Stockfish's best comes first
+    assert len({tuple(p["good"]) for p in pairs}) == 4
+    assert build_pairs([decision_632], "diag") == pairs  # stable sample
+    assert build_pairs([decision_632], "diag", mate_pairs=False) == []  # otherwise dropped as already lost
+    arrays = to_arrays(pairs)
+    assert arrays["mate_rule"].all() and not arrays["repetition_rule"].any()

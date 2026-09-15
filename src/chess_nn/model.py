@@ -130,6 +130,16 @@ class ThreatNet(EvalNet):
         return self.out(x)
 
 
+def model_from_config(config: dict) -> EvalNet:
+    """The architecture a run's config.json describes, with fresh weights."""
+    head = tuple(config["head"])
+    if config.get("threat_hidden"):
+        return ThreatNet(config["hidden"], head, config["threat_hidden"])
+    if config.get("king_buckets"):
+        return KingBucketNet(config["hidden"], head)
+    return EvalNet(config["hidden"], head)
+
+
 def count_params(model: nn.Module) -> int:
     return sum(p.numel() for p in model.parameters())
 
