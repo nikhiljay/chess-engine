@@ -496,6 +496,19 @@ noted. Full table: `uv run python -m chess_nn.report`.
     improving them. Smallest remaining ranking test (`sweeps/rank_b.json`):
     ~24k score pairs (mate-in-one and repetition off), weight 0.05, on the
     default h1024 recipe, seeds 0 and 1, with a matched seed-1 control.
+58. **Capacity does not improve play on this recipe and data.** Matched
+    data (4.36M), objectives (s1000 + cp 0.2), 20 epochs, seed 0, dev
+    openings:
+    - h1024, 856,161 params, 3.4 MB: val 0.00287; 2.8 min to train; L1 69.8
+      (92/95/13) / L2 54.2 (60/97/43) / L3 29.0 (20/76/104)
+    - h3072, 2,566,243 params: val 0.00273; 10.8 min; 67.0 (90/88/22) /
+      54.8 (61/97/42) / 25.0 (16/68/116); games 453-514 s per level
+    - h8192, 6,841,443 params, 27.4 MB: val 0.00262 (still falling: e10
+      0.00275); 24.9 min; 72.0 (105/78/17) / 51.5 (58/90/52) / 26.8
+      (14/79/107); games 633-788 s per level (shared CPU)
+    Validation loss falls steadily with width but match scores do not
+    follow: h8192's +2.2 L1 comes with −2.7 L2 and −2.2 L3, all inside seed
+    noise, so no size earns a seed-1 repeat and h1024 stays the default.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
