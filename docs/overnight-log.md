@@ -86,41 +86,52 @@ noted. Full table: `uv run python -m chess_nn.report`.
     more human data (+7 L1 from 726k → 2.9M) and self-play positions at an
     ~18% share (+5-7 L1 via fewer losses). Last test before the interruption:
     `sweeps/june4_selfplay5x.json` (self-play shard repeated 5× ≈ 21% share).
-14. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
+14. **Repeating the self-play shard 5× (~21% share) did not help.** h512 +
+    ladder + cp_loss 0.1: L1 60.8% / L2 44.5% (1×: 64.8 / 49.0); h256-s400:
+    64.0 / 48.0 (j4 baselines 64.0-63.7 / 45.0-46.0). Duplicated positions
+    likely overfit; the shard-0 self-play gain came from fresh positions.
+15. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
-## In progress at time of writing
+## State at the interruption
 
-- June labeling (`data/candidates.txt`, 6.84M candidates → ~5M positions):
-  shards land in `data/shards/shard_000N.npz`. **Stopped deliberately after
-  shard_0003 (~2.9M positions)** at 23:24 to give self-play labeling the CPU
-  before the interruption; resume picks up at shard_0004.
+- June labeling (`data/candidates.txt`, 6.84M candidates → ~5M positions) was
+  stopped deliberately after `shard_0003` (2.9M positions) to give self-play
+  labeling the CPU; shards 4-6 remain and resume picks up at `shard_0004`.
 - Self-play positions (`data/selfplay_L2_a.txt`, 212,568 FENs from
-  m2a-h256-shard0 vs Level 2 with 10% random moves), labeled with depth 9 +
-  depth-14 re-search when |score| ≥ 600 → `data/shards_selfplay/`.
-- Seed-variance sweep (`sweeps/shard0_seeds.json`).
-- Shard0 + self-play sweep (`sweeps/shard0_selfplay.json`).
-- July 2017 download (`data/lichess_2017-07.pgn.zst.part`, ~130 KiB/s).
+  m2a-h256-shard0 vs Level 2 with 10% random moves) are labeled:
+  `data/shards_selfplay/shard_selfplay_a_0000.npz` (154,944 positions).
+- Every sweep listed under "Resuming" finished; results are in `runs/` and
+  committed.
+- The July 2017 download was still in progress
+  (`data/lichess_2017-07.pgn.zst.part`, resumable); July sampling and
+  labeling have not run.
 
 ## Next steps after the interruption
 
-Best so far: `j4-h256-32x32-s400` / `-seed1` (L1 ~64%, L2 ~45-46%) and
-`j4-h512-32x32-s400` (L1 63.7%, L2 49.8%). No model has passed L1 (70%) on dev,
-so no official run has been made.
+**Leaderboard #1 is not beaten yet.** Best dev results (200 games per level):
+`j4sp-h512-s400-ladder-cp10` L1 64.8% / L2 49.0%, `j4-h512-32x32-s400`
+63.7 / 49.8, `j4-h256-32x32-s400` 64.0 / 45.0. No model reached 70% on dev
+L1, so no official run was made.
 
-1. Check `sweeps/june4_selfplay.json` and `sweeps/shard0_selfplay.json`
-   results (`chess_nn.report`). The question is whether self-play positions,
-   the mate ladder and the pawn-space loss cut `repetition_while_winning`.
-2. If they do: generate self-play positions at scale with the best model
-   (`datagen`, all threads, no competing jobs), label with
-   `--deep-depth 14`, and retrain h256/h512 on June + self-play with the
-   winning settings.
-3. If they don't: the eval still can't rank won positions. Options to try
-   next: higher `cp_loss_weight`, deeper labels for all lopsided positions,
-   or more self-play data specifically from positions reached in repetition
-   loops (sample only after the net is ahead).
-4. Resume June labeling (shards 4-6) and train on the full ~5M either way;
-   more data measurably helped h256 (+7 L1 from 726k to 2.9M).
+What moved the numbers: more human data (+7 L1, 726k → 2.9M) and fresh
+self-play positions at ~18% share (+5-7 L1 via fewer losses). What did not:
+WDL scale 800/1000, mate ladder, progress shaping, pawn-space loss 0.02/0.1,
+repeating one self-play shard. The remaining leak is conversion: ~45% of games
+end in threefold repetition, most with the net clearly winning.
+
+1. **Finish the data.** Resume June shards 4-6, then July; train h256 and h512
+   on the full ~5M (then ~10M). This is the one lever that helped reliably.
+2. **Fresh self-play at scale, targeted at loops.** Run `datagen` with the best
+   model at full CPU (no competing jobs) to produce ≥1M new positions, not
+   repeats. Add a datagen mode with `--random-move-prob 0` that keeps positions
+   only from games ending in repetition while the net is ahead, so labels land
+   exactly on the loop positions; label with `--deep-depth 14`.
+3. **Retrain on June (+ July) + fresh self-play at ~20% share** and compare
+   `repetition_while_winning` against the j4 baselines with ≥2 seeds; single
+   runs differ by ~±3 points.
+4. **Revisit h128 once data reaches ~9M.** The leaderboard model is h128 at 9M;
+   here h128 trailed h256 at 2.9M, which may be a data-size effect.
 5. Only once dev L1 ≥ ~72%: run `--official` for Level 1 (then Level 2).
 
 ## Resuming after an interruption
@@ -147,6 +158,7 @@ uv run python -m chess_nn.sweep sweeps/june4b.json
 uv run python -m chess_nn.sweep sweeps/june4_shaped.json
 uv run python -m chess_nn.sweep sweeps/june4_selfplay.json
 uv run python -m chess_nn.sweep sweeps/june4_selfplay_cp.json
+uv run python -m chess_nn.sweep sweeps/june4_selfplay5x.json
 
 # Table of every run
 uv run python -m chess_nn.report
