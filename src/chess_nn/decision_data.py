@@ -24,6 +24,7 @@ import argparse
 import json
 import sys
 import time
+from collections import Counter
 from multiprocessing import Pool
 from pathlib import Path
 
@@ -68,19 +69,30 @@ def quiescence_leaf(net, board: chess.Board, alpha: float, beta: float) -> tuple
     return alpha, leaf
 
 
-def decision_positions(net, fen: str) -> list[str]:
-    """The decision position, each move's child, and each child's quiescence leaf."""
+def decision_positions(net, fen: str) -> tuple[list[str], Counter]:
+    """The positions whose static evals decide this move, and how each was reached.
+
+    For every legal move that is the quiet leaf quiescence scores the move by:
+    the child itself when quiescence stands pat there ("child"), otherwise the
+    leaf at the end of the capture line ("leaf"). A child quiescence searches
+    past is left out: its searched score reflects captures the search already
+    plays out, so it is not a target for the static evaluator. The decision
+    position itself is not scored by this decision and is left out too.
+    """
     board = chess.Board(fen)
-    positions = [board.fen()]
+    positions, kinds = [], Counter()
     for move in list(board.legal_moves):
         board.push(move)
-        if not board.is_game_over():
-            positions.append(board.fen())
-            _, leaf = quiescence_leaf(net, board, -float("inf"), float("inf"))
-            if leaf is not None:
-                positions.append(leaf)
+        child = board.fen()
+        _, leaf = quiescence_leaf(net, board, -float("inf"), float("inf"))
+        if leaf is None:
+            kinds["terminal"] += 1
+        else:
+            kind = "child" if leaf == child else "leaf"
+            kinds[kind] += 1
+            positions.append(leaf)
         board.pop()
-    return positions
+    return positions, kinds
 
 
 _net: NetEval | None = None
@@ -116,8 +128,9 @@ def main() -> None:
     start = time.time()
     with Pool(args.workers, initializer=_init, initargs=(str(args.net),)) as pool:
         collected = pool.map(_positions, sorted(turning), chunksize=4)
+    kinds = sum((k for _, k in collected), Counter())
     seen, kept, dropped = set(), [], 0
-    for fen in (f for group in collected for f in group):
+    for fen in (f for group, _ in collected for f in group):
         key = position_key(chess.Board(fen))
         if key in excluded:
             dropped += 1
@@ -125,8 +138,8 @@ def main() -> None:
             seen.add(key)
             kept.append(fen)
     args.out.write_text("\n".join(kept) + "\n")
-    print(f"{len(turning):,} turning decisions → {len(kept):,} unique positions ({dropped:,} held-out duplicates dropped, "
-          f"{time.time() - start:.0f}s) → {args.out}", file=sys.stderr)
+    print(f"{len(turning):,} turning decisions; moves scored by {dict(kinds)} → {len(kept):,} unique positions "
+          f"({dropped:,} held-out duplicates dropped, {time.time() - start:.0f}s) → {args.out}", file=sys.stderr)
 
 
 if __name__ == "__main__":

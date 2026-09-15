@@ -534,6 +534,25 @@ noted. Full table: `uv run python -m chess_nn.report`.
     Capacity lowers validation loss but not match scores at 4.36M positions,
     at ~9× training time and ~8× batched inference for 6.8M params. Running:
     bounded rank_b (h1024, score pairs at w0.05, seeds 0-1, matched control).
+60. **rank_b fails on both seeds; the ranking loss is retired (2026-09-15).**
+    h1024, s1000 + cp 0.2, score pairs only at w0.05, each seed against a
+    control identical but for rank_weight 0 (w0 loads no pairs). Paired
+    per-game point differences on dev openings (SE counts an opening's two
+    games as one unit):
+    - L1: seed 0 59.0 (75/86/39) vs 69.8 (92/95/13), −0.107 ± 0.032; seed 1
+      59.0 (76/84/40) vs 72.8 (112/67/21), −0.138 ± 0.036; pooled −0.122 ±
+      0.024, 95% CI [−0.169, −0.076], openings better/worse 47/102
+    - L2: 40.2 (39/83/78) vs 54.2 (60/97/43), −0.140 ± 0.040; 46.0 (45/94/61)
+      vs 56.5 (71/84/45), −0.105 ± 0.038; pooled −0.122 ± 0.028, CI [−0.176,
+      −0.069], 44/98
+    - L3: 23.2 (16/61/123) vs 29.0 (20/76/104), −0.058 ± 0.032; 20.0
+      (13/54/133) vs 32.2 (23/83/94), −0.122 ± 0.032; pooled −0.090 ± 0.023,
+      CI [−0.134, −0.046], 48/93
+    Repetition draws fell (L1 86/84 vs 95/67) only because losses rose;
+    repetitions the net was winning also fell (65/52 vs 78/49) while wins
+    fell. No weight or kind variation follows; the failure analysis
+    (which safe decisions became losing moves, and whether before or during
+    quiescence) is finding 61.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),

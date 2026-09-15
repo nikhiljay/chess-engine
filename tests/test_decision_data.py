@@ -34,13 +34,18 @@ def test_leaf_value_matches_the_search_check_move_value():
         assert -value == move_value(material, board, move)
 
 
-def test_decision_positions_cover_children_and_their_leaves():
+def test_decision_positions_are_the_leaves_the_search_scores_each_move_by():
     board = chess.Board("4k3/8/8/4p3/8/8/3Q4/4K3 w - - 0 1")
-    positions = decision_positions(material, board.fen())
-    assert positions[0] == board.fen()
+    positions, kinds = decision_positions(material, board.fen())
+    assert board.fen() not in positions  # the decision position is not scored by this decision
     after_qd4 = board.copy()
     after_qd4.push_uci("d2d4")
-    assert after_qd4.fen() in positions  # the blunder's child
+    assert after_qd4.fen() not in positions  # quiescence searches past the blunder's child
     after_exd4 = after_qd4.copy()
     after_exd4.push_uci("e5d4")
     assert after_exd4.fen() in positions  # the quiet leaf the search evaluates after Qd4
+    after_ke2 = board.copy()
+    after_ke2.push_uci("e1e2")
+    assert after_ke2.fen() in positions  # a quiet child quiescence stands pat on
+    assert kinds["leaf"] >= 1 and kinds["child"] >= 1
+    assert kinds["child"] + kinds["leaf"] + kinds["terminal"] == board.legal_moves.count()
