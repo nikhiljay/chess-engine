@@ -6,14 +6,16 @@
 //! line, deduplicated, ready for `chess_nn.label`.
 //!
 //! With `--loop-plies N`, games that end in threefold repetition while the net
-//! thinks it is at least `--min-eval` pawns ahead also emit every quiet child
-//! of each position the net moved from in the last N plies. Labels on those
-//! children tell the net which moves make progress instead of shuffling.
+//! thinks it is at least `--min-eval` pawns ahead also emit positions from the
+//! last N plies: by default (`--emit children`) every quiet child of each
+//! position the net moved from, so labels tell the net which moves make
+//! progress instead of shuffling; with `--emit parents`, those positions the
+//! net moved from, so their children can be grouped per parent downstream.
 //!
 //! Usage:
 //!   datagen <model.onnx> --out FILE [--games N] [--threads T] [--level L]
 //!           [--random-move-prob P] [--sample-prob Q] [--min-ply K] [--seed S]
-//!           [--loop-plies N] [--min-eval PAWNS]
+//!           [--loop-plies N] [--min-eval PAWNS] [--emit children|parents]
 
 use engine::bot::Bot;
 use engine::game::GameState;
@@ -42,6 +44,7 @@ struct Config {
     seed: u64,
     loop_plies: usize,
     min_eval: f32,
+    emit_parents: bool,
 }
 
 /// xorshift64* — dependency-free and good enough for move sampling.
@@ -70,7 +73,7 @@ impl Rng {
     }
 }
 
-/// Plays one game; returns true if it emitted loop children.
+/// Plays one game; returns true if it emitted loop positions.
 fn play_game(
     nn: &NnEvalBot,
     baseline: &BaselineBot,
@@ -122,13 +125,14 @@ fn play_game(
 
     cfg.loop_plies > 0
         && game.is_threefold_repetition()
-        && emit_loop_children(nn, game.history.len(), &nn_positions, cfg, tx)
+        && emit_loop_positions(nn, game.history.len(), &nn_positions, cfg, tx)
 }
 
-/// Sends the quiet, ongoing children of each position the net moved from in
-/// the last `cfg.loop_plies` plies, if its eval of the last one is at least
-/// `cfg.min_eval` pawns.
-fn emit_loop_children(
+/// If the net's eval of the last position it moved from is at least
+/// `cfg.min_eval` pawns, sends the positions it moved from in the last
+/// `cfg.loop_plies` plies (`--emit parents`) or their quiet, ongoing
+/// children (`--emit children`).
+fn emit_loop_positions(
     nn: &NnEvalBot,
     end_ply: usize,
     nn_positions: &[(usize, Board)],
@@ -148,6 +152,12 @@ fn emit_loop_children(
             break;
         }
         if !seen.insert(board.hash()) {
+            continue;
+        }
+        if cfg.emit_parents {
+            if tx.send((board.hash(), board.to_string())).is_err() {
+                return false;
+            }
             continue;
         }
         let mut children = Vec::new();
@@ -183,7 +193,7 @@ fn parse_args() -> Config {
     if args.len() < 2 || args[1] == "--help" || args[1] == "-h" {
         eprintln!("Usage: datagen <model.onnx> --out FILE [--games N] [--threads T] [--level L]");
         eprintln!("               [--random-move-prob P] [--sample-prob Q] [--min-ply K] [--seed S]");
-        eprintln!("               [--loop-plies N] [--min-eval PAWNS]");
+        eprintln!("               [--loop-plies N] [--min-eval PAWNS] [--emit children|parents]");
         std::process::exit(1);
     }
     let mut cfg = Config {
@@ -198,6 +208,7 @@ fn parse_args() -> Config {
         seed: 1,
         loop_plies: 0,
         min_eval: 3.0,
+        emit_parents: false,
     };
     let mut i = 2;
     while i < args.len() {
@@ -217,6 +228,16 @@ fn parse_args() -> Config {
             "--seed" => cfg.seed = parse(flag, value),
             "--loop-plies" => cfg.loop_plies = parse(flag, value),
             "--min-eval" => cfg.min_eval = parse(flag, value),
+            "--emit" => {
+                cfg.emit_parents = match value.as_str() {
+                    "children" => false,
+                    "parents" => true,
+                    _ => {
+                        eprintln!("--emit must be children or parents");
+                        std::process::exit(1);
+                    }
+                }
+            }
             _ => {
                 eprintln!("unknown flag {flag}");
                 std::process::exit(1);
