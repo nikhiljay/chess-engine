@@ -78,7 +78,15 @@ noted. Full table: `uv run python -m chess_nn.report`.
     hints at better conversion on L2 (repetition 104 → 76,
     repetition-while-winning 65 → 43, wins 39 → 59) but L1 losses rose to 38,
     so it is inconclusive at 0.02; `sweeps/june4_selfplay_cp.json` tests 0.1.
-13. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
+13. **cp_loss 0.1: no clear conversion gain.** Shards 0-3 + self-play with
+    the ladder: h256 L1 60.5% / L2 43.8%; h512 64.8 / 49.0 (h512 baseline
+    63.7 / 49.8). Repetition still ~45% of games, repetition-while-winning
+    59-61 (L1) and 47-51 (L2). None of WDL scale, mate ladder, progress
+    shaping or the pawn-space loss fixed conversion. What measurably helped:
+    more human data (+7 L1 from 726k → 2.9M) and self-play positions at an
+    ~18% share (+5-7 L1 via fewer losses). Last test before the interruption:
+    `sweeps/june4_selfplay5x.json` (self-play shard repeated 5× ≈ 21% share).
+14. **compete's W/D/L tally is wrong** (`0.5 as u32` counts draws as losses);
    scores and pass/fail are correct. `evaluate.py` recounts from points.
 
 ## In progress at time of writing
