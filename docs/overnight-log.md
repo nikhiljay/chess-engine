@@ -177,6 +177,23 @@ uv run python -m chess_nn.sweep sweeps/june4_selfplay5x.json
 # Table of every run
 uv run python -m chess_nn.report
 
+# Lichess eval database (2026-09-15): download (resumable), then convert.
+(cd data && curl -C - -o lichess_db_eval.jsonl.zst.part \
+  https://database.lichess.org/lichess_db_eval.jsonl.zst \
+  && mv lichess_db_eval.jsonl.zst.part lichess_db_eval.jsonl.zst)
+# Pilot: first 10M lines of the file (works on the partial download too)
+mkfifo /tmp/pilot.fifo
+(zstd -dc data/lichess_db_eval.jsonl.zst* | head -n 10000000 > /tmp/pilot.fifo &)
+uv run python -m chess_nn.import_evals --evals /tmp/pilot.fifo \
+  --out-dir data/shards_evaldb_pilot --sample-prob 0.4
+uv run python -m chess_nn.sweep sweeps/evpilot_only.json
+uv run python -m chess_nn.sweep sweeps/evpilot_mix.json
+# Full: ~354M lines sampled at 3% → ~7.7M positions (seeded; skips finished shards)
+uv run python -m chess_nn.import_evals --evals data/lichess_db_eval.jsonl.zst \
+  --out-dir data/shards_evaldb --sample-prob 0.03
+uv run python -m chess_nn.sweep sweeps/evdb_only.json
+uv run python -m chess_nn.sweep sweeps/evdb_mix.json
+
 # July download, then sampling and labeling
 (cd data && curl -C - -o lichess_2017-07.pgn.zst.part \
   https://database.lichess.org/standard/lichess_db_standard_rated_2017-07.pgn.zst \
