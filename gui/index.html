@@ -1,0 +1,326 @@
+<title>Quiet Move</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Symbols+2&text=%E2%99%9A%E2%99%9B%E2%99%9C%E2%99%9D%E2%99%9E%E2%99%9F&display=block">
+<style>
+  :root {
+    --ground: #e9eef0;
+    --surface: #f6f8f9;
+    --ink: #172026;
+    --ink-soft: #52616b;
+    --rule: #c9d3d8;
+    --sq-light: #dde5ea;
+    --sq-dark: #8a9dab;
+    --accent: #b7791f;
+    --accent-tint: rgba(214, 158, 46, 0.42);
+    --premove: rgba(70, 104, 196, 0.5);
+    --mark: rgba(214, 86, 58, 0.62);
+    --arrow: rgba(222, 116, 34, 0.82);
+    --hover-ring: rgba(23, 32, 38, 0.55);
+    --dot: rgba(23, 32, 38, 0.28);
+    --piece-white: #fbfcfc;
+    --piece-outline: #1c252b;
+    --piece-black: #1c252b;
+    --bad: #b4443a;
+    --gauge-white: #fbfcfc;
+    --gauge-black: #26313a;
+    --button-ink: #f6f8f9;
+    --display: "Big Shoulders Display", "Arial Narrow", "Helvetica Neue", sans-serif;
+    --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+    --glyph: "Noto Sans Symbols 2", "Segoe UI Symbol", "DejaVu Sans", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #12181c;
+      --surface: #1a2227;
+      --ink: #e3e9ec;
+      --ink-soft: #93a3ad;
+      --rule: #2c3942;
+      --sq-light: #7a8d9a;
+      --sq-dark: #465864;
+      --accent: #e3ae45;
+      --accent-tint: rgba(227, 174, 69, 0.4);
+      --premove: rgba(116, 146, 236, 0.55);
+      --mark: rgba(232, 110, 82, 0.62);
+      --arrow: rgba(240, 140, 60, 0.85);
+      --hover-ring: rgba(240, 244, 246, 0.75);
+      --dot: rgba(12, 17, 20, 0.45);
+      --piece-white: #f4f7f8;
+      --piece-outline: #0f1519;
+      --piece-black: #0f1519;
+      --bad: #e07a6f;
+      --gauge-white: #e8edef;
+      --gauge-black: #0c1114;
+      --button-ink: #12181c;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #12181c;
+    --surface: #1a2227;
+    --ink: #e3e9ec;
+    --ink-soft: #93a3ad;
+    --rule: #2c3942;
+    --sq-light: #7a8d9a;
+    --sq-dark: #465864;
+    --accent: #e3ae45;
+    --accent-tint: rgba(227, 174, 69, 0.4);
+    --premove: rgba(116, 146, 236, 0.55);
+    --mark: rgba(232, 110, 82, 0.62);
+    --arrow: rgba(240, 140, 60, 0.85);
+    --hover-ring: rgba(240, 244, 246, 0.75);
+    --dot: rgba(12, 17, 20, 0.45);
+    --piece-white: #f4f7f8;
+    --piece-outline: #0f1519;
+    --piece-black: #0f1519;
+    --bad: #e07a6f;
+    --gauge-white: #e8edef;
+    --gauge-black: #0c1114;
+    --button-ink: #12181c;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { background: var(--ground); }
+  body {
+    color: var(--ink);
+    font: 400 15px/1.5 var(--body);
+    padding-inline: clamp(16px, 4vw, 40px);
+    padding-block: 24px 48px;
+  }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .page { max-width: 1140px; margin-inline: auto; display: grid; gap: 28px; }
+
+  .masthead {
+    display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between;
+    gap: 16px 40px; padding-bottom: 20px; border-bottom: 1px solid var(--rule);
+  }
+  .masthead h1 {
+    margin: 0; font: 800 clamp(44px, 7vw, 76px)/0.86 var(--display);
+    letter-spacing: 0.005em; text-transform: uppercase;
+  }
+  .masthead p { margin: 10px 0 0; max-width: 58ch; color: var(--ink-soft); text-wrap: pretty; }
+  .spec { margin: 0; display: grid; grid-template-columns: auto auto; gap: 4px 18px; font: 400 12.5px/1.45 var(--mono); }
+  .spec dt { color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.06em; font-size: 11px; align-self: center; }
+  .spec dd { margin: 0; font-variant-numeric: tabular-nums; }
+
+  .play { display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 36px; align-items: start; }
+  @media (max-width: 880px) { .play { grid-template-columns: minmax(0, 1fr); } }
+
+  .board-column { display: grid; gap: 14px; width: 100%; max-width: min(100%, calc(78vh + 24px)); }
+  .board-wrap { display: flex; gap: 10px; }
+  .gauge {
+    width: 12px; flex: none; border-radius: 3px; position: relative; overflow: hidden;
+    background: var(--gauge-black); box-shadow: inset 0 0 0 1px var(--rule);
+  }
+  .gauge-fill { position: absolute; left: 0; right: 0; bottom: 0; background: var(--gauge-white); transition: height 0.35s ease; }
+  .gauge.flipped .gauge-fill { top: 0; bottom: auto; }
+  .gauge-mid { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--accent); opacity: 0.7; }
+
+  .board {
+    position: relative; flex: 1; min-width: 0; aspect-ratio: 1 / 1; container-type: inline-size;
+    display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr);
+    border-radius: 4px; overflow: hidden; box-shadow: 0 1px 0 var(--rule), 0 14px 32px -22px rgba(10, 20, 26, 0.55);
+    touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+  }
+  .sq {
+    position: relative; border: 0; margin: 0; padding: 0; background: var(--sq-dark); overflow: visible;
+    display: grid; place-items: center; cursor: pointer; line-height: 1;
+    font-size: calc(100cqi / 8 * 0.76);
+  }
+  .sq.light { background: var(--sq-light); }
+  .sq.last::before, .sq.selected::before, .sq.premove::before, .sq.marked::before {
+    content: ""; position: absolute; inset: 0; background: var(--accent-tint);
+  }
+  .sq.selected::before { box-shadow: inset 0 0 0 3px var(--accent); }
+  .sq.premove::before { background: var(--premove); }
+  .sq.marked::before { background: var(--mark); }
+  .sq.check { box-shadow: inset 0 0 0 4px var(--bad); }
+  .sq.hover { box-shadow: inset 0 0 0 calc(100cqi / 8 * 0.055) var(--hover-ring); }
+  .sq.target::after {
+    content: ""; position: absolute; width: 28%; height: 28%; border-radius: 50%; background: var(--dot); z-index: 2;
+  }
+  .sq.target.capture::after { width: 86%; height: 86%; background: transparent; border: calc(100cqi / 8 * 0.07) solid var(--dot); }
+  .piece { position: relative; z-index: 1; font-family: var(--glyph); pointer-events: none; }
+  .piece.w { color: var(--piece-white); -webkit-text-stroke: 0.04em var(--piece-outline); paint-order: stroke fill; }
+  .piece.b { color: var(--piece-black); }
+  .piece.lifted { opacity: 0.28; }
+  .piece.moving { z-index: 4; }
+  .coord { position: absolute; z-index: 1; font: 500 calc(100cqi / 8 * 0.15)/1 var(--mono); pointer-events: none; }
+  .coord.rank { top: 5%; left: 6%; }
+  .coord.file { bottom: 5%; right: 7%; }
+  .sq.light .coord { color: var(--sq-dark); }
+  .sq:not(.light) .coord { color: var(--sq-light); }
+
+  .marks { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
+  .marks .arrow-shaft { stroke: var(--arrow); stroke-width: 19; fill: none; }
+  .marks .arrow-head { fill: var(--arrow); }
+
+  .float-piece {
+    position: fixed; left: 0; top: 0; z-index: 60; display: grid; place-items: center; line-height: 1;
+    pointer-events: none; will-change: transform; filter: drop-shadow(0 8px 10px rgba(10, 20, 26, 0.35));
+  }
+
+  .promo {
+    position: absolute; top: 0; width: 12.5%; z-index: 20; display: flex; flex-direction: column;
+    background: var(--surface); box-shadow: 0 6px 22px rgba(10, 20, 26, 0.4);
+  }
+  .promo.from-bottom { top: auto; bottom: 0; flex-direction: column-reverse; }
+  .promo button {
+    aspect-ratio: 1 / 1; border: 0; background: var(--surface); cursor: pointer; display: grid; place-items: center;
+    font-size: calc(100cqi / 8 * 0.72); line-height: 1;
+  }
+  .promo button:hover, .promo button:focus-visible { background: var(--accent-tint); }
+  .promo .promo-cancel {
+    aspect-ratio: auto; height: calc(100cqi / 8 * 0.42); font: 700 calc(100cqi / 8 * 0.3)/1 var(--body); color: var(--ink-soft);
+    background: var(--rule);
+  }
+
+  .status { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 8px 24px; }
+  .status h2 { margin: 0; font: 700 21px/1.2 var(--body); text-wrap: balance; }
+  .status p { margin: 2px 0 0; color: var(--ink-soft); font-size: 14px; max-width: 48ch; }
+  .status p.warn { color: var(--bad); }
+  .readout { text-align: right; }
+  .readout-num { font: 800 58px/0.9 var(--display); font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
+  .readout-label { font: 400 11px/1.4 var(--mono); color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.07em; }
+
+  .rail { display: grid; gap: 26px; }
+  .label { margin: 0 0 10px; font: 500 11px/1.3 var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); }
+
+  .controls { display: grid; gap: 12px; }
+  .side { display: inline-flex; border: 1px solid var(--rule); border-radius: 5px; overflow: hidden; width: fit-content; }
+  .side input { position: absolute; opacity: 0; pointer-events: none; }
+  .side label { padding: 7px 16px; cursor: pointer; font-weight: 700; font-size: 14px; }
+  .side input:checked + label { background: var(--ink); color: var(--button-ink); }
+  .side input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+  .btn {
+    padding: 8px 14px; border-radius: 5px; border: 1px solid var(--rule); background: transparent;
+    font-weight: 700; font-size: 14px; cursor: pointer;
+  }
+  .btn:hover:not(:disabled) { border-color: var(--ink-soft); }
+  .btn.primary { background: var(--ink); color: var(--button-ink); border-color: var(--ink); }
+  .btn:disabled { opacity: 0.45; cursor: default; }
+
+  .thinking-panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 16px 16px 14px; }
+  .decision-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+  .decision-move { font: 800 34px/1 var(--display); letter-spacing: 0.01em; }
+  .decision-caption { color: var(--ink-soft); font-size: 13px; text-align: right; }
+  .moves { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+  .moves li {
+    display: grid; grid-template-columns: 58px minmax(0, 1fr) 72px; align-items: center; gap: 10px;
+    font: 400 13px/1.9 var(--mono); font-variant-numeric: tabular-nums;
+  }
+  .moves .bar { height: 6px; border-radius: 3px; background: var(--rule); position: relative; overflow: hidden; }
+  .moves .bar span { position: absolute; inset: 0 auto 0 0; background: var(--ink-soft); border-radius: 3px; }
+  .moves li.chosen { font-weight: 500; }
+  .moves li.chosen .bar span { background: var(--accent); }
+  .moves .score { text-align: right; }
+  .panel-foot { margin: 10px 0 0; font: 400 11.5px/1.5 var(--mono); color: var(--ink-soft); }
+
+  .sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+  .sheet-head .label { margin: 0; }
+  .nav { display: flex; gap: 4px; }
+  .nav button {
+    width: 34px; height: 30px; border: 1px solid var(--rule); border-radius: 4px; background: transparent;
+    font: 500 15px/1 var(--mono); cursor: pointer;
+  }
+  .nav button:hover:not(:disabled) { border-color: var(--ink-soft); }
+  .nav button:disabled { opacity: 0.4; cursor: default; }
+  .sheet { max-height: 300px; overflow-y: auto; border-top: 1px solid var(--rule); }
+  .sheet ol { list-style: none; margin: 0; padding: 0; font: 400 14px/1 var(--mono); font-variant-numeric: tabular-nums; }
+  .sheet li { display: grid; grid-template-columns: 40px 1fr 1fr; border-bottom: 1px solid var(--rule); }
+  .sheet .num { color: var(--ink-soft); text-align: right; padding: 8px 12px 8px 6px; }
+  .sheet .ply {
+    border: 0; background: transparent; text-align: left; padding: 8px 6px; font: inherit; cursor: pointer;
+  }
+  .sheet .ply:hover { background: color-mix(in srgb, var(--accent-tint) 50%, transparent); }
+  .sheet .ply.current { background: var(--accent-tint); }
+  .sheet-empty { color: var(--ink-soft); font-size: 14px; padding: 10px 0; margin: 0; }
+
+  .fineprint { margin: 0; color: var(--ink-soft); font-size: 13px; max-width: 65ch; }
+  .fineprint kbd { font: 500 12px/1 var(--mono); padding: 1px 4px; border: 1px solid var(--rule); border-radius: 3px; }
+
+  @media (prefers-reduced-motion: reduce) { .gauge-fill { transition: none; } }
+</style>
+
+<div class="page">
+  <header class="masthead">
+    <div>
+      <h1>Quiet Move</h1>
+      <p>Play the eval net from the leaderboard push. It looks one move ahead, follows captures until the position is quiet, and scores what it sees — the same search the harness runs.</p>
+    </div>
+    <dl class="spec" id="spec"></dl>
+  </header>
+
+  <main class="play">
+    <section class="board-column" aria-label="Board">
+      <div class="board-wrap">
+        <div class="gauge" id="gauge" aria-hidden="true"><div class="gauge-fill" id="gauge-fill"></div><div class="gauge-mid"></div></div>
+        <div class="board" id="board" role="grid" aria-label="Chessboard">
+          <svg class="marks" id="marks" viewBox="0 0 800 800" aria-hidden="true"></svg>
+          <div class="promo" id="promo" role="group" aria-label="Choose a promotion piece" hidden></div>
+        </div>
+      </div>
+      <div class="status" aria-live="polite">
+        <div>
+          <h2 id="status-title">Loading the net…</h2>
+          <p id="status-sub"></p>
+        </div>
+        <div class="readout">
+          <div class="readout-num" id="readout">—</div>
+          <div class="readout-label">Net eval · White's view, pawns</div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="rail">
+      <section class="controls" aria-label="Game controls">
+        <div>
+          <p class="label">You play</p>
+          <div class="side" role="radiogroup" aria-label="Your colour">
+            <input type="radio" name="side" id="side-white" value="w" checked><label for="side-white">White</label>
+            <input type="radio" name="side" id="side-black" value="b"><label for="side-black">Black</label>
+          </div>
+        </div>
+        <div class="buttons">
+          <button class="btn primary" id="new-game" type="button">New game</button>
+          <button class="btn" id="take-back" type="button">Take back</button>
+          <button class="btn" id="flip" type="button">Flip board</button>
+          <button class="btn" id="sound" type="button" aria-pressed="true">Sound on</button>
+        </div>
+      </section>
+
+      <section class="thinking-panel" aria-label="How the net saw the position">
+        <p class="label" id="panel-label">How the net saw it</p>
+        <div class="decision-head">
+          <div class="decision-move" id="decision-move">—</div>
+          <div class="decision-caption" id="decision-caption"></div>
+        </div>
+        <ol class="moves" id="moves"></ol>
+        <p class="panel-foot" id="panel-foot"></p>
+      </section>
+
+      <section aria-label="Scoresheet">
+        <div class="sheet-head">
+          <p class="label">Scoresheet</p>
+          <div class="nav" role="group" aria-label="Move review">
+            <button type="button" id="nav-first" aria-label="Starting position">«</button>
+            <button type="button" id="nav-prev" aria-label="Previous move">‹</button>
+            <button type="button" id="nav-next" aria-label="Next move">›</button>
+            <button type="button" id="nav-last" aria-label="Back to the game">»</button>
+          </div>
+        </div>
+        <div class="sheet" id="sheet"></div>
+      </section>
+
+      <p class="fineprint">Drag a piece, or tap it and then a square. While the net thinks, move ahead of time — premoves play the instant it's your turn; right-click or <kbd>Esc</kbd> cancels them. Right-click a square to mark it, right-drag to draw an arrow. <kbd>←</kbd> <kbd>→</kbd> step through the moves, <kbd>End</kbd> returns to the game. Scores are the net's own judgement in pawns for the side choosing the move.</p>
+    </aside>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+<script src="weights.js"></script>
+<script src="main.js"></script>

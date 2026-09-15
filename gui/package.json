@@ -1,0 +1,16 @@
+{
+  "name": "quiet-move",
+  "private": true,
+  "type": "module",
+  "description": "Play page for the chess-challenge eval net: a TypeScript engine that mirrors the harness search.",
+  "scripts": {
+    "build": "node scripts/build.ts",
+    "typecheck": "tsc --noEmit",
+    "check": "node scripts/check.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.0",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2"
+  }
+}
