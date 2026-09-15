@@ -1,11 +1,17 @@
 """Move-ranking pairs from chess_nn.diagnose decisions.
 
-For each decision where the net's move was clearly worse than Stockfish's best
-(scored with the game history, so a shuffle into a repetition counts as a
-draw), keep the two positions those moves lead to. The net scores a position
-from its side to move's view, so the mover should see the better child scored
-lower; model.rank_loss trains exactly that ordering.
+Two kinds of pair, each holding the positions two moves lead to:
 
+  - score pairs: the net's move was clearly worse than Stockfish's best (by at
+    least --min-gap-cp, scored with the game history);
+  - repetition pairs: the net was winning (best >= WIN_CP) and its move went
+    back into a position already seen in the game while Stockfish's best move
+    did not. Stockfish only scores the move that completes a threefold as a
+    draw, so these shuffles often look nearly as good as progress; the rule
+    labels them anyway, whatever the centipawn gap.
+
+The net scores a position from its side to move's view, so the mover should see
+the better child scored lower; model.rank_loss trains exactly that ordering.
 Pairs are skipped when either child is in check or the game is over there —
 the harness resolves those with a search rather than the net's static eval —
 and when the position was already lost. Pairs are split by game into train and
@@ -44,17 +50,34 @@ def child_features(fen: str, uci: str) -> list[int] | None:
     return feature_indices(board)
 
 
-def build_pairs(decisions: list[dict], source: str, min_gap_cp: int = MIN_GAP_CP) -> list[dict]:
+def repeats_position(decision: dict, uci: str) -> bool:
+    """Whether playing `uci` at this decision returns to a position already seen in the game."""
+    board = chess.Board(decision["start_fen"])
+    seen = {board._transposition_key()}
+    for move in decision["history"]:
+        board.push_uci(move)
+        seen.add(board._transposition_key())
+    board.push_uci(uci)
+    return board._transposition_key() in seen
+
+
+def build_pairs(decisions: list[dict], source: str, min_gap_cp: int = MIN_GAP_CP, repetition_pairs: bool = True) -> list[dict]:
     pairs = []
     for d in decisions:
+        if d["best"] == d["played"] or d["best_cp"] <= -WIN_CP:
+            continue
         gap = d["best_cp"] - d["played_cp"]
-        if d["best"] == d["played"] or gap < min_gap_cp or d["best_cp"] <= -WIN_CP:
+        if gap >= min_gap_cp:
+            kind = "score"
+        elif repetition_pairs and d["repeats"] and d["best_cp"] >= WIN_CP and not repeats_position(d, d["best"]):
+            kind = "repetition"
+        else:
             continue
         good = child_features(d["fen"], d["best"])
         bad = child_features(d["fen"], d["played"])
         if good is None or bad is None:
             continue
-        pairs.append({"game": f"{source}:{d['game']}", "good": good, "bad": bad, "gap_cp": gap, "repeats": d["repeats"]})
+        pairs.append({"game": f"{source}:{d['game']}", "good": good, "bad": bad, "gap_cp": max(gap, 0), "repeats": d["repeats"], "kind": kind})
     return pairs
 
 
@@ -69,6 +92,7 @@ def to_arrays(pairs: list[dict]) -> dict[str, np.ndarray]:
         "bad": bad,
         "gap_cp": np.clip([p["gap_cp"] for p in pairs], 0, 32000).astype(np.int16),
         "repeats": np.array([p["repeats"] for p in pairs], dtype=bool),
+        "repetition_rule": np.array([p["kind"] == "repetition" for p in pairs], dtype=bool),
     }
 
 
@@ -92,19 +116,20 @@ def main() -> None:
     parser.add_argument("diagnoses", type=Path, nargs="+", help="chess_nn.diagnose output directories")
     parser.add_argument("--out", type=Path, required=True, help="writes <out>_train.npz and <out>_val.npz")
     parser.add_argument("--min-gap-cp", type=int, default=MIN_GAP_CP)
+    parser.add_argument("--no-repetition-pairs", action="store_true")
     args = parser.parse_args()
 
     pairs = []
     for directory in args.diagnoses:
         decisions = [json.loads(line) for line in (directory / "decisions.jsonl").read_text().splitlines() if line.strip()]
-        pairs += build_pairs(decisions, directory.name, args.min_gap_cp)
+        pairs += build_pairs(decisions, directory.name, args.min_gap_cp, not args.no_repetition_pairs)
     val = [p for p in pairs if is_validation(p["game"])]
     train = [p for p in pairs if not is_validation(p["game"])]
     args.out.parent.mkdir(parents=True, exist_ok=True)
     for name, subset in (("train", train), ("val", val)):
         np.savez(f"{args.out}_{name}.npz", **to_arrays(subset))
-    repeats = sum(p["repeats"] for p in pairs)
-    print(f"{len(pairs):,} pairs ({repeats:,} where the net's move repeated a position): {len(train):,} train, {len(val):,} val → {args.out}_*.npz")
+    by_rule = sum(p["kind"] == "repetition" for p in pairs)
+    print(f"{len(pairs):,} pairs ({len(pairs) - by_rule:,} by score gap, {by_rule:,} by the repetition rule): {len(train):,} train, {len(val):,} val → {args.out}_*.npz")
 
 
 if __name__ == "__main__":

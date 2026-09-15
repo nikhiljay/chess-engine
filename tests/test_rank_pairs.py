@@ -49,3 +49,17 @@ def test_rank_loss_rewards_scoring_the_better_child_lower():
     good_lower = rank_loss(torch.tensor([-1.0]), torch.tensor([1.0]))
     good_higher = rank_loss(torch.tensor([1.0]), torch.tensor([-1.0]))
     assert good_lower < good_higher
+
+
+def test_repetition_rule_pairs_a_shuffle_with_progress_whatever_the_gap():
+    start = "4k3/8/8/8/8/8/8/R3K3 w - - 0 1"
+    shuffle = {
+        "game": 3, "start_fen": start, "history": ["e1e2", "e8e7", "e2e1", "e7e8"], "fen": start,
+        "best": "a1a7", "best_cp": 900, "played": "e1e2", "played_cp": 880, "repeats": True,
+    }
+    [pair] = build_pairs([shuffle], "d")
+    assert pair["kind"] == "repetition" and pair["gap_cp"] == 20
+    assert build_pairs([shuffle], "d", repetition_pairs=False) == []
+    assert build_pairs([{**shuffle, "best_cp": 200, "played_cp": 180}], "d") == []  # not winning
+    assert build_pairs([{**shuffle, "best": "e1d1", "played": "e1e2"}], "d")[0]["kind"] == "repetition"  # d1 is new
+    assert build_pairs([{**shuffle, "best": "e1e2", "played": "e1d1", "repeats": False}], "d") == []
