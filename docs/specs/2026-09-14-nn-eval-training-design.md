@@ -81,7 +81,10 @@ to be 2–5 GB compressed, streamed through zstd without decompressing to disk.
 - Record the score from the side-to-move perspective and the best move.
 - Drop positions whose best move is a capture or promotion, so the data
   matches the quiet positions quiescence search hands the net.
-- Scores are clamped to ±2500 cp; mate scores map to ±2500.
+- Raw centipawns (bounded to ±32000 for int16) and signed moves-to-mate are
+  stored; training clamps to ±2500 cp by default (`--score-clamp-cp`). Storing
+  raw labels lets label transforms change without relabeling. (M1's shard
+  predates this and holds scores already clamped to ±2500.)
 
 **Volume.** ~5M labeled positions for v1.
 
@@ -89,6 +92,7 @@ to be 2–5 GB compressed, streamed through zstd without decompressing to disk.
 - `features`: int16 `[N, 68]` active-feature indices into the 1540 input,
   padded with −1 (max 32 pieces × 2 halves + 4 castling flags).
 - `score_cp`: int16 `[N]`.
+- `mate`: int16 `[N]`, signed moves-to-mate, 0 when not a mate score.
 - `fens`: text sidecar for debugging.
 Labeling is resumable: completed shards are skipped.
 

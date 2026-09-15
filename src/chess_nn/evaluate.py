@@ -42,6 +42,9 @@ def run_compete(model: Path, level: int, openings: Path, json_path: Path) -> dic
 
 def summarize_level(level: dict, evaluator: OnnxEvaluator) -> dict:
     games = level["games"]
+    # compete's own W/D/L tally counts draws as losses (0.5 as u32 == 0), so
+    # recount from each game's points.
+    points = [game["points"] for game in games]
     thrown_wins = 0
     for game in games:
         if game["reason"] != "repetition":
@@ -58,9 +61,9 @@ def summarize_level(level: dict, evaluator: OnnxEvaluator) -> dict:
         "level": level["level"],
         "score": level["score"],
         "score_pct": level["score_pct"],
-        "wins": level["wins"],
-        "draws": level["draws"],
-        "losses": level["losses"],
+        "wins": sum(p == 1.0 for p in points),
+        "draws": sum(p == 0.5 for p in points),
+        "losses": sum(p == 0.0 for p in points),
         "passed": level["passed"],
         "end_reasons": dict(Counter(game["reason"] for game in games)),
         "repetition_while_winning": thrown_wins,

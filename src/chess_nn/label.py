@@ -21,21 +21,26 @@ from chess_nn.encoding import feature_indices
 from chess_nn.harness import SHARDS_DIR
 from chess_nn.shards import Row, write_shard
 
-SCORE_CLAMP_CP = 2500
+# Storage bound that fits int16. Scores are stored raw; training applies its own clamp.
+SCORE_LIMIT_CP = 32000
 SHARD_SIZE = 1_000_000
 
 
-def parse_score(line: str) -> int | None:
-    """Side-to-move centipawns from a UCI info line, clamped; mates map to the clamp."""
+def parse_score(line: str) -> tuple[int, int] | None:
+    """(centipawns, mate) from a UCI info line, from the side to move's view.
+
+    mate is the signed moves-to-mate from the engine, or 0 when the score is in
+    centipawns; mate scores report ±SCORE_LIMIT_CP as their centipawns.
+    """
     tokens = line.split()
     if "score" not in tokens or "lowerbound" in tokens or "upperbound" in tokens:
         return None
     i = tokens.index("score")
     kind, value = tokens[i + 1], int(tokens[i + 2])
     if kind == "cp":
-        return max(-SCORE_CLAMP_CP, min(SCORE_CLAMP_CP, value))
+        return max(-SCORE_LIMIT_CP, min(SCORE_LIMIT_CP, value)), 0
     if kind == "mate":
-        return SCORE_CLAMP_CP if value > 0 else -SCORE_CLAMP_CP
+        return (SCORE_LIMIT_CP if value > 0 else -SCORE_LIMIT_CP), value
     return None
 
 
@@ -74,8 +79,8 @@ class Stockfish:
             if line.startswith(prefix):
                 return line
 
-    def analyse(self, fen: str, depth: int) -> tuple[int | None, str]:
-        """Return (score_cp, best_move_uci) at a fixed depth."""
+    def analyse(self, fen: str, depth: int) -> tuple[tuple[int, int] | None, str]:
+        """Return ((score_cp, mate) or None, best_move_uci) at a fixed depth."""
         self._send(f"position fen {fen}")
         self._send(f"go depth {depth}")
         score = None
@@ -99,7 +104,8 @@ def label_position(engine: Stockfish, fen: str, depth: int) -> Row | None:
     score, best = engine.analyse(fen, depth)
     if score is None or best == "(none)" or not is_quiet_best_move(board, best):
         return None
-    return fen, score, feature_indices(board)
+    score_cp, mate = score
+    return fen, score_cp, mate, feature_indices(board)
 
 
 _engine: Stockfish | None = None

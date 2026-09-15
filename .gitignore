@@ -3,6 +3,8 @@ __pycache__/
 .pytest_cache/
 data/*
 !data/dev_openings.txt
+*.log
+runs/*/*_L[0-9].json
 *.onnx
 *.onnx.data
 *.pt

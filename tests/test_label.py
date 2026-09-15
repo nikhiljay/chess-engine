@@ -3,17 +3,18 @@ import shutil
 import chess
 import pytest
 
-from chess_nn.label import SCORE_CLAMP_CP, Stockfish, is_quiet_best_move, label_position, parse_score
+from chess_nn.label import SCORE_LIMIT_CP, Stockfish, is_quiet_best_move, label_position, parse_score
 
 
-def test_parse_score_centipawns_and_clamp():
-    assert parse_score("info depth 9 seldepth 12 multipv 1 score cp 34 nodes 5000 pv e2e4") == 34
-    assert parse_score("info depth 9 score cp -9000 nodes 1") == -SCORE_CLAMP_CP
+def test_parse_score_keeps_raw_centipawns():
+    assert parse_score("info depth 9 seldepth 12 multipv 1 score cp 34 nodes 5000 pv e2e4") == (34, 0)
+    assert parse_score("info depth 9 score cp -9000 nodes 1") == (-9000, 0)
+    assert parse_score("info depth 9 score cp 40000 nodes 1") == (SCORE_LIMIT_CP, 0)
 
 
-def test_parse_score_mates_map_to_clamp():
-    assert parse_score("info depth 9 score mate 3 nodes 1") == SCORE_CLAMP_CP
-    assert parse_score("info depth 9 score mate -2 nodes 1") == -SCORE_CLAMP_CP
+def test_parse_score_keeps_mate_distance():
+    assert parse_score("info depth 9 score mate 3 nodes 1") == (SCORE_LIMIT_CP, 3)
+    assert parse_score("info depth 9 score mate -2 nodes 1") == (-SCORE_LIMIT_CP, -2)
 
 
 def test_parse_score_ignores_bounds_and_strings():
@@ -38,9 +39,10 @@ def test_stockfish_labels_startpos():
     try:
         row = label_position(engine, chess.STARTING_FEN, depth=6)
         assert row is not None
-        fen, score, indices = row
+        fen, score, mate, indices = row
         assert fen == chess.STARTING_FEN
         assert abs(score) < 100
+        assert mate == 0
         assert len(indices) == 68
         # A hanging queen: best move captures it, so the position is dropped.
         assert label_position(engine, "rnb1kbnr/pppp1ppp/8/4p3/3qP3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 1", depth=6) is None

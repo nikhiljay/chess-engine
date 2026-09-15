@@ -39,6 +39,7 @@ class TrainConfig:
     val_frac: float = 0.02
     seed: int = 0
     device: str = default_device()
+    score_clamp_cp: int = 2500
     limit: int | None = None
     runs_dir: str = str(RUNS_DIR)
 
@@ -59,7 +60,7 @@ def run_training(cfg: TrainConfig) -> Path:
     run_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "config.json").write_text(json.dumps(asdict(cfg), indent=2))
 
-    features_np, scores_np = load_shards([Path(p) for p in cfg.shards])
+    features_np, scores_np, _ = load_shards([Path(p) for p in cfg.shards])
     if cfg.limit:
         features_np, scores_np = features_np[: cfg.limit], scores_np[: cfg.limit]
     n = len(scores_np)
@@ -71,7 +72,8 @@ def run_training(cfg: TrainConfig) -> Path:
 
     device = torch.device(cfg.device)
     features = torch.from_numpy(features_np).to(device)
-    targets = torch.from_numpy(scores_np.astype(np.float32)).to(device)
+    clamped = np.clip(scores_np, -cfg.score_clamp_cp, cfg.score_clamp_cp).astype(np.float32)
+    targets = torch.from_numpy(clamped).to(device)
     val_idx, train_idx = val_idx_cpu.to(device), train_idx_cpu.to(device)
 
     model = EvalNet(cfg.hidden).to(device)
@@ -140,6 +142,7 @@ def main() -> None:
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--score-clamp-cp", type=int, default=2500)
     parser.add_argument("--device", default=default_device())
     parser.add_argument("--limit", type=int)
     args = parser.parse_args()
@@ -156,6 +159,7 @@ def main() -> None:
         lr=args.lr,
         weight_decay=args.weight_decay,
         seed=args.seed,
+        score_clamp_cp=args.score_clamp_cp,
         device=args.device,
         limit=args.limit,
     )
