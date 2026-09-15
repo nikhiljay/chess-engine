@@ -2,15 +2,12 @@
   "shards": ["data/shards/shard_000[0-3].npz", "data/shards/shard_2017-07_000[0-1].npz"],
   "levels": [1, 2, 3],
   "openings": "data/dev_openings_100.txt",
-  "defaults": {"epochs": 20, "batch_size": 16384, "hidden": 512, "head": [32, 32], "wdl_scale_cp": 1000, "cp_loss_weight": 0.2,
+  "defaults": {"epochs": 20, "batch_size": 16384, "hidden": 1024, "head": [32, 32], "wdl_scale_cp": 1000, "cp_loss_weight": 0.2,
                "rank_pairs": ["data/rank_pairs_b_train.npz"], "rank_val_pairs": ["data/rank_pairs_b_val.npz"],
-               "rank_batch_size": 4096},
+               "rank_kinds": ["score"], "rank_batch_size": 4096},
   "runs": [
-    {"name": "rank-b-h512-w0", "rank_weight": 0.0},
-    {"name": "rank-b-h512-w005", "rank_weight": 0.05},
-    {"name": "rank-b-h512-w02", "rank_weight": 0.2},
-    {"name": "rank-b-threat64-w0", "threat_hidden": 64, "rank_weight": 0.0},
-    {"name": "rank-b-threat64-w005", "threat_hidden": 64, "rank_weight": 0.05},
-    {"name": "rank-b-threat64-w02", "threat_hidden": 64, "rank_weight": 0.2}
+    {"name": "rank-b-h1024-w0-seed1", "rank_weight": 0.0, "seed": 1},
+    {"name": "rank-b-h1024-w005", "rank_weight": 0.05, "seed": 0},
+    {"name": "rank-b-h1024-w005-seed1", "rank_weight": 0.05, "seed": 1}
   ]
 }
