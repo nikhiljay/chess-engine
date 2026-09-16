@@ -819,6 +819,69 @@ noted. Full table: `uv run python -m chess_nn.report`.
     matters at every node. With rank_a/rank_b (60) this is the second
     objective to buy relative structure by giving up absolute accuracy, and
     the second to lose; within this family play tracks val loss monotonically.
+70. **Neither the objective weighting nor more data moves leaf error
+    (fid_a + scale probe, 2026-09-15).**
+    - fid_a, h1024 on the broad mix, seed 0, against the default:
+      cp_loss_weight 0.5 → L1 70.5 / L2 51.5 / L3 31.8 (L2 −0.028 ± 0.038);
+      weight 1.0 → 66.8 / 50.8 / 30.0 (−0.035 ± 0.037); weight 1.0 with
+      scale 1500 → 72.2 / 56.0 / 31.8 (+0.018 ± 0.035). All within noise.
+      The mechanism check failed outright: leaf MAE 3.30 for all three
+      against the default's 3.29, with the winning buckets identical.
+    - Data scaling, same recipe on 25% / 50% / 100% of the mix: leaf MAE
+      3.47 / 3.39 / 3.29. About 0.09 per doubling, so matching Stockfish's
+      static eval (2.94) would need roughly 8x more data. The curve is alive
+      but far too shallow to carry L2, so labeling more was stopped.
+    - Every model measured sits in the same place: h1024 3.29, h3072 3.21,
+      h8192 3.21, kb-h256 3.27, tact_a 3.27. An 8x parameter range and a 4x
+      data range move leaf error by a few hundredths.
+71. **The defect is over-confidence in level positions (2026-09-15).** On the
+    20,000 leaves the student's search evaluated, restricted to |d9| ≤ 3 —
+    3,992 leaves, the regime where finding 39 says the deciding blunders
+    happen:
+    | predictor | MAE | sd(pred) | r | \|err\|>3 |
+    |---|---|---|---|---|
+    | constant 0 | 1.13 | 0.00 | — | 0.0% |
+    | Stockfish static | 1.20 | 1.73 | 0.561 | 9.9% |
+    | jj6-h1024 (default) | 2.42 | 3.26 | 0.347 | 29.6% |
+    | cap-h8192 | 2.34 | 3.26 | 0.359 | 29.1% |
+    | b99k-h128 | 2.19 | 3.08 | 0.300 | 24.4% |
+    | threat-a-h512 | 2.15 | 3.03 | 0.379 | 25.8% |
+    The truth has sd 1.42 there. Our nets answer with sd 3.26 — more than
+    twice the spread of what they are predicting — and are badly wrong three
+    times as often as Stockfish's static eval. A constant 0 beats every one
+    of them on MAE in this regime. (MAE alone is misleading here: it rewards
+    shrinking towards zero, which is why the weakest model, b99k, appears
+    better than h8192. Spread and correlation are the honest summaries.)
+    An over-confident leaf value is precisely what makes the search choose
+    that leaf, so this is a mechanism for the decisive errors priced in 67,
+    and it is untouched by capacity or data. Suspect: `cp_loss` uses
+    smooth_l1, which is linear past one pawn, so the large misses that decide
+    games are the cheapest thing in the objective. dis_a tests a quadratic
+    price and narrower target ranges.
+72. **The over-confidence is neither the loss's shape nor the function class
+    (dis_a + CNN probe, 2026-09-15).**
+    - dis_a, h1024 on the broad mix, seed 0, paired against the default:
+      mse → L2 −0.113 ± 0.038; mse at weight 1.0 → −0.123 ± 0.042; mse with
+      targets clamped to ±10 pawns → −0.083 ± 0.036; huber with that clamp →
+      0.000 ± 0.038. Three of four clearly worse, none better.
+    - The mechanism check failed again: level-position spread stayed at
+      3.06-3.38 against the truth's 1.42 and correlation did not move
+      (0.323-0.357 against the default's 0.347). Pricing large misses
+      quadratically does not make the net less confident — mse slightly
+      *raised* the spread — so the over-confidence is what the net learns,
+      not an artefact of smooth_l1's linear tail.
+    - CNN probe: a residual CNN over the board (32 channels, 6 blocks, 152k
+      params, harness-validated, 0.25 ms/position) on the same 2.18M
+      positions as the MLP half-data probe reaches level r 0.301 against
+      that MLP's 0.345. Worse — though it is smaller and got 10 epochs to
+      the MLP's 20, so this rules out a cheap CNN, not convolutions.
+    - **Fit regime:** WDL loss on equal-size train and validation samples —
+      h1024 0.00239 / 0.00287 (ratio 1.20), h8192 0.00168 / 0.00262 (ratio
+      1.56). The nets do overfit the human mix, so in-distribution they are
+      data-limited. But leaf error barely moves with data (finding 70),
+      which puts the real gap in distribution shift: trained on quiet human
+      positions, deployed on the leaves its own search reaches. leaf_a tests
+      exactly that.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),

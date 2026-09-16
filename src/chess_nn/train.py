@@ -16,7 +16,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from chess_nn.encoding import dense_from_sparse, dense_numpy
+from chess_nn.encoding import CASTLING_FEATURES, dense_from_sparse, dense_numpy, mirror_permutation
 from chess_nn.export import export_onnx, export_onnx_torch, parity_check, sanity_checks, validate_with_harness
 from chess_nn.harness import RUNS_DIR, SHARDS_DIR, VALIDATE_MODEL, load_harness_tool
 from chess_nn.groups import load_group_rows, padded
@@ -116,6 +116,9 @@ class TrainConfig:
     # Residual CNN over the board (model.ConvNet) instead of the NNUE-style net; 0 = off.
     conv_channels: int = 0
     conv_blocks: int = 6
+    # Mirror positions left-right at random during training (only those without castling
+    # rights, where the reflection is exact and the label carries over unchanged).
+    mirror_augment: bool = False
     # Move-ranking pairs from chess_nn.rank_pairs (paths under training/); rank_weight 0 = off.
     rank_pairs: list[str] = field(default_factory=list)
     rank_val_pairs: list[str] = field(default_factory=list)
@@ -239,6 +242,24 @@ def run_training(cfg: TrainConfig) -> Path:
     print(f"{cfg.name}: {n:,} positions ({len(train_idx):,} train / {n_val:,} val), "
           f"{count_params(model):,} params, device={device}")
 
+    mirror = mirrorable = None
+    if cfg.mirror_augment:
+        mirror = torch.from_numpy(mirror_permutation()).to(device)
+        has_castling = torch.zeros(n, dtype=torch.bool, device=device)
+        for feature in CASTLING_FEATURES:
+            has_castling |= (features == feature).any(dim=1)
+        mirrorable = ~has_castling
+        print(f"mirror augmentation: {int(mirrorable.sum()):,} of {n:,} positions are mirrorable")
+
+    def batch_features(rows: torch.Tensor) -> torch.Tensor:
+        """Sparse features for these rows, with half of the mirrorable ones reflected."""
+        sparse = features[rows]
+        if mirror is None:
+            return dense_from_sparse(sparse)
+        flip = mirrorable[rows] & (torch.rand(len(rows), device=device) < 0.5)
+        reflected = torch.where(sparse >= 0, mirror[sparse.long().clamp(min=0)].to(sparse.dtype), sparse)
+        return dense_from_sparse(torch.where(flip.unsqueeze(1), reflected, sparse))
+
     metrics = []
     for epoch in range(1, cfg.epochs + 1):
         model.train()
@@ -247,7 +268,7 @@ def run_training(cfg: TrainConfig) -> Path:
         total = torch.zeros((), device=device)
         for s in range(0, len(order), cfg.batch_size):
             batch = order[s : s + cfg.batch_size]
-            out = model(dense_from_sparse(features[batch])).squeeze(1)
+            out = model(batch_features(batch)).squeeze(1)
             loss = wdl_loss(out, targets[batch], cfg.wdl_scale_cp)
             if cfg.cp_loss_weight:
                 loss = loss + cfg.cp_loss_weight * cp_loss(out, targets[batch], cfg.cp_loss_clip_pawns, cfg.cp_loss_kind)

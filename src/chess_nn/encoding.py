@@ -37,6 +37,27 @@ def feature_indices(board: chess.Board) -> list[int]:
     return _half_indices(board, board.turn, 0) + _half_indices(board, not board.turn, HALF_SIZE)
 
 
+def mirror_permutation() -> np.ndarray:
+    """Feature index map for mirroring the board left-right (files a<->h).
+
+    Chess is exactly symmetric under this reflection except for castling, which is not
+    file-symmetric, so only positions without castling rights may be mirrored. En passant
+    is not part of the encoding, so nothing else changes and the Stockfish label carries
+    over unchanged. Used as free augmentation: the nets overfit the human mix (finding 72).
+    """
+    permutation = np.arange(TENSOR_SIZE, dtype=np.int64)
+    for half in (0, HALF_SIZE):
+        for plane in range(12):
+            base = half + plane * 64
+            for square in range(64):
+                file, rank = square % 8, square // 8
+                permutation[base + square] = base + (7 - file) + 8 * rank
+    return permutation
+
+
+CASTLING_FEATURES = (768, 769, HALF_SIZE + 768, HALF_SIZE + 769)
+
+
 def encode_sparse(boards: list[chess.Board]) -> np.ndarray:
     """Encode boards as int16 [N, 68] active indices, padded with -1."""
     features = np.full((len(boards), MAX_FEATURES), -1, dtype=np.int16)
