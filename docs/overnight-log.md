@@ -1040,6 +1040,39 @@ noted. Full table: `uv run python -m chess_nn.report`.
     position; hand-rolled attention was only 10% faster than PyTorch's, so
     the cost is inherent rather than a kernel artefact), which is why the
     budget is fixed rather than the epochs.
+79. **arch_b results, and one bounded cycle on data volume (2026-09-16).**
+    Fixed budget (1.5M positions, 10 epochs, seed 0), architecture the only
+    variable, with an MLP control at that same budget because the full-data
+    default trained on three times the data:
+    | model | params | ms/pos | L1 | L2 | L3 |
+    |---|---|---|---|---|---|
+    | MLP h1024 (control) | 856k | 0.034 | 63.7 | 39.2 | 27.0 |
+    | CNN 32x6 | 152k | 0.088 | 46.2 | 28.5 | 10.2 |
+    | CNN 64x8 | 640k | 0.35 | 50.0 | 37.2 | 16.0 |
+    Paired against the control, the matched CNN is L1 −0.138 ± 0.033,
+    L2 −0.020 ± 0.035, L3 −0.110 ± 0.029: capacity explains its L2 deficit
+    (level there, interval spanning zero) but not L1 or L3, at 10x the
+    inference cost. Its game profile is the familiar trade — 36 wins and 87
+    losses against the control's 24 and 67, with 32 fewer draws.
+    The control is itself the most useful number: the same architecture and
+    recipe scores **39.2% at L2 on 1.5M positions and 54.2% on 4.36M**.
+    **Process note.** Fifteen experiments, no promotable candidate. The
+    failures of method, not of luck: hopping between hypotheses after single
+    results; using leaf metrics to choose directions after establishing they
+    are anti-correlated with play (labeling was stopped last night on the
+    leaf-error slope while the play slope on the same axis was the largest
+    effect measured); reading underpowered single-seed arms, then
+    over-correcting by treating reduced-budget screens as verdicts.
+    **The cycle now running** puts the whole budget on the one lever with a
+    large measured effect. Labeling the already-sampled candidates to ~8.5M
+    positions, then the established h1024 recipe at 20 epochs on two seeds.
+    The default and its twin are that recipe at 4.36M with the same epochs
+    and seeds, so data volume is the only change. Promotion requires, decided
+    in advance: pooled L2 ≥ +0.02 points per game with the 95% CI excluding
+    zero, no clear regression at L1 or L3, and the same sign with L2 ≥ +0.02
+    on `data/fresh_openings_d_100.txt`, an opening set generated for this
+    confirmation and used for nothing else. Start-position results are
+    reported and never selected on.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
