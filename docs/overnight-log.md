@@ -983,6 +983,27 @@ noted. Full table: `uv run python -m chess_nn.report`.
     Nothing here is promotable. Two ingredients lean positive for the wider
     net — mirror augmentation and depth-12 targets — so comb_a trains h3072
     on the depth-12 mix with mirroring at two seeds.
+77. **comb_a wins on dev and does not confirm on fresh openings (2026-09-16).**
+    h3072, the 4.17M depth-12 mix, mirror augmentation, two seeds, pooled
+    against seed-matched controls.
+    - **Dev openings:** L1 −0.010 ± 0.020, L2 +0.026 ± 0.024, **L3 +0.075 ±
+      0.025, CI [+0.026, +0.124]**, 92 openings better against 63. Dev scores
+      L2 58.5 / 57.5 against 54.2 / 56.5, L3 35.5 / 40.8 against 29.0 / 32.2.
+      The first candidate of the project to clear the bar at any level.
+    - **Fresh openings** (which had guided no choice): L1 +0.015 ± 0.020,
+      L2 +0.023 ± 0.025, **L3 +0.003 ± 0.023**. The L3 gain is gone.
+    Read: after a night of selection against the dev set, a dev-only gain is
+    what selection pressure manufactures, and L3 is where the noise was
+    largest (the controls themselves move 29.0 → 32.8 and 32.2 → 37.0 between
+    the two opening sets). Not promoted; the default stands.
+    The one durable signal is L2, positive and near-identical in both sets
+    (+0.026 dev, +0.023 fresh, roughly +0.024 ± 0.017 pooled across all four
+    comparisons) — consistent, unresolved, and worth about two points of
+    score. Each ingredient alone was noise (mirror at h3072 +0.015, depth 12
+    +0.014, mirror at h1024 −0.035), so the combination is doing something,
+    but small.
+    Protocol note: the fresh set has now been spent on a confirmation. Any
+    further confirmation needs a newly generated opening set.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),

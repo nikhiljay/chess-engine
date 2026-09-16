@@ -1,0 +1,10 @@
+{
+  "shards": ["data/shards_d12/shard_d12_*.npz", "data/shards_d12/shard_d12b_*.npz"],
+  "levels": [1, 2, 3],
+  "openings": "data/dev_openings_100.txt",
+  "defaults": {"epochs": 30, "batch_size": 16384, "head": [32, 32], "wdl_scale_cp": 1000, "cp_loss_weight": 0.2, "mirror_augment": true},
+  "runs": [
+    {"name": "comb-b-h8192-d12-mir", "hidden": 8192, "seed": 0},
+    {"name": "comb-b-h3072-d12-mir-e30", "hidden": 3072, "seed": 1}
+  ]
+}
