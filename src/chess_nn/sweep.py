@@ -48,7 +48,9 @@ def main() -> None:
     tag = tag_for(openings, official=False)
 
     for run in spec["runs"]:
-        cfg = TrainConfig(**{**spec.get("defaults", {}), **run, "shards": shards})
+        # A run may name its own shards, so one spec can compare data or label sets.
+        run_shards = expand_shards(run["shards"]) if "shards" in run else shards
+        cfg = TrainConfig(**{**spec.get("defaults", {}), **run, "shards": run_shards})
         run_dir = Path(cfg.runs_dir) / cfg.name
         if not (run_dir / "summary.json").exists():
             run_training(cfg)

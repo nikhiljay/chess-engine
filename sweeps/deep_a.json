@@ -1,0 +1,10 @@
+{
+  "shards": ["data/shards_d12/shard_d12_*.npz"],
+  "levels": [1, 2, 3],
+  "openings": "data/dev_openings_100.txt",
+  "defaults": {"epochs": 20, "batch_size": 16384, "hidden": 1024, "head": [32, 32], "wdl_scale_cp": 1000, "cp_loss_weight": 0.2, "seed": 0},
+  "runs": [
+    {"name": "deep-a-d12"},
+    {"name": "deep-a-d9", "shards": ["data/shards_d9_matched/shard_d9m_*.npz"]}
+  ]
+}

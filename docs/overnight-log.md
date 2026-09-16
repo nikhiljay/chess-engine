@@ -907,6 +907,38 @@ noted. Full table: `uv run python -m chess_nn.report`.
     leaf error as a target to optimise directly, though it stays useful as a
     description. leaf_b repeats this with the quiet filter, which separates
     distribution shift from the confound.
+74. **Static accuracy is anti-correlated with play (leaf_b + stat_a,
+    2026-09-15).** Two arms, same h1024 recipe, seed 0, paired on dev
+    openings against the default.
+    - **leaf_b** — leaf_a's 1.5M leaves put through `chess_nn.label`'s
+      quiet-best-move filter, which kept only 660k of them (44%; the broad
+      human mix keeps ~72%). So 56% of the positions the search evaluates
+      have tactics pending, which is the double-counting of finding 73
+      measured directly. Play: L1 −0.023 ± 0.032, L2 −0.053 ± 0.037
+      (CI [−0.124, +0.019]), L3 +0.045 ± 0.035. The filter recovers almost
+      all of leaf_a's 21-point collapse, confirming the mechanism, but adding
+      the deployment distribution is worth nothing on its own.
+    - **stat_a** — distilling Stockfish's *static* eval instead of its d9
+      search score: 3.5M positions (1.5M search leaves, 2M human), no filter
+      needed, deterministic labels. It is the most accurate evaluator this
+      project has produced: level spread 3.26 → 2.18 against a truth of 1.42,
+      level r 0.347 → 0.427, level |err|>3 29.6% → 18.4%. It plays clearly
+      worse: L1 −0.070 ± 0.035, L2 −0.118 ± 0.035 (42.5%), L3 −0.100 ± 0.032,
+      with 37 wins and 67 losses against the control's 60 and 43.
+    Three points now run the wrong way — leaf_a (MAE 2.58, r 0.395) → L2 33.0;
+    stat_a (r 0.427, |err|>3 18.4%) → L2 42.5; the default (r 0.347) → 54.2.
+    Beyond about r 0.35, agreeing better with a static assessment predicts
+    *worse* play, so the leaf metrics of findings 68-71 describe the nets but
+    do not rank them.
+    Working explanation: a depth-9 target carries tactical lookahead that
+    this search (depth 1 plus captures, no check extensions) cannot perform,
+    so a net trained on it substitutes for search depth, while a faithful
+    static evaluator supplies accurate but shallow values. Stockfish's own
+    static eval plays 68.8% because its quality (r 0.561) is high enough to
+    pay for the missing foresight; our imitation at r 0.427 is not. The sharp
+    prediction is that *deeper* targets should play better — tested next with
+    the same 2M positions relabeled at depth 12, the only change being label
+    depth.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
