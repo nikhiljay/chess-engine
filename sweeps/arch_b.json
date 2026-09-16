@@ -1,0 +1,12 @@
+{
+  "shards": ["data/shards/shard_000[0-3].npz", "data/shards/shard_2017-07_000[0-1].npz"],
+  "levels": [1, 2, 3],
+  "openings": "data/dev_openings_100.txt",
+  "defaults": {"epochs": 10, "limit": 1500000, "batch_size": 16384, "head": [32, 32], "wdl_scale_cp": 1000, "cp_loss_weight": 0.2, "seed": 0},
+  "runs": [
+    {"name": "arch-b-mlp-h1024", "hidden": 1024},
+    {"name": "arch-b-cnn-c32b6", "conv_channels": 32, "conv_blocks": 6},
+    {"name": "arch-b-cnn-c64b8", "conv_channels": 64, "conv_blocks": 8},
+    {"name": "arch-b-tf-d64l4", "transformer_dim": 64, "transformer_layers": 4, "batch_size": 8192}
+  ]
+}

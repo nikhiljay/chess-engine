@@ -1004,6 +1004,42 @@ noted. Full table: `uv run python -m chess_nn.report`.
     but small.
     Protocol note: the fresh set has now been spent on a confirmation. Any
     further confirmation needs a newly generated opening set.
+78. **Scaling the family is exhausted; a compact CNN is much weaker in play
+    (2026-09-16).**
+    - **comb_b**: h8192 on the depth-12 mix with mirroring gives L1 +0.030,
+      L2 −0.050, L3 +0.063 against the default — more capacity makes the net
+      commit harder to its own judgment, which helps at L1 and L3 and hurts
+      against the depth-2 opponent (61 wins and 64 losses against 60 and 43,
+      draws down from 97 to 75). A controlled pair — same width, data and
+      seed, 20 epochs against 30 — gives L2 57.5 against 53.2, so **fitting
+      the target harder plays worse**, finding 74 from a third direction.
+    - **arch-cnn-c32b6** (full data, 20 epochs, the default's recipe): a
+      residual CNN of 152k parameters, 0.088 ms per position against the
+      baseline's 0.034. Dev L1 64.5, L2 39.2, L3 24.5 against the baseline's
+      69.8 / 54.2 / 29.0, losing 81 games at L2 to the baseline's 43.
+    - Slices (`chess_nn.arch_compare`, agreement with the d9 teacher) locate
+      the difference rather than assume it. The CNN is *better* in endgames
+      (r 0.888 against 0.879), with no captures available (0.943 / 0.936),
+      cramped (0.788 / 0.783) and with few pieces (MAE 4.16 / 4.34); it is
+      worse in openings (0.735 / 0.752), with many pieces (0.756 / 0.781),
+      with captures pending (0.761 / 0.779) and material even (0.410 /
+      0.457). Locality suits sparse closed positions and costs in open ones.
+    - The same slicing on the baselines gives the sharpest description of the
+      evaluator's problem so far: **r 0.949 and MAE 1.32 where no captures
+      are available, against r 0.773 and MAE 3.66 where captures are pending
+      — and 89% of the leaves the search evaluates have captures pending.**
+      That is finding 73's double-counting as a measurement.
+    - Note the disconnect again: the CNN's leaf agreement is only slightly
+      worse (0.761 against 0.779 on the dominant slice) while its play is 15
+      points worse at L2. These metrics locate differences; they do not
+      predict their size.
+    arch_b therefore compares architectures at a fixed budget (1.5M positions,
+    10 epochs, seed 0) with an MLP control at that same budget, spanning 144k
+    to 856k parameters so capacity does not masquerade as architecture. The
+    transformer costs about 20x the baseline per sample (64 tokens per
+    position; hand-rolled attention was only 10% faster than PyTorch's, so
+    the cost is inherent rather than a kernel artefact), which is why the
+    budget is fixed rather than the epochs.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
