@@ -186,8 +186,59 @@ class ConvNet(nn.Module):
         return self.out(torch.relu(self.fc(x)))
 
 
+class TransformerBlock(nn.Module):
+    """Pre-norm self-attention over the squares, then a position-wise MLP."""
+
+    def __init__(self, dim: int, heads: int, mlp_ratio: int) -> None:
+        super().__init__()
+        self.norm_attention = nn.LayerNorm(dim)
+        self.attention = nn.MultiheadAttention(dim, heads, batch_first=True)
+        self.norm_mlp = nn.LayerNorm(dim)
+        self.mlp = nn.Sequential(nn.Linear(dim, dim * mlp_ratio), nn.GELU(), nn.Linear(dim * mlp_ratio, dim))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        normed = self.norm_attention(x)
+        x = x + self.attention(normed, normed, normed, need_weights=False)[0]
+        return x + self.mlp(self.norm_mlp(x))
+
+
+class TransformerNet(nn.Module):
+    """Self-attention encoder over the 64 squares.
+
+    Where a convolution sees a square with its neighbours, attention lets any square consult any
+    other directly, which is the relation a pin, a skewer or a long diagonal actually is. Each
+    square becomes a token carrying its 24 piece-plane indicators (both perspectives) and the
+    castling flags, plus a learned square embedding; the pooled encoding scores the position in
+    pawns from the side to move.
+
+    Input is the harness's flat [N, 1540] tensor, reshaped the same way ConvNet does it.
+    """
+
+    def __init__(self, dim: int = 64, layers: int = 4, heads: int = 4, mlp_ratio: int = 2) -> None:
+        super().__init__()
+        self.dim, self.layers_count = dim, layers
+        self.embed = nn.Linear(28, dim)
+        self.square = nn.Parameter(torch.zeros(1, 64, dim))
+        nn.init.normal_(self.square, std=0.02)
+        self.blocks = nn.ModuleList(TransformerBlock(dim, heads, mlp_ratio) for _ in range(layers))
+        self.norm = nn.LayerNorm(dim)
+        self.head = nn.Linear(dim, dim)
+        self.out = nn.Linear(dim, 1)
+
+    def forward(self, board: torch.Tensor) -> torch.Tensor:
+        tokens = ConvNet.planes(board).flatten(2).transpose(1, 2)  # [N, 64 squares, 28 channels]
+        x = self.embed(tokens) + self.square
+        for block in self.blocks:
+            x = block(x)
+        pooled = self.norm(x).mean(dim=1)
+        return self.out(torch.relu(self.head(pooled)))
+
+
 def model_from_config(config: dict) -> nn.Module:
     """The architecture a run's config.json describes, with fresh weights."""
+    if config.get("transformer_dim"):
+        return TransformerNet(config["transformer_dim"], config.get("transformer_layers", 4),
+                              config.get("transformer_heads", 4))
     if config.get("conv_channels"):
         return ConvNet(config["conv_channels"], config.get("conv_blocks", 6))
     head = tuple(config["head"])

@@ -25,6 +25,7 @@ from chess_nn.model import (
     EvalNet,
     KingBucketNet,
     ThreatNet,
+    TransformerNet,
     count_params,
     cp_loss,
     group_consistency_loss,
@@ -116,6 +117,10 @@ class TrainConfig:
     # Residual CNN over the board (model.ConvNet) instead of the NNUE-style net; 0 = off.
     conv_channels: int = 0
     conv_blocks: int = 6
+    # Self-attention encoder over the squares (model.TransformerNet); 0 = off.
+    transformer_dim: int = 0
+    transformer_layers: int = 4
+    transformer_heads: int = 4
     # Mirror positions left-right at random during training (only those without castling
     # rights, where the reflection is exact and the label carries over unchanged).
     mirror_augment: bool = False
@@ -228,7 +233,9 @@ def run_training(cfg: TrainConfig) -> Path:
         print(f"{len(rows_per_decision):,} decisions matched; {len(train_idx_np):,} train groups "
               f"(≥2 members), {len(val_idx_np):,} held-out groups")
 
-    if cfg.conv_channels:
+    if cfg.transformer_dim:
+        model = TransformerNet(cfg.transformer_dim, cfg.transformer_layers, cfg.transformer_heads).to(device)
+    elif cfg.conv_channels:
         model = ConvNet(cfg.conv_channels, cfg.conv_blocks).to(device)
     elif cfg.threat_hidden:
         model = ThreatNet(cfg.hidden, tuple(cfg.head), cfg.threat_hidden).to(device)
@@ -307,7 +314,8 @@ def run_training(cfg: TrainConfig) -> Path:
 
     model = model.cpu().eval()
     onnx_path = run_dir / "model.onnx"
-    (export_onnx_torch if isinstance(model, ConvNet) else export_onnx)(model, onnx_path)
+    torch_exported = isinstance(model, (ConvNet, TransformerNet))
+    (export_onnx_torch if torch_exported else export_onnx)(model, onnx_path)
     valid = validate_with_harness(onnx_path)
     sample = dense_numpy(features_np[val_idx_cpu[:1000].numpy()])
     parity = parity_check(model, onnx_path, sample)

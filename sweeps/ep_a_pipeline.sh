@@ -10,4 +10,4 @@
 T=/Users/nikhildsouza/workspace/chess-challenge/training
 cd $T
 while pgrep -f 'run_experiment.sh|chess_nn.sweep|datagen ' > /dev/null; do sleep 60; done
-exec /bin/zsh $T/sweeps/run_experiment.sh $T/sweeps/ep_a.json ep-a-h3072-e10 ep-a-h3072-e10-seed1
+exec /bin/zsh $T/sweeps/run_experiment.sh $T/sweeps/ep_a.json ep-a-h3072-e10 ep-a-h3072-e10-seed1 ep-a-h3072-e05 ep-a-h3072-e05-seed1

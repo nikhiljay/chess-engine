@@ -5,6 +5,8 @@
   "defaults": {"batch_size": 16384, "hidden": 3072, "head": [32, 32], "wdl_scale_cp": 1000, "cp_loss_weight": 0.2, "mirror_augment": true},
   "runs": [
     {"name": "ep-a-h3072-e10", "epochs": 10, "seed": 0},
-    {"name": "ep-a-h3072-e10-seed1", "epochs": 10, "seed": 1}
+    {"name": "ep-a-h3072-e10-seed1", "epochs": 10, "seed": 1},
+    {"name": "ep-a-h3072-e05", "epochs": 5, "seed": 0},
+    {"name": "ep-a-h3072-e05-seed1", "epochs": 5, "seed": 1}
   ]
 }
