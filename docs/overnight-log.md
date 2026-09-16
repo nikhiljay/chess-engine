@@ -939,6 +939,26 @@ noted. Full table: `uv run python -m chess_nn.report`.
     prediction is that *deeper* targets should play better — tested next with
     the same 2M positions relabeled at depth 12, the only change being label
     depth.
+75. **Depth-12 targets beat depth-9 targets, but not yet resolved (deep_a,
+    2026-09-16).** 2M positions from the broad mix relabeled at depth 12
+    (143 positions/s, 81-96% kept), with the depth-9 arm restricted by
+    `chess_nn.match_shard` to exactly the subset depth 12 kept, so label depth
+    is the only difference. Same h1024 recipe, seed 0.
+    - Paired against each other: L1 +0.018 ± 0.035, **L2 +0.055 ± 0.042,
+      CI [−0.027, +0.137], 46 openings better and 32 worse**, L3 −0.038 ±
+      0.030. d12 52.2% against d9 46.8% at L2.
+    - Against the default (which has 4.36M positions to these arms' 2M):
+      d12 −0.020 ± 0.038 at L2, d9 −0.075 ± 0.036. So d12 at less than half
+      the data is within noise of the default, while d9 at that size is
+      clearly behind it.
+    - Leaf metrics are flat and, as finding 74 predicts, uninformative here:
+      d12 level r 0.340, d9 0.339, default 0.347.
+    This is the first positive signal of the night and it matches finding
+    74's explanation — a deeper target carries more of the lookahead the
+    search cannot perform. The interval includes zero, so by the standing
+    rule it earns replication, not promotion: deep_a_rep repeats the pair at
+    seed 1, and deep_b trains depth 12 at full scale (4.3M) at two seeds
+    against the default.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
