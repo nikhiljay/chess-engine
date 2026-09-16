@@ -17,10 +17,11 @@ import numpy as np
 import torch
 
 from chess_nn.encoding import dense_from_sparse, dense_numpy
-from chess_nn.export import export_onnx, parity_check, sanity_checks, validate_with_harness
+from chess_nn.export import export_onnx, export_onnx_torch, parity_check, sanity_checks, validate_with_harness
 from chess_nn.harness import RUNS_DIR, SHARDS_DIR, VALIDATE_MODEL, load_harness_tool
 from chess_nn.groups import load_group_rows, padded
 from chess_nn.model import (
+    ConvNet,
     EvalNet,
     KingBucketNet,
     ThreatNet,
@@ -112,6 +113,9 @@ class TrainConfig:
     king_buckets: bool = False
     # Width of the attack/threat feature transformer (model.ThreatNet); 0 = off.
     threat_hidden: int = 0
+    # Residual CNN over the board (model.ConvNet) instead of the NNUE-style net; 0 = off.
+    conv_channels: int = 0
+    conv_blocks: int = 6
     # Move-ranking pairs from chess_nn.rank_pairs (paths under training/); rank_weight 0 = off.
     rank_pairs: list[str] = field(default_factory=list)
     rank_val_pairs: list[str] = field(default_factory=list)
@@ -221,7 +225,9 @@ def run_training(cfg: TrainConfig) -> Path:
         print(f"{len(rows_per_decision):,} decisions matched; {len(train_idx_np):,} train groups "
               f"(≥2 members), {len(val_idx_np):,} held-out groups")
 
-    if cfg.threat_hidden:
+    if cfg.conv_channels:
+        model = ConvNet(cfg.conv_channels, cfg.conv_blocks).to(device)
+    elif cfg.threat_hidden:
         model = ThreatNet(cfg.hidden, tuple(cfg.head), cfg.threat_hidden).to(device)
     elif cfg.king_buckets:
         model = KingBucketNet(cfg.hidden, tuple(cfg.head)).to(device)
@@ -280,7 +286,7 @@ def run_training(cfg: TrainConfig) -> Path:
 
     model = model.cpu().eval()
     onnx_path = run_dir / "model.onnx"
-    export_onnx(model, onnx_path)
+    (export_onnx_torch if isinstance(model, ConvNet) else export_onnx)(model, onnx_path)
     valid = validate_with_harness(onnx_path)
     sample = dense_numpy(features_np[val_idx_cpu[:1000].numpy()])
     parity = parity_check(model, onnx_path, sample)

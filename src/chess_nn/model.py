@@ -130,8 +130,66 @@ class ThreatNet(EvalNet):
         return self.out(x)
 
 
-def model_from_config(config: dict) -> EvalNet:
+class ResidualBlock(nn.Module):
+    """Two 3x3 convolutions over the board with a skip connection."""
+
+    def __init__(self, channels: int) -> None:
+        super().__init__()
+        self.first = nn.Conv2d(channels, channels, 3, padding=1)
+        self.norm_first = nn.BatchNorm2d(channels)
+        self.second = nn.Conv2d(channels, channels, 3, padding=1)
+        self.norm_second = nn.BatchNorm2d(channels)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        y = torch.relu(self.norm_first(self.first(x)))
+        y = self.norm_second(self.second(y))
+        return torch.relu(x + y)
+
+
+class ConvNet(nn.Module):
+    """Residual CNN over the 8x8 board, for the local patterns tactics are made of.
+
+    Every NNUE-style net in this project sits at the same accuracy in level positions
+    (finding 71: r ~0.35 against Stockfish static's 0.561), across an 8x parameter range
+    and a 4x data range, because a linear map over piece-square features has to judge a
+    tactic from what is on which square. A convolution sees a square together with its
+    neighbours and shares weights across the board, which is the bias those positions want.
+
+    Input is the harness's flat [N, 1540] tensor: two 770-float perspective halves, each
+    12 piece planes of 64 squares plus 2 castling flags. Both halves become planes, so the
+    net sees the position from both sides exactly as EvalNet does. Output is pawns from
+    the side to move.
+    """
+
+    def __init__(self, channels: int = 32, blocks: int = 6) -> None:
+        super().__init__()
+        self.channels, self.blocks_count = channels, blocks
+        self.stem = nn.Conv2d(28, channels, 3, padding=1)
+        self.norm_stem = nn.BatchNorm2d(channels)
+        self.blocks = nn.ModuleList(ResidualBlock(channels) for _ in range(blocks))
+        self.reduce = nn.Conv2d(channels, 8, 1)
+        self.fc = nn.Linear(8 * 64, 64)
+        self.out = nn.Linear(64, 1)
+
+    @staticmethod
+    def planes(board: torch.Tensor) -> torch.Tensor:
+        stm = board[:, :768].reshape(-1, 12, 8, 8)
+        nstm = board[:, HALF_SIZE : HALF_SIZE + 768].reshape(-1, 12, 8, 8)
+        castling = torch.cat([board[:, 768:770], board[:, HALF_SIZE + 768 : HALF_SIZE + 770]], dim=1)
+        return torch.cat([stm, nstm, castling.reshape(-1, 4, 1, 1).expand(-1, 4, 8, 8)], dim=1)
+
+    def forward(self, board: torch.Tensor) -> torch.Tensor:
+        x = torch.relu(self.norm_stem(self.stem(self.planes(board))))
+        for block in self.blocks:
+            x = block(x)
+        x = torch.relu(self.reduce(x)).flatten(1)
+        return self.out(torch.relu(self.fc(x)))
+
+
+def model_from_config(config: dict) -> nn.Module:
     """The architecture a run's config.json describes, with fresh weights."""
+    if config.get("conv_channels"):
+        return ConvNet(config["conv_channels"], config.get("conv_blocks", 6))
     head = tuple(config["head"])
     if config.get("threat_hidden"):
         return ThreatNet(config["hidden"], head, config["threat_hidden"])

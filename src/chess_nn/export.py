@@ -208,6 +208,30 @@ def export_onnx(model: EvalNet, path) -> None:
     onnx.save(onnx_model, str(path))
 
 
+def export_onnx_torch(model: torch.nn.Module, path) -> None:
+    """Export a model that takes [N, 1540] through torch, with named dynamic axes.
+
+    The hand-built exporter above only covers the NNUE-style family. ConvNet goes this way;
+    the harness rejects unnamed batch dimensions, so the axes are named explicitly.
+    """
+    model.cpu().eval()
+    dummy = torch.zeros(2, TENSOR_SIZE)
+    torch.onnx.export(
+        model,
+        dummy,
+        str(path),
+        input_names=["board"],
+        output_names=["eval"],
+        dynamic_axes={"board": {0: "batch"}, "eval": {0: "batch"}},
+        opset_version=17,
+    )
+    # torch writes ir_version 10; the harness requires exactly 8.
+    exported = onnx.load(str(path))
+    exported.ir_version = 8
+    onnx.checker.check_model(exported)
+    onnx.save(exported, str(path))
+
+
 class OnnxEvaluator:
     """Evaluate python-chess boards with an exported model via ONNX Runtime."""
 
