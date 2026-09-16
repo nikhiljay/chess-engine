@@ -42,6 +42,15 @@ def report(leaves: Path, runs: list[Path]) -> None:
                 continue
             group = error[inside]
             print(f"  {label(low, high):>12s}  n={inside.sum():6d}  bias {group.mean():+6.2f}  MAE {np.abs(group).mean():5.2f}")
+        # Level positions decide games, and over-dispersion there is what drives blunders:
+        # predicted spread against the truth's, plus how often the model is badly wrong.
+        level = (teacher >= -3) & (teacher <= 3)
+        if level.sum() > 20:
+            predicted, truth = values[level], teacher[level]
+            correlation = float(np.corrcoef(predicted, truth)[0, 1])
+            big = float((np.abs(predicted - truth) > 3).mean())
+            print(f"  level (-3..+3): sd(pred) {predicted.std():.2f} vs sd(true) {truth.std():.2f}, "
+                  f"r {correlation:.3f}, |err|>3 {100 * big:.1f}%")
 
 
 def main() -> None:

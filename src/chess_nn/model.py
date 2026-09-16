@@ -144,14 +144,21 @@ def count_params(model: nn.Module) -> int:
     return sum(p.numel() for p in model.parameters())
 
 
-def cp_loss(eval_pawns: torch.Tensor, score_cp: torch.Tensor, clip_pawns: float = 50.0) -> torch.Tensor:
-    """Huber loss in pawns against targets clipped to ±clip_pawns.
+def cp_loss(eval_pawns: torch.Tensor, score_cp: torch.Tensor, clip_pawns: float = 50.0, kind: str = "huber") -> torch.Tensor:
+    """Loss in pawns against targets clipped to ±clip_pawns.
 
     Unlike the WDL loss, this keeps full gradient between large advantages
     (e.g. +8 pawns vs a laddered mate), which a depth-1 search needs in order
     to rank progress moves above shuffles in won positions.
+
+    "huber" is linear past one pawn, so a large miss costs little; finding 70
+    found the nets over-dispersed in level positions (predicted sd 3.26 against
+    a true sd of 1.42), which is what makes the search walk into a leaf it rates
+    three pawns too high. "mse" prices those misses quadratically instead.
     """
     target = torch.clamp(score_cp / 100.0, -clip_pawns, clip_pawns)
+    if kind == "mse":
+        return torch.nn.functional.mse_loss(eval_pawns, target)
     return torch.nn.functional.smooth_l1_loss(eval_pawns, target)
 
 

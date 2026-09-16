@@ -106,6 +106,8 @@ class TrainConfig:
     # loss stays WDL-only so runs remain comparable.
     cp_loss_weight: float = 0.0
     cp_loss_clip_pawns: float = 50.0
+    # "huber" (linear past a pawn) or "mse" (quadratic, so large misses are expensive).
+    cp_loss_kind: str = "huber"
     # Feature transformer chosen by each side's own king square (model.KingBucketNet).
     king_buckets: bool = False
     # Width of the attack/threat feature transformer (model.ThreatNet); 0 = off.
@@ -242,7 +244,7 @@ def run_training(cfg: TrainConfig) -> Path:
             out = model(dense_from_sparse(features[batch])).squeeze(1)
             loss = wdl_loss(out, targets[batch], cfg.wdl_scale_cp)
             if cfg.cp_loss_weight:
-                loss = loss + cfg.cp_loss_weight * cp_loss(out, targets[batch], cfg.cp_loss_clip_pawns)
+                loss = loss + cfg.cp_loss_weight * cp_loss(out, targets[batch], cfg.cp_loss_clip_pawns, cfg.cp_loss_kind)
             if rank_train is not None:
                 pick = torch.randint(0, len(rank_train[0]), (cfg.rank_batch_size,), device=device)
                 good = model(dense_from_sparse(rank_train[0][pick])).squeeze(1)
