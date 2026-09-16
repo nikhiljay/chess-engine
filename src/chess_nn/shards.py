@@ -41,3 +41,12 @@ def load_shards(paths: list[Path]) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
             else:
                 mates.append(np.zeros(len(shard["score_cp"]), dtype=np.int16))
     return np.concatenate(features), np.concatenate(scores), np.concatenate(mates)
+
+
+def load_fens(paths: list[Path]) -> np.ndarray:
+    """The FEN of every row, in the same order as load_shards."""
+    fens = []
+    for path in paths:
+        with np.load(path) as shard:
+            fens.append(shard["fens"])
+    return np.concatenate(fens)

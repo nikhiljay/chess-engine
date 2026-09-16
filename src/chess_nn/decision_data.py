@@ -130,6 +130,8 @@ def main() -> None:
     parser.add_argument("--net", type=Path, required=True, help="model whose quiescence leaves to collect")
     parser.add_argument("--exclude", type=Path, nargs="*", default=[], help="held-out diagnosis directories")
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--groups", type=Path,
+                        help="also write one JSON line per decision with the leaves its moves are scored by")
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--select", choices=["turning", "winning"], default="turning",
                         help="expand turning decisions, or every decision with best_cp >= --min-cp")
@@ -157,6 +159,12 @@ def main() -> None:
             seen.add(key)
             kept.append(fen)
     args.out.write_text("\n".join(kept) + "\n")
+    if args.groups:
+        # Membership is per decision, before de-duplication: the search compares these
+        # leaves against each other, and a leaf may belong to more than one decision.
+        with args.groups.open("w") as out:
+            for fen, (positions, _) in zip(turning, collected):
+                out.write(json.dumps({"decision": fen, "positions": positions}) + "\n")
     print(f"{len(turning):,} turning decisions; moves scored by {dict(kinds)} → {len(kept):,} unique positions "
           f"({dropped:,} held-out duplicates dropped, {time.time() - start:.0f}s) → {args.out}", file=sys.stderr)
 

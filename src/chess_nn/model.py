@@ -155,6 +155,22 @@ def cp_loss(eval_pawns: torch.Tensor, score_cp: torch.Tensor, clip_pawns: float 
     return torch.nn.functional.smooth_l1_loss(eval_pawns, target)
 
 
+def group_consistency_loss(eval_pawns: torch.Tensor, score_cp: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
+    """Mean within-group variance of the error in pawns, over [G, M] sibling leaves.
+
+    Targets arrive in centipawns, like cp_loss and wdl_loss; padding is masked out.
+    The search compares a decision's leaves against each other, so error shared by
+    every sibling cancels and only the variation inside a group changes the move
+    played. Unlike rank_loss this leaves the absolute targets in charge: a group
+    whose evaluations are all wrong by the same amount is not penalised here.
+    """
+    error = (eval_pawns - score_cp / 100.0) * mask
+    count = mask.sum(dim=1).clamp(min=1)
+    mean = (error.sum(dim=1) / count).unsqueeze(1)
+    centered = (error - mean) * mask
+    return ((centered**2).sum(dim=1) / count).mean()
+
+
 def rank_loss(good_child: torch.Tensor, bad_child: torch.Tensor, margin_pawns: float = 0.2, temperature_pawns: float = 0.5) -> torch.Tensor:
     """Logistic ranking loss over the positions two moves lead to.
 

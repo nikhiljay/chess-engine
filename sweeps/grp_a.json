@@ -1,0 +1,19 @@
+{
+  "shards": ["data/shards/shard_000[0-3].npz", "data/shards/shard_2017-07_000[0-1].npz", "data/shards_tactics/shard_tactics_a_*.npz"],
+  "levels": [1, 2, 3],
+  "openings": "data/dev_openings_100.txt",
+  "defaults": {
+    "epochs": 20,
+    "batch_size": 16384,
+    "hidden": 1024,
+    "head": [32, 32],
+    "wdl_scale_cp": 1000,
+    "cp_loss_weight": 0.2,
+    "group_files": ["/Users/nikhildsouza/workspace/chess-challenge/training/data/tactics_groups_a.jsonl"],
+    "group_batch": 128
+  },
+  "runs": [
+    {"name": "grp-a-h1024-w01", "seed": 0, "group_weight": 0.1},
+    {"name": "grp-a-h1024-w05", "seed": 0, "group_weight": 0.5}
+  ]
+}

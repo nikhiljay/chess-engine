@@ -19,10 +19,20 @@ import torch
 from chess_nn.encoding import dense_from_sparse, dense_numpy
 from chess_nn.export import export_onnx, parity_check, sanity_checks, validate_with_harness
 from chess_nn.harness import RUNS_DIR, SHARDS_DIR, VALIDATE_MODEL, load_harness_tool
-from chess_nn.model import EvalNet, KingBucketNet, ThreatNet, count_params, cp_loss, rank_loss, wdl_loss
+from chess_nn.groups import load_group_rows, padded
+from chess_nn.model import (
+    EvalNet,
+    KingBucketNet,
+    ThreatNet,
+    count_params,
+    cp_loss,
+    group_consistency_loss,
+    rank_loss,
+    wdl_loss,
+)
 from chess_nn.rank_pairs import KINDS, load_pairs
 from chess_nn.shaping import progress_bonus
-from chess_nn.shards import load_shards
+from chess_nn.shards import load_fens, load_shards
 
 PARITY_TOLERANCE = 1e-4
 # Mates further than this many moves share the lowest rung of the mate ladder.
@@ -109,6 +119,13 @@ class TrainConfig:
     rank_batch_size: int = 4096
     # Pair kinds to train on (rank_pairs.KINDS); validation accuracy always uses all kinds.
     rank_kinds: list[str] = field(default_factory=lambda: list(KINDS))
+    # Sibling leaves per decision from chess_nn.decision_data --groups. The loss penalises
+    # error that varies inside a group (which changes the move the search plays) and ignores
+    # error shared by the whole group (which cancels). group_weight 0 = off.
+    group_files: list[str] = field(default_factory=list)
+    group_weight: float = 0.0
+    group_batch: int = 128
+    group_max_members: int = 48
     device: str = field(default_factory=default_device)
     limit: int | None = None
     runs_dir: str = str(RUNS_DIR)
@@ -123,6 +140,24 @@ def _loss_over(model, features, targets, indices, batch_size, scale_cp) -> float
         out = model(dense_from_sparse(features[batch])).squeeze(1)
         total += wdl_loss(out, targets[batch], scale_cp) * len(batch)
     return total.item() / len(indices)
+
+
+@torch.no_grad()
+def _group_error_std(model, features, targets, indices, mask, chunk: int = 256) -> float:
+    """Root mean within-group variance of the error, in pawns, over held-out members.
+
+    The part of the error that actually changes which move the search plays.
+    """
+    if len(indices) == 0:
+        return 0.0
+    model.eval()
+    total = torch.zeros((), device=features.device)
+    for start in range(0, len(indices), chunk):
+        rows, valid = indices[start : start + chunk], mask[start : start + chunk]
+        flat = rows.reshape(-1)
+        out = model(dense_from_sparse(features[flat])).squeeze(1).view(rows.shape)
+        total += group_consistency_loss(out, targets[flat].view(rows.shape), valid) * len(rows)
+    return math.sqrt(total.item() / len(indices))
 
 
 @torch.no_grad()
@@ -172,6 +207,18 @@ def run_training(cfg: TrainConfig) -> Path:
     rank_train = load_pairs(cfg.rank_pairs, device, cfg.rank_kinds) if cfg.rank_weight and cfg.rank_pairs else None
     rank_val = load_pairs(cfg.rank_val_pairs, device) if cfg.rank_val_pairs else None
 
+    group_train = group_val = None
+    if cfg.group_files:
+        rows_per_decision = load_group_rows(cfg.group_files, load_fens([Path(p) for p in cfg.shards]))
+        is_train = np.zeros(n, dtype=bool)
+        is_train[train_idx_cpu.numpy()] = True
+        train_idx_np, train_mask_np = padded(rows_per_decision, is_train, cfg.group_max_members)
+        val_idx_np, val_mask_np = padded(rows_per_decision, ~is_train, cfg.group_max_members)
+        group_train = (torch.from_numpy(train_idx_np).to(device), torch.from_numpy(train_mask_np).to(device))
+        group_val = (torch.from_numpy(val_idx_np).to(device), torch.from_numpy(val_mask_np).to(device))
+        print(f"{len(rows_per_decision):,} decisions matched; {len(train_idx_np):,} train groups "
+              f"(≥2 members), {len(val_idx_np):,} held-out groups")
+
     if cfg.threat_hidden:
         model = ThreatNet(cfg.hidden, tuple(cfg.head), cfg.threat_hidden).to(device)
     elif cfg.king_buckets:
@@ -201,6 +248,14 @@ def run_training(cfg: TrainConfig) -> Path:
                 good = model(dense_from_sparse(rank_train[0][pick])).squeeze(1)
                 bad = model(dense_from_sparse(rank_train[1][pick])).squeeze(1)
                 loss = loss + cfg.rank_weight * rank_loss(good, bad, cfg.rank_margin_pawns, cfg.rank_temperature_pawns)
+            if cfg.group_weight and group_train is not None and len(group_train[0]):
+                pick = torch.randint(0, len(group_train[0]), (cfg.group_batch,), device=device)
+                rows, valid = group_train[0][pick], group_train[1][pick]
+                flat = rows.reshape(-1)
+                grouped = model(dense_from_sparse(features[flat])).squeeze(1).view(rows.shape)
+                loss = loss + cfg.group_weight * group_consistency_loss(
+                    grouped, targets[flat].view(rows.shape), valid
+                )
             optimizer.zero_grad(set_to_none=True)
             loss.backward()
             optimizer.step()
@@ -213,6 +268,7 @@ def run_training(cfg: TrainConfig) -> Path:
             "train_loss": train_loss,
             "val_loss": val_loss,
             "rank_val_accuracy": _pair_accuracy(model, rank_val, cfg.batch_size) if rank_val is not None else None,
+            "group_error_std": _group_error_std(model, features, targets, *group_val) if group_val is not None else None,
             "lr": scheduler.get_last_lr()[0],
             "seconds": round(time.time() - start, 1),
         })
