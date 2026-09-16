@@ -763,6 +763,62 @@ noted. Full table: `uv run python -m chess_nn.report`.
     searched score — that says our student is far from reproducing the
     target it is already trained on, not that a static net cannot learn it.
     Scope: L2, 40 games, one opening subset, one deterministic baseline.
+68. **Noise sensitivity, the student's leaf error, and a structured anchor
+    (2026-09-15).** Same 20 openings, both colours, L2.
+    - **Noise:** the d9 teacher with position-seeded Gaussian noise at each
+      leaf (one value per position, so the search stays self-consistent).
+      σ 0.25 → 96.2%, σ 0.5 → 95.0%, σ 1 → 91.2% (33/7/0), σ 2 → 61.2%
+      (21/7/12), the last being +0.05 ± 0.076, CI [−0.099, +0.199] against
+      the student. Losses appear only at σ 2. This is sensitivity to
+      *unstructured* perturbation; a net's errors are systematic and
+      correlated, so σ here is not a tolerance for our net.
+    - **Leaf error:** 20,000 sampled positions the student's own search
+      evaluated in its 40 recorded games, scored by d9. Bias (net − teacher)
+      −2.59 pawns, MAE 3.29, RMSE 5.22, r 0.807, sign disagreement 17.9%.
+      By regime: −10..−3 bias −0.27 / MAE 1.18; −1..+1 −1.46 / 2.15; +1..+3
+      −2.24 / 2.91; +3..+10 (8,883 leaves) −3.67 / 4.14; >+10 −5.58 / 6.28.
+      Median leaf +0.10 (net) against +4.63 (teacher). The student is
+      accurate when losing or level and compresses its advantage when
+      winning — over half the leaves its search evaluates.
+    - **Stockfish's static eval on the same leaves**, the structured anchor
+      noise cannot provide: bias −1.80, MAE 2.94, RMSE 4.67, r 0.827, sign
+      disagreement 13.1%, with the same won-position pattern (−3.03 at
+      +3..+10, −6.45 above +10) — and it scores 68.8% to the student's
+      56.2%. So under-valuing won positions is characteristic of static
+      evaluation, not of our target transform, and aggregate error size does
+      not separate the arms: 3.29 MAE plays 56.2%, 2.94 plays 68.8%, 0 plays
+      93.8%. Structured error of ~2.9 pawns costs far less than 2 pawns of
+      independent noise.
+69. **Within-group consistency makes play clearly worse (grp_a,
+    2026-09-15).** Hypothesis from 68: the harmful part of the student's
+    error is what varies between the sibling leaves one decision compares,
+    because a bias shared by all of them cancels when the root ranks moves —
+    which is how Stockfish's static eval can carry our won-position bias and
+    still play better. `chess_nn.model.group_consistency_loss` penalises the
+    within-group variance of the error (targets in cp, padding masked),
+    added to the existing WDL + cp losses with the absolute targets
+    untouched; groups from `decision_data --groups`, regenerated for tact_a's
+    20,000 decisions (candidate set reproduced exactly; 19,903 decisions
+    matched, 19,894 training groups, 2,313 held out). h1024 recipe, tact_a's
+    data, seed 0, paired on dev openings:
+    - weight 0.1: L1 57.0 (75/78/47), L2 39.2 (35/87/78), L3 17.5 (9/52/139);
+      vs the default −0.128 ± 0.036, −0.150 ± 0.035, −0.115 ± 0.031; vs
+      tact-a-h1024 (same data, no term) −0.128, −0.143, −0.150.
+    - weight 0.5: L1 50.2, L2 29.8, L3 13.2; vs the default −0.195 ± 0.035,
+      −0.245 ± 0.037, −0.158 ± 0.031. Every CI excludes zero.
+    - start position: weight 0.1 gives 0.5 / 0 / 0 and weight 0.5 gives
+      0.5 / 0.5 / 0, against the default's 1 / 1 / 0.5.
+    - **The term did what it was meant to.** Within-group error std on the
+      same 2,313 held-out groups: 1.99 (default), 1.84 (tact_a), 1.66
+      (weight 0.1), 1.72 (weight 0.5) pawns. Val loss rose in the order play
+      fell: 0.00287, 0.00295, 0.00351, 0.00421.
+    Falsified operationally: the named quantity moved ~17% the intended way
+    and L2 fell 15 points. The premise was too simple — a shared bias
+    cancels only at the root, while inside quiescence stand-pat is compared
+    against alpha/beta carried in from other subtrees, so the absolute level
+    matters at every node. With rank_a/rank_b (60) this is the second
+    objective to buy relative structure by giving up absolute accuracy, and
+    the second to lose; within this family play tracks val loss monotonically.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),

@@ -1,0 +1,11 @@
+{
+  "shards": ["data/shards/shard_000[0-3].npz", "data/shards/shard_2017-07_000[0-1].npz"],
+  "levels": [1, 2, 3],
+  "openings": "data/dev_openings_100.txt",
+  "defaults": {"epochs": 20, "batch_size": 16384, "hidden": 1024, "head": [32, 32], "wdl_scale_cp": 1000, "seed": 0},
+  "runs": [
+    {"name": "fid-a-h1024-cp05", "cp_loss_weight": 0.5},
+    {"name": "fid-a-h1024-cp10", "cp_loss_weight": 1.0},
+    {"name": "fid-a-h1024-cp10-s1500", "cp_loss_weight": 1.0, "wdl_scale_cp": 1500}
+  ]
+}
