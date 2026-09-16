@@ -1,0 +1,22 @@
+{
+  "params": 1712326,
+  "members": [
+    "jj6-h1024-s1000-cp20",
+    "rank-b-h1024-w0-seed1"
+  ],
+  "harness_validation": true,
+  "sanity": {
+    "startpos": {
+      "eval": 0.422,
+      "pass": true
+    },
+    "queen_up": {
+      "eval": 11.288,
+      "pass": true
+    },
+    "queen_down": {
+      "eval": -10.276,
+      "pass": true
+    }
+  }
+}

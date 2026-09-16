@@ -882,6 +882,31 @@ noted. Full table: `uv run python -m chess_nn.report`.
       which puts the real gap in distribution shift: trained on quiet human
       positions, deployed on the leaves its own search reaches. leaf_a tests
       exactly that.
+73. **Better leaf accuracy, much worse play — targets must be quiet
+    (leaf_a, 2026-09-15).** 1,500,000 positions taken exactly as the search
+    asked about them, from 1,400 recorded h1024 games at L2 and L3 (datagen's
+    random openings, no dev overlap), with d9 values as targets under the
+    usual transform and **no quiet-best-move filter**, added to the broad mix
+    (5.84M positions total). h1024 recipe, seed 0:
+    - Leaf accuracy improved more than any other change tried: MAE 3.29 →
+      2.58, bias −2.59 → −1.58, level r 0.347 → 0.395, level |err|>3
+      29.6% → 24.1%. The best numbers in the project.
+    - Play collapsed: L1 54.8 (−0.150 ± 0.032), L2 33.0 (−0.213 ± 0.036),
+      L3 15.5 (−0.135 ± 0.029), every interval far from zero, 61 of 100
+      openings worse at L2.
+    The likely mechanism is double-counting. Those leaves include positions
+    with tactics pending, and d9's score there already contains the captures
+    the harness's quiescence plays out for itself, so the static evaluator
+    was trained to count them a second time. `chess_nn.label` keeps only
+    positions whose best move is quiet, which is exactly what prevents this
+    in the broad mix — and tact_a's data went through that filter, which is
+    why it was merely useless rather than harmful.
+    The wider lesson: **agreement with d9 on the leaves is not the objective**.
+    A static evaluator inside this search must score the position as it
+    stands, not as it will stand after the tactics resolve. That invalidates
+    leaf error as a target to optimise directly, though it stays useful as a
+    description. leaf_b repeats this with the quiet filter, which separates
+    distribution shift from the confound.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),
