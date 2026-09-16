@@ -959,6 +959,30 @@ noted. Full table: `uv run python -m chess_nn.report`.
     rule it earns replication, not promotion: deep_a_rep repeats the pair at
     seed 1, and deep_b trains depth 12 at full scale (4.3M) at two seeds
     against the default.
+76. **Replication shrinks the depth effect; mirror and scale-1500 are nulls
+    (2026-09-16).**
+    - **deep_a_rep** (seed 1, same controlled pair): d12 51.2% against d9
+      50.0% at L2, a gap of +0.013 where seed 0 gave +0.055. Pooled over
+      both seeds: L1 +0.010 ± 0.025, **L2 +0.034 ± 0.027, CI [−0.019,
+      +0.087]**, L3 −0.034 ± 0.021. The direction survives replication, the
+      size roughly halves, and it is still unresolved.
+    - **deep_b** (depth 12 at full scale, 4.17M positions, two seeds, against
+      seed-matched controls): L1 −0.034 ± 0.022, **L2 +0.014 ± 0.025**,
+      L3 −0.030 ± 0.022. The single 58.5% run at seed 0 — the highest L2 of
+      the project — is seed luck: its twin scored 55.0%, and pooled the arm
+      is indistinguishable from the default. Deeper targets are worth at most
+      a point or two at L2, possibly nothing, and may cost at L3.
+    - **rep_a**: the scale-1500 / cp-weight-1.0 recipe that scored 56.0% at
+      seed 0 gives 52.2% and 54.2% at seeds 1 and 2 — pooled, exactly the
+      default. A reminder that single arms within ±2 points are seed noise.
+    - **mir_a** (mirror augmentation, exact for positions without castling
+      rights): h1024 L2 −0.035 ± 0.033; h3072 L1 +0.013, L2 +0.015, L3 +0.023,
+      all within noise but all positive, which fits finding 72's measurement
+      that the wider net overfits harder (val/train 1.56 against 1.20) and so
+      has more to gain from augmentation.
+    Nothing here is promotable. Two ingredients lean positive for the wider
+    net — mirror augmentation and depth-12 targets — so comb_a trains h3072
+    on the depth-12 mix with mirroring at two seeds.
 39. **Why the earlier conversion fixes failed, given 38.** Every one of
     them changed per-position targets from Stockfish searches that did not
     know the game: mate ladder, WDL scale, pawn-space loss (5, 12-13, 26),

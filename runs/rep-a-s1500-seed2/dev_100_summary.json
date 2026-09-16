@@ -1,0 +1,44 @@
+[
+  {
+    "level": 1,
+    "score": 128.5,
+    "score_pct": 64.2,
+    "wins": 80,
+    "draws": 97,
+    "losses": 23,
+    "passed": false,
+    "end_reasons": {
+      "checkmate": 103,
+      "repetition": 97
+    },
+    "repetition_while_winning": 60
+  },
+  {
+    "level": 2,
+    "score": 108.5,
+    "score_pct": 54.2,
+    "wins": 67,
+    "draws": 83,
+    "losses": 50,
+    "passed": false,
+    "end_reasons": {
+      "repetition": 83,
+      "checkmate": 117
+    },
+    "repetition_while_winning": 61
+  },
+  {
+    "level": 3,
+    "score": 63.0,
+    "score_pct": 31.5,
+    "wins": 25,
+    "draws": 76,
+    "losses": 99,
+    "passed": false,
+    "end_reasons": {
+      "checkmate": 124,
+      "repetition": 76
+    },
+    "repetition_while_winning": 44
+  }
+]
