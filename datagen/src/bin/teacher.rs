@@ -219,23 +219,46 @@ fn parse_info_score(line: &str) -> Option<(i32, i32)> {
     }
 }
 
+/// Gaussian noise that depends only on the position, so one position always gets one value.
+/// This perturbs a teacher's scores independently per position; a network's errors are
+/// structured and correlated, so this measures sensitivity, not a tolerance for a net.
+fn seeded_normal(key: &str, sigma: f32) -> f32 {
+    let mut hash: u64 = 0xcbf2_9ce4_8422_2325;
+    for byte in key.as_bytes() {
+        hash ^= *byte as u64;
+        hash = hash.wrapping_mul(0x0000_0100_0000_01b3);
+    }
+    let mut state = hash | 1;
+    let mut next = move || {
+        state ^= state >> 12;
+        state ^= state << 25;
+        state ^= state >> 27;
+        (state.wrapping_mul(0x2545_F491_4F6C_DD1D) >> 11) as f64 / (1u64 << 53) as f64
+    };
+    let (u1, u2) = (next().max(1e-12), next());
+    let normal = (-2.0 * u1.ln()).sqrt() * (2.0 * std::f64::consts::PI * u2).cos();
+    normal as f32 * sigma
+}
+
 struct SfEval {
     engine: RefCell<Stockfish>,
     mode: SfMode,
     depth: u32,
     fresh_hash: bool,
+    noise: f32,
     cache: RefCell<HashMap<String, f32>>,
     asked: Cell<u64>,
     hits: Cell<u64>,
 }
 
 impl SfEval {
-    fn start(path: &str, mode: SfMode, depth: u32, fresh_hash: bool) -> SfEval {
+    fn start(path: &str, mode: SfMode, depth: u32, fresh_hash: bool, noise: f32) -> SfEval {
         SfEval {
             engine: RefCell::new(Stockfish::start(path, 16)),
             mode,
             depth,
             fresh_hash,
+            noise,
             cache: RefCell::new(HashMap::new()),
             asked: Cell::new(0),
             hits: Cell::new(0),
@@ -279,6 +302,7 @@ impl Evaluator for SfEval {
                 }
             }
         };
+        let pawns = if self.noise > 0.0 { pawns + seeded_normal(&fen, self.noise) } else { pawns };
         self.cache.borrow_mut().insert(fen, pawns);
         pawns
     }
@@ -604,14 +628,14 @@ fn mode_verify(cfg: &Config) {
 fn mode_compare(cfg: &Config) {
     let games = read_recorded_games();
     let model = cfg.model.clone();
-    let (sf_path, mode, depth, fresh) = (cfg.stockfish.clone(), cfg.mode, cfg.depth, cfg.fresh_hash);
+    let (sf_path, mode, depth, fresh, noise) = (cfg.stockfish.clone(), cfg.mode, cfg.depth, cfg.fresh_hash, cfg.noise);
     let started = Instant::now();
     let lines = parallel(
         games.len(),
         cfg.threads,
         &|| Box::new(NetEval::load(&model)),
         &|i, student| {
-            let teacher = SfEval::start(&sf_path, mode, depth, fresh);
+            let teacher = SfEval::start(&sf_path, mode, depth, fresh, noise);
             let mut out: Vec<String> = Vec::new();
             replay(&games[i], |game, recorded| {
                 let (student_mv, student_score) = choose_move(student, game).expect("student move");
@@ -667,7 +691,8 @@ fn mode_play(cfg: &Config) {
 
     let level = Level::new(cfg.level).expect("level 1-4");
     let model = cfg.model.clone();
-    let (sf_path, mode, depth, fresh, teacher) = (cfg.stockfish.clone(), cfg.mode, cfg.depth, cfg.fresh_hash, cfg.teacher.clone());
+    let (sf_path, mode, depth, fresh, noise, teacher) =
+        (cfg.stockfish.clone(), cfg.mode, cfg.depth, cfg.fresh_hash, cfg.noise, cfg.teacher.clone());
     let started = Instant::now();
     eprintln!(
         "teacher={teacher} level={} openings={} (stride {}) games={}",
@@ -684,7 +709,7 @@ fn mode_play(cfg: &Config) {
             if teacher == "net" {
                 Box::new(NetEval::load(&model))
             } else {
-                Box::new(SfEval::start(&sf_path, mode, depth, fresh))
+                Box::new(SfEval::start(&sf_path, mode, depth, fresh, noise))
             }
         },
         &|i, evaluator| {
@@ -733,6 +758,82 @@ fn mode_play(cfg: &Config) {
     );
 }
 
+/// Records every position an inner evaluator is asked about, with the value it gave.
+struct RecordingEval<'a> {
+    inner: &'a dyn Evaluator,
+    seen: RefCell<HashMap<String, f32>>,
+}
+
+impl Evaluator for RecordingEval<'_> {
+    fn eval(&self, board: &Board) -> f32 {
+        let value = self.inner.eval(board);
+        self.seen.borrow_mut().insert(board.to_string(), value);
+        value
+    }
+}
+
+fn fnv1a(key: &str) -> u64 {
+    let mut hash: u64 = 0xcbf2_9ce4_8422_2325;
+    for byte in key.as_bytes() {
+        hash ^= *byte as u64;
+        hash = hash.wrapping_mul(0x0000_0100_0000_01b3);
+    }
+    hash
+}
+
+/// The leaves the student's own search evaluates in its recorded games, scored by the teacher.
+/// Says how far the student's values sit from the target it was trained on, where it matters.
+fn mode_leaves(cfg: &Config) {
+    let games = read_recorded_games();
+    let student = NetEval::load(&cfg.model);
+    let recorder = RecordingEval { inner: &student, seen: RefCell::new(HashMap::new()) };
+    let started = Instant::now();
+    for game_record in &games {
+        replay(game_record, |game, _| {
+            choose_move(&recorder, game);
+        });
+    }
+    let mut leaves: Vec<(String, f32)> = recorder.seen.into_inner().into_iter().collect();
+    leaves.sort_by(|a, b| a.0.cmp(&b.0));
+    eprintln!(
+        "{} distinct leaves from {} games in {:.1}s",
+        leaves.len(),
+        games.len(),
+        started.elapsed().as_secs_f64()
+    );
+
+    if cfg.sample < leaves.len() {
+        let mut keyed: Vec<(u64, usize)> =
+            leaves.iter().enumerate().map(|(i, (fen, _))| (fnv1a(fen) ^ cfg.seed, i)).collect();
+        keyed.sort();
+        let picked: Vec<(String, f32)> =
+            keyed.into_iter().take(cfg.sample).map(|(_, i)| leaves[i].clone()).collect();
+        leaves = picked;
+        eprintln!("sampled {} leaves (seed {})", leaves.len(), cfg.seed);
+    }
+
+    let (sf_path, mode, depth, fresh) = (cfg.stockfish.clone(), cfg.mode, cfg.depth, cfg.fresh_hash);
+    let scored = parallel(
+        leaves.len(),
+        cfg.threads,
+        &|| Box::new(SfEval::start(&sf_path, mode, depth, fresh, 0.0)),
+        &|i, teacher| {
+            let (fen, net_value) = &leaves[i];
+            let board: Board = fen.parse().expect("leaf FEN");
+            format!(
+                r#"{{"fen":"{fen}","net":{:.4},"teacher":{:.4}}}"#,
+                net_value,
+                teacher.eval(&board)
+            )
+        },
+    );
+    let mut stdout = std::io::stdout().lock();
+    for line in &scored {
+        writeln!(stdout, "{line}").expect("write");
+    }
+    eprintln!("leaves: {} scored in {:.1}s", scored.len(), started.elapsed().as_secs_f64());
+}
+
 // ---------------------------------------------------------------------------
 // CLI
 // ---------------------------------------------------------------------------
@@ -744,12 +845,16 @@ struct Config {
     mode: SfMode,
     depth: u32,
     fresh_hash: bool,
+    /// Standard deviation, in pawns, of position-seeded noise added to a teacher's scores.
+    noise: f32,
     stockfish: String,
     openings: PathBuf,
     out: PathBuf,
     level: u8,
     stride: usize,
     threads: usize,
+    sample: usize,
+    seed: u64,
 }
 
 fn main() {
@@ -765,12 +870,15 @@ fn main() {
         mode: SfMode::Clamped,
         depth: 9,
         fresh_hash: true,
+        noise: 0.0,
         stockfish: "stockfish".to_string(),
         openings: PathBuf::new(),
         out: PathBuf::from("teacher_games.json"),
         level: 2,
         stride: 1,
         threads: 8,
+        sample: 20_000,
+        seed: 0,
     };
     let mut i = 2;
     while i < args.len() {
@@ -785,6 +893,9 @@ fn main() {
             "--level" => cfg.level = value().parse().expect("level"),
             "--stride" => cfg.stride = value().parse().expect("stride"),
             "--threads" => cfg.threads = value().parse().expect("threads"),
+            "--noise" => cfg.noise = value().parse().expect("noise"),
+            "--sample" => cfg.sample = value().parse().expect("sample"),
+            "--seed" => cfg.seed = value().parse().expect("seed"),
             "--keep-hash" => {
                 cfg.fresh_hash = false;
                 i += 1;
@@ -805,6 +916,7 @@ fn main() {
         "verify" => mode_verify(&cfg),
         "compare" => mode_compare(&cfg),
         "play" => mode_play(&cfg),
+        "leaves" => mode_leaves(&cfg),
         other => panic!("unknown mode {other} (verify, compare, play)"),
     }
 }

@@ -743,10 +743,15 @@ noted. Full table: `uv run python -m chess_nn.report`.
       cost ≤0.25, 4% cost >3. Big errors concentrate where the teacher is
       winning (44 of 57; 6% of those decisions vs 2% when level), and 23 of
       40 games contain at least one, a median of 2 each. So most
-      disagreement is harmless preference, and outright blunders are too few
-      to explain a 56% → 94% gap on their own: the rest is small, persistent
+      disagreement is harmless preference. Two candidates remain for the
+      gap and this data does not choose between them: (a) the rare decisive
+      errors — 4% of decisions, but about one per affected game in 23 of 40
+      games, which is enough to decide matches; (b) small, persistent
       misvaluation in won positions, which a per-position cost cannot price
-      because the teacher scores leaves without game history either.
+      because the teacher also scores leaves without game history. The
+      failures of decision_a and tact_a do not rule out (a): they show those
+      particular datasets did not help, not that decisive errors are the
+      wrong target.
     Depth-1 + quiescence wins these games outright when the leaf values are
     accurate, so search depth is not the binding constraint, and neither is
     the target clamp at L2. Conversion follows leaf accuracy with no
