@@ -323,28 +323,15 @@ fn quiescence(evaluator: &dyn Evaluator, board: &Board, mut alpha: f32, beta: f3
         Status::Ongoing => {}
     }
 
-    let in_check = !board.checkers().is_empty();
-
-    if !in_check {
-        let stand_pat = evaluator.eval(board);
-        if stand_pat >= beta {
-            return beta;
-        }
-        if stand_pat > alpha {
-            alpha = stand_pat;
-        }
+    let stand_pat = evaluator.eval(board);
+    if stand_pat >= beta {
+        return beta;
+    }
+    if stand_pat > alpha {
+        alpha = stand_pat;
     }
 
-    let moves = if in_check {
-        let mut all = Vec::new();
-        board.generate_moves(|piece_moves| {
-            all.extend(piece_moves);
-            false
-        });
-        all
-    } else {
-        capture_moves(board)
-    };
+    let moves = capture_moves(board);
 
     for mv in moves {
         let mut child = board.clone();
@@ -359,6 +346,68 @@ fn quiescence(evaluator: &dyn Evaluator, board: &Board, mut alpha: f32, beta: f3
     }
 
     alpha
+}
+
+/// Quiescence that also reports the leaf its principal line rests on.
+///
+/// The value the search returns is some leaf's static evaluation, carried up through negamax.
+/// Training that leaf toward what the ROOT is worth makes the search's output match the teacher,
+/// instead of making every leaf match a target that the search is about to re-derive by playing
+/// the captures out itself (findings 73 and 74).
+fn quiescence_leaf(evaluator: &dyn Evaluator, board: &Board, mut alpha: f32, beta: f32) -> (f32, Option<String>) {
+    match status_of(board) {
+        Status::Lost => return (-MATE_SCORE_F, None),
+        Status::Drawn => return (DRAW_SCORE_F, None),
+        Status::Ongoing => {}
+    }
+
+    let stand_pat = evaluator.eval(board);
+    let mut leaf: Option<String> = Some(board.to_string());
+    if stand_pat >= beta {
+        return (beta, leaf);
+    }
+    if stand_pat > alpha {
+        alpha = stand_pat;
+    }
+
+    let moves = capture_moves(board);
+
+    for mv in moves {
+        let mut child = board.clone();
+        child.play_unchecked(mv);
+        let (score, child_leaf) = quiescence_leaf(evaluator, &child, -beta, -alpha);
+        let score = -score;
+        if score >= beta {
+            return (beta, child_leaf);
+        }
+        if score > alpha {
+            alpha = score;
+            leaf = child_leaf;
+        }
+    }
+
+    (alpha, leaf)
+}
+
+/// The leaf the search stands on at this position, and whether it has the same side to move.
+fn principal_leaf(evaluator: &dyn Evaluator, game: &GameState) -> Option<(String, bool)> {
+    let mut best = f32::NEG_INFINITY;
+    let mut best_leaf: Option<String> = None;
+    for mv in game.legal_moves() {
+        let mut child = game.board.clone();
+        child.play_unchecked(mv);
+        if !matches!(status_of(&child), Status::Ongoing) {
+            continue;
+        }
+        let (value, leaf) = quiescence_leaf(evaluator, &child, f32::NEG_INFINITY, f32::INFINITY);
+        if leaf.is_some() && -value > best {
+            best = -value;
+            best_leaf = leaf;
+        }
+    }
+    let leaf = best_leaf?;
+    let same_side = leaf.split_whitespace().nth(1) == game.board.to_string().split_whitespace().nth(1);
+    Some((leaf, same_side))
 }
 
 /// What one move is worth to an evaluator, searched with a full window.
@@ -388,7 +437,7 @@ fn choose_move(evaluator: &dyn Evaluator, game: &GameState) -> Option<(Move, f32
         let eval = match status_of(&child) {
             Status::Lost => MATE_SCORE_F,
             Status::Drawn => DRAW_SCORE_F,
-            Status::Ongoing => -quiescence(evaluator, &child, f32::NEG_INFINITY, -alpha),
+            Status::Ongoing => -quiescence(evaluator, &child, f32::NEG_INFINITY, f32::INFINITY),
         };
         if eval > alpha {
             alpha = eval;
@@ -758,6 +807,42 @@ fn mode_play(cfg: &Config) {
     );
 }
 
+/// For each position on stdin, the leaf the search rests on: `{"root", "leaf", "same_side"}`.
+/// Stockfish then scores the roots, and the leaf is trained toward the root's score.
+fn mode_pv(cfg: &Config) {
+    let mut input = String::new();
+    std::io::stdin().read_to_string(&mut input).expect("read stdin");
+    let roots: Vec<String> = input.lines().map(str::trim).filter(|l| !l.is_empty()).map(str::to_string).collect();
+    let model = cfg.model.clone();
+    let started = Instant::now();
+
+    let lines = parallel(
+        roots.len(),
+        cfg.threads,
+        &|| Box::new(NetEval::load(&model)),
+        &|i, evaluator| {
+            let game = match GameState::from_fen(&roots[i]) {
+                Ok(game) => game,
+                Err(_) => return None,
+            };
+            if !game.board.checkers().is_empty() || game.is_game_over() {
+                return None;
+            }
+            principal_leaf(evaluator, &game).map(|(leaf, same_side)| {
+                format!(r#"{{"root":"{}","leaf":"{}","same_side":{}}}"#, roots[i], leaf, same_side)
+            })
+        },
+    );
+
+    let mut stdout = std::io::stdout().lock();
+    let mut written = 0usize;
+    for line in lines.into_iter().flatten() {
+        writeln!(stdout, "{line}").expect("write");
+        written += 1;
+    }
+    eprintln!("pv: {written} leaves from {} roots in {:.1}s", roots.len(), started.elapsed().as_secs_f64());
+}
+
 /// Records every position an inner evaluator is asked about, with the value it gave.
 struct RecordingEval<'a> {
     inner: &'a dyn Evaluator,
@@ -917,6 +1002,7 @@ fn main() {
         "compare" => mode_compare(&cfg),
         "play" => mode_play(&cfg),
         "leaves" => mode_leaves(&cfg),
+        "pv" => mode_pv(&cfg),
         other => panic!("unknown mode {other} (verify, compare, play)"),
     }
 }

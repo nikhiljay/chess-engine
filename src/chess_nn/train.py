@@ -74,6 +74,9 @@ def training_targets(
 
 
 def default_device() -> str:
+    """CUDA where it exists (cloud boxes), Apple's MPS locally, CPU otherwise."""
+    if torch.cuda.is_available():
+        return "cuda"
     return "mps" if torch.backends.mps.is_available() else "cpu"
 
 
@@ -124,6 +127,8 @@ class TrainConfig:
     # Mirror positions left-right at random during training (only those without castling
     # rights, where the reflection is exact and the label carries over unchanged).
     mirror_augment: bool = False
+    # Start from another run's weights instead of fresh ones, for corrective fine-tuning.
+    init_from: str | None = None
     # Move-ranking pairs from chess_nn.rank_pairs (paths under training/); rank_weight 0 = off.
     rank_pairs: list[str] = field(default_factory=list)
     rank_val_pairs: list[str] = field(default_factory=list)
@@ -243,6 +248,9 @@ def run_training(cfg: TrainConfig) -> Path:
         model = KingBucketNet(cfg.hidden, tuple(cfg.head)).to(device)
     else:
         model = EvalNet(cfg.hidden, tuple(cfg.head)).to(device)
+    if cfg.init_from:
+        model.load_state_dict(torch.load(Path(cfg.init_from) / "model.pt", map_location=device))
+        print(f"warm start from {cfg.init_from}")
     optimizer = torch.optim.AdamW(model.parameters(), lr=cfg.lr, weight_decay=cfg.weight_decay)
     steps_per_epoch = math.ceil(len(train_idx) / cfg.batch_size)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=cfg.epochs * steps_per_epoch)
