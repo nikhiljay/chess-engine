@@ -6,7 +6,8 @@
   "scripts": {
     "build": "node scripts/build.ts",
     "typecheck": "tsc --noEmit",
-    "check": "node scripts/check.ts"
+    "check": "node scripts/check.ts",
+    "pieces": "node scripts/pieces.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.0",

@@ -4,6 +4,8 @@
 
 import { MATE, createEngine, type Analysis, type Engine } from "./engine.ts";
 import type { AnalyseRequest, AnalyseResponse, WeightGlobals } from "./protocol.ts";
+import { pieceUrl } from "./pieces.ts";
+import { ensureAudio, play, preloadSounds, setSoundEnabled } from "./sound.ts";
 
 interface SavedState {
   pgn?: string;
@@ -21,7 +23,6 @@ interface HotApi {
 declare global {
   interface Window extends WeightGlobals {
     claude?: { hot?: HotApi };
-    webkitAudioContext?: typeof AudioContext;
   }
 }
 
@@ -44,8 +45,6 @@ interface Drag {
 
 type Analyser = (fen: string) => Promise<Analysis>;
 
-const GLYPH: Record<ChessPieceType, string> = { k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟" };
-const TEXT_STYLE = "︎"; // keep the chess glyphs from rendering as emoji
 const NAMES: Record<ChessPieceType, string> = { k: "king", q: "queen", r: "rook", b: "bishop", n: "knight", p: "pawn" };
 const FILES = "abcdefgh";
 const SHOWN_MOVES = 9;
@@ -78,7 +77,6 @@ let rightStart: { square: string; pointerId: number } | null = null;
 let pendingPromotion: ChessMove[] | null = null;
 let viewPly: number | null = null; // null = the live position
 let soundOn = true;
-let audio: AudioContext | null = null;
 let panelTimer: ReturnType<typeof setTimeout> | null = null;
 const analyses = new Map<string, Analysis>(); // by FEN; the search is deterministic
 const analysing = new Set<string>();
@@ -289,45 +287,9 @@ function premoveTargets(pieces: Map<string, ChessPiece>, from: string): string[]
 
 // ------------------------------------------------------------------ render
 
-const PIECE_TYPES: ChessPieceType[] = ["k", "q", "r", "b", "n", "p"];
-
-// Chess glyphs sit off-centre in their em box (side bearings, baseline), so
-// measure each glyph's ink in the loaded font and shift it to the true centre.
-async function centerPieceGlyphs(): Promise<void> {
-  const family = getComputedStyle(document.documentElement).getPropertyValue("--glyph").trim();
-  const size = 200;
-  const font = `${size}px ${family}`;
-  try {
-    await document.fonts.load(font, PIECE_TYPES.map((type) => GLYPH[type]).join(""));
-  } catch {
-    // Measure whichever font the browser falls back to.
-  }
-  const ctx = document.createElement("canvas").getContext("2d");
-  if (!ctx) return;
-  ctx.font = font;
-  ctx.textAlign = "left";
-  ctx.textBaseline = "alphabetic";
-  const rules: string[] = [];
-  for (const type of PIECE_TYPES) {
-    const m = ctx.measureText(GLYPH[type] + TEXT_STYLE);
-    // With line-height 1 the glyph box is one em tall and the baseline sits in the half-leading model's place.
-    const baseline = (size - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxAscent;
-    const inkCenterX = (m.actualBoundingBoxRight - m.actualBoundingBoxLeft) / 2;
-    const inkCenterY = baseline + (m.actualBoundingBoxDescent - m.actualBoundingBoxAscent) / 2;
-    const dx = (m.width / 2 - inkCenterX) / size;
-    const dy = (size / 2 - inkCenterY) / size;
-    if (Number.isFinite(dx) && Number.isFinite(dy)) {
-      rules.push(`.piece[data-type="${type}"] { translate: ${dx.toFixed(4)}em ${dy.toFixed(4)}em; }`);
-    }
-  }
-  let style = document.getElementById("piece-centering");
-  if (!style) {
-    style = document.createElement("style");
-    style.id = "piece-centering";
-    document.head.appendChild(style);
-  }
-  style.textContent = rules.join("\n");
-}
+/** chessground paints a piece as a background image on the square; so do we. */
+const pieceHtml = (piece: ChessPiece, extra = ""): string =>
+  `<span class="piece${extra}" style="background-image:url(${pieceUrl(piece.color, piece.type)})" aria-hidden="true"></span>`;
 
 function buildBoard(): void {
   const board = $("board");
@@ -383,7 +345,7 @@ function renderBoard(view: Chess): void {
       button.className = classes.join(" ");
       let html = "";
       if (piece) {
-        html += `<span class="piece ${piece.color}${live && hidden === name ? " lifted" : ""}" data-type="${piece.type}">${GLYPH[piece.type]}${TEXT_STYLE}</span>`;
+        html += pieceHtml(piece, live && hidden === name ? " lifted" : "");
       }
       if (col === 0) html += `<span class="coord rank">${rank}</span>`;
       if (row === 7) html += `<span class="coord file">${FILES[fileIdx]}</span>`;
@@ -647,33 +609,11 @@ function animateMove(from: string, to: string): void {
 
 // ------------------------------------------------------------------- sound
 
-function ensureAudio(): void {
-  if (audio || !soundOn) return;
-  const Context = window.AudioContext ?? window.webkitAudioContext;
-  try {
-    audio = Context ? new Context() : null;
-  } catch {
-    audio = null;
-  }
-}
-
+/** What lichess plays for a move: capture or move, then check, then any result. */
 function playSound(move: ChessMove): void {
-  if (!soundOn || !audio) return;
-  const capture = move.flags.includes("c") || move.flags.includes("e");
-  const seconds = capture ? 0.1 : 0.06;
-  const buffer = audio.createBuffer(1, Math.floor(audio.sampleRate * seconds), audio.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, capture ? 2 : 5);
-  const source = audio.createBufferSource();
-  source.buffer = buffer;
-  const filter = audio.createBiquadFilter();
-  filter.type = "bandpass";
-  filter.frequency.value = capture ? 1500 : 950;
-  filter.Q.value = 1.1;
-  const gain = audio.createGain();
-  gain.gain.value = capture ? 0.9 : 0.7;
-  source.connect(filter).connect(gain).connect(audio.destination);
-  source.start();
+  play(move.flags.includes("c") || move.flags.includes("e") ? "capture" : "move");
+  if (game.in_check()) play("check");
+  if (outcome()) play(game.in_checkmate() ? (game.turn() === human ? "defeat" : "victory") : "draw");
 }
 
 // -------------------------------------------------------------------- play
@@ -801,7 +741,7 @@ function askPromotion(to: string, options: ChessMove[]): void {
   const choices: ChessPieceType[] = ["q", "n", "r", "b"];
   strip.innerHTML =
     choices
-      .map((type) => `<button type="button" data-type="${type}" aria-label="Promote to ${NAMES[type]}"><span class="piece ${human}" data-type="${type}">${GLYPH[type]}${TEXT_STYLE}</span></button>`)
+      .map((type) => `<button type="button" data-type="${type}" aria-label="Promote to ${NAMES[type]}">${pieceHtml({ color: human, type })}</button>`)
       .join("") + `<button type="button" class="promo-cancel" data-type="" aria-label="Cancel promotion">×</button>`;
   strip.hidden = false;
   render();
@@ -875,8 +815,7 @@ function floatPiece(piece: ChessPiece): { el: HTMLDivElement; size: number } {
   el.className = "float-piece";
   el.style.width = `${size}px`;
   el.style.height = `${size}px`;
-  el.style.fontSize = `${size * 0.76}px`;
-  el.innerHTML = `<span class="piece ${piece.color}" data-type="${piece.type}">${GLYPH[piece.type]}${TEXT_STYLE}</span>`;
+  el.innerHTML = pieceHtml(piece);
   document.body.appendChild(el);
   return { el, size };
 }
@@ -1104,11 +1043,12 @@ function start(state: SavedState): void {
   human = state.human ?? "w";
   flipped = state.flipped ?? human === "b";
   soundOn = state.soundOn !== false;
+  setSoundEnabled(soundOn);
+  preloadSounds();
   $<HTMLInputElement>(human === "b" ? "side-black" : "side-white").checked = true;
   rebuildKeys();
   buildBoard();
   renderSpec();
-  void centerPieceGlyphs();
 
   const board = $("board");
   board.addEventListener("pointerdown", onPointerDown);
@@ -1144,7 +1084,7 @@ function start(state: SavedState): void {
   syncSound();
   soundButton.addEventListener("click", () => {
     soundOn = !soundOn;
-    if (soundOn) ensureAudio();
+    setSoundEnabled(soundOn);
     syncSound();
   });
 
